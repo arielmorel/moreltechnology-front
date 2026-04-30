@@ -94,7 +94,7 @@ jobs:
 
 
       - name: Notify Telegram Success
-        if: ${{ success() && secrets.TELEGRAM_API_URL != '' && secrets.TELEGRAM_CHAT_ID != '' }}
+        if: success()
         run: |
           curl -s -X POST "${{ secrets.TELEGRAM_API_URL }}" \
           -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
@@ -103,7 +103,7 @@ jobs:
 
 
       - name: Notify Telegram Failure
-        if: ${{ failure() && secrets.TELEGRAM_API_URL != '' && secrets.TELEGRAM_CHAT_ID != '' }}
+        if: failure()
         run: |
           curl -s -X POST "${{ secrets.TELEGRAM_API_URL }}" \
             -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
