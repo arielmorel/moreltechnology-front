@@ -4,7 +4,7 @@ on:
   push:
     branches: ["main"]
     paths:
-      - 'moreltechnology/**' # Solo dispara si cambia esta carpeta
+      - '**' # Dispara en cualquier cambio en el repo
 
   workflow_dispatch:  
 
@@ -30,17 +30,15 @@ jobs:
         with:
           node-version: '20'
           cache: 'pnpm'
-          cache-dependency-path: moreltechnology/pnpm-lock.yaml
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies and build (Next.js SSR)
-        working-directory: moreltechnology
         run: |
           pnpm install --no-frozen-lockfile
           pnpm run build
 
       # Prune dev dependencies before rsync (optional but good practice)
       - name: Prune dev dependencies
-        working-directory: moreltechnology
         run: pnpm prune --prod
 
       - name: Verify Node.js version
@@ -50,7 +48,7 @@ jobs:
         uses: burnett01/rsync-deployments@7.0.1
         with:
           switches: -avzr --delete --exclude node_modules --exclude .next
-          path: ./moreltechnology/
+          path: ./
           remote_path: /home/${{ secrets.SSH_USER }}/moreltechnology/app/
           remote_host: ${{ secrets.SERVER_HOST }}
           remote_user: ${{ secrets.SSH_USER }}
