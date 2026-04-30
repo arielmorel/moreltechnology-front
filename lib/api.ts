@@ -1,8 +1,8 @@
 import axios from "axios";
 import { Product, ProductCondition } from "./data";
 
-//const API_URL = "https://sm.novuswise.com/api/catalogs/moreltechnology/products";
-const API_URL = "http://localhost:8282/api/catalogs/moreltechnology/products";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8282/api/catalogs/moreltechnology/products";
+
 
 export interface ApiProduct {
   id: number;
