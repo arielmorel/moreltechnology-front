@@ -1,0 +1,19 @@
+services:
+  moreltechnologyrd_front:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: moreltechnologyrd_front
+    restart: always
+    env_file:
+      - .env
+    networks:
+      - web
+    ports:
+      - '3333:3000'
+    volumes:
+      - /etc/letsencrypt/live/moreltechnologyrd.com:/etc/letsencrypt/live/moreltechnologyrd.com:ro  # SSL cert volume  
+
+networks:
+  web:
+    driver: bridge

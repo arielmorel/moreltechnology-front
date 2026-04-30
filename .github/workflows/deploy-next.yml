@@ -1,0 +1,116 @@
+name: Deploy MorelTechnologyRD.com (Next.js SSR)
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - 'moreltechnology/**' # Solo dispara si cambia esta carpeta
+
+  workflow_dispatch:  
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment: moreltechnology
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Debug carpeta actual
+        run: ls -laR
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          cache-dependency-path: moreltechnology/pnpm-lock.yaml
+
+      - name: Install dependencies and build (Next.js SSR)
+        working-directory: moreltechnology
+        run: |
+          pnpm install --no-frozen-lockfile
+          pnpm run build
+
+      # Prune dev dependencies before rsync (optional but good practice)
+      - name: Prune dev dependencies
+        working-directory: moreltechnology
+        run: pnpm prune --prod
+
+      - name: Verify Node.js version
+        run: node -v
+
+      - name: Copy moreltechnology to remote server
+        uses: burnett01/rsync-deployments@7.0.1
+        with:
+          switches: -avzr --delete --exclude node_modules --exclude .next
+          path: ./moreltechnology/
+          remote_path: /home/${{ secrets.SSH_USER }}/moreltechnology/app/
+          remote_host: ${{ secrets.SERVER_HOST }}
+          remote_user: ${{ secrets.SSH_USER }}
+          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Mover archivo .env al root de la app
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+        run: |
+          eval "$(ssh-agent -s)"
+          echo "$SSH_PRIVATE_KEY" > /tmp/deploy_key
+          chmod 600 /tmp/deploy_key
+          ssh-add /tmp/deploy_key
+
+          ssh -o StrictHostKeyChecking=no -i /tmp/deploy_key $SSH_USER@$SERVER_HOST << EOF
+            cp /home/$SSH_USER/.env /home/$SSH_USER/moreltechnology/app/.env
+          EOF
+
+      - name: Rebuild and restart Docker containers
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+        run: |
+          eval "$(ssh-agent -s)"
+          echo "$SSH_PRIVATE_KEY" > /tmp/deploy_key
+          chmod 600 /tmp/deploy_key
+          ssh-add /tmp/deploy_key
+
+          ssh -o StrictHostKeyChecking=no -i /tmp/deploy_key $SSH_USER@$SERVER_HOST << EOF
+            cd /home/$SSH_USER/moreltechnology/app
+            docker-compose down
+            docker-compose build
+            docker-compose up -d
+          EOF
+
+          ssh -o StrictHostKeyChecking=no -i /tmp/deploy_key $SSH_USER@$SERVER_HOST << EOF
+            docker ps | grep moreltechnology || echo "❌ Contenedor no iniciado"
+          EOF
+
+
+      - name: Notify Telegram Success
+        if: success()
+        run: |
+          curl -s -X POST "${{ secrets.TELEGRAM_API_URL }}" \
+          -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
+          -d text="✅ Despliegue exitoso de *moreltechnology* en producción.\n🕐 $(date '+%Y-%m-%d %H:%M:%S')" \
+          -d parse_mode="Markdown"
+
+
+      - name: Notify Telegram Failure
+        if: failure()
+        run: |
+          curl -s -X POST "${{ secrets.TELEGRAM_API_URL }}" \
+            -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
+            -d text="❌ Falló el despliegue de *moreltechnology*. Revisa el workflow." \
+            -d parse_mode="Markdown"
+
+
+
+
