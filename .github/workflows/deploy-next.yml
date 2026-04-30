@@ -7,6 +7,7 @@ on:
       - '**' # Dispara en cualquier cambio en el repo
 
   workflow_dispatch:  
+    
 
 jobs:
   build-and-deploy:
@@ -47,7 +48,7 @@ jobs:
       - name: Copy moreltechnology to remote server
         uses: burnett01/rsync-deployments@7.0.1
         with:
-          switches: -avzr --delete --exclude node_modules --exclude .next
+          switches: -vrtz --delete --exclude .git --exclude .github --exclude node_modules --exclude .next --no-perms --no-owner --no-group
           path: ./
           remote_path: /home/${{ secrets.SSH_USER }}/moreltechnology/app/
           remote_host: ${{ secrets.SERVER_HOST }}
