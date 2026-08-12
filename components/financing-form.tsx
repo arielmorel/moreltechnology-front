@@ -132,7 +132,7 @@ export function FinancingForm() {
                 <FormItem>
                   <FormLabel>Nombre Completo</FormLabel>
                   <FormControl>
-                    <Input className="h-11 sm:h-12" placeholder="Ej. Juan Pérez" {...field} />
+                    <Input className="h-11 sm:h-12 placeholder:text-muted-foreground/60" placeholder="Ej. Juan Pérez" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -145,7 +145,7 @@ export function FinancingForm() {
                 <FormItem>
                   <FormLabel>Cédula de Identidad</FormLabel>
                   <FormControl>
-                    <Input className="h-11 sm:h-12" placeholder="Sin guiones (Ej. 40200000000)" {...field} />
+                    <Input className="h-11 sm:h-12 placeholder:text-muted-foreground/60" placeholder="Sin guiones (Ej. 40200000000)" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -161,7 +161,7 @@ export function FinancingForm() {
                 <FormItem>
                   <FormLabel>Teléfono / WhatsApp</FormLabel>
                   <FormControl>
-                    <Input className="h-11 sm:h-12" placeholder="Ej. 809-555-5555" {...field} />
+                    <Input className="h-11 sm:h-12 placeholder:text-muted-foreground/60" placeholder="Ej. 809-555-5555" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -174,7 +174,7 @@ export function FinancingForm() {
                 <FormItem>
                   <FormLabel>Correo Electrónico</FormLabel>
                   <FormControl>
-                    <Input className="h-11 sm:h-12" type="email" placeholder="Ej. juan@email.com" {...field} />
+                    <Input className="h-11 sm:h-12 placeholder:text-muted-foreground/60" type="email" placeholder="Ej. juan@email.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -191,7 +191,7 @@ export function FinancingForm() {
                   <FormLabel>Género (Opcional)</FormLabel>
                   <Select onValueChange={(val) => field.onChange(val || "")} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger className="h-11 sm:h-12">
+                      <SelectTrigger className="h-11 sm:h-12 placeholder:text-muted-foreground/60">
                         <SelectValue placeholder="Seleccionar" />
                       </SelectTrigger>
                     </FormControl>
@@ -213,7 +213,7 @@ export function FinancingForm() {
                   <FormLabel>Estado Civil (Opcional)</FormLabel>
                   <Select onValueChange={(val) => field.onChange(val || "")} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger className="h-11 sm:h-12">
+                      <SelectTrigger className="h-11 sm:h-12 placeholder:text-muted-foreground/60">
                         <SelectValue placeholder="Seleccionar" />
                       </SelectTrigger>
                     </FormControl>
@@ -237,7 +237,7 @@ export function FinancingForm() {
                   <FormLabel>Sucursal Preferida</FormLabel>
                   <Select onValueChange={(val) => field.onChange(val || "")} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger className="h-11 sm:h-12">
+                      <SelectTrigger className="h-11 sm:h-12 placeholder:text-muted-foreground/60">
                         <SelectValue placeholder="Elige la sucursal" />
                       </SelectTrigger>
                     </FormControl>
@@ -262,7 +262,7 @@ export function FinancingForm() {
               <FormItem>
                 <FormLabel>Dirección (Opcional)</FormLabel>
                 <FormControl>
-                  <Input className="h-11 sm:h-12" placeholder="Ej. Calle Principal #123, Santo Domingo" {...field} />
+                  <Input className="h-11 sm:h-12 placeholder:text-muted-foreground/60" placeholder="Ej. Calle Principal #123, Santo Domingo" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -283,7 +283,7 @@ export function FinancingForm() {
                   <FormItem>
                     <FormLabel>Empresa donde laboras</FormLabel>
                     <FormControl>
-                      <Input className="h-11 sm:h-12" placeholder="Nombre de la empresa" {...field} />
+                      <Input className="h-11 sm:h-12 placeholder:text-muted-foreground/60" placeholder="Nombre de la empresa" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -296,7 +296,7 @@ export function FinancingForm() {
                   <FormItem>
                     <FormLabel>Tiempo Laborando</FormLabel>
                     <FormControl>
-                      <Input className="h-11 sm:h-12" placeholder="Ej. 2 años y 4 meses" {...field} />
+                      <Input className="h-11 sm:h-12 placeholder:text-muted-foreground/60" placeholder="Ej. 2 años y 4 meses" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -312,7 +312,7 @@ export function FinancingForm() {
                   <FormItem>
                     <FormLabel>Salario Mensual (DOP)</FormLabel>
                     <FormControl>
-                      <Input className="h-11 sm:h-12" type="number" placeholder="Ej. 35000" {...field} />
+                      <Input className="h-11 sm:h-12 placeholder:text-muted-foreground/60" type="number" placeholder="Ej. 35000" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -325,7 +325,7 @@ export function FinancingForm() {
                   <FormItem>
                     <FormLabel>Otros Ingresos (Opcional)</FormLabel>
                     <FormControl>
-                      <Input className="h-11 sm:h-12" type="number" placeholder="Ej. 5000" {...field} />
+                      <Input className="h-11 sm:h-12 placeholder:text-muted-foreground/60" type="number" placeholder="Ej. 5000" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -341,7 +341,7 @@ export function FinancingForm() {
               <FormItem>
                 <FormLabel>Equipo de Interés (Opcional)</FormLabel>
                 <FormControl>
-                    <Input className="h-11 sm:h-12" placeholder="Ej. MacBook Pro M3 o Asus ROG" {...field} />
+                    <Input className="h-11 sm:h-12 placeholder:text-muted-foreground/60" placeholder="Ej. MacBook Pro M3 o Asus ROG" {...field} />
                 </FormControl>
                 <FormDescription>
                   Si ya tienes una laptop en mente, déjanos saber cuál es.
