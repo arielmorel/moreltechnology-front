@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Morel Technology - Laptops en República Dominicana",
   description: "Las mejores laptops para estudiar, trabajar y gaming en RD. Equipos nuevos y usados con garantía. Catálogo profesional con atención vía WhatsApp.",
-  keywords: ["laptops RD", "laptops en santo domingo", "laptop gamer republica dominicanarepublica", "laptops usadas RD", "Morel Technology", "tienda de laptops", "comprar laptop RD"],
+  keywords: ["laptops RD", "laptops en santo domingo", "laptop gamer republica dominicana", "laptops usadas RD", "Morel Technology", "tienda de laptops", "comprar laptop RD"],
   authors: [{ name: "Morel Technology" }],
   creator: "Morel Technology",
   icons: {
