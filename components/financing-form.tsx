@@ -20,7 +20,7 @@ import { branches } from "@/lib/data";
 import { ShieldCheck, CreditCard, Send, CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL?.replace(/\/products$/, "") || "http://localhost:8282/api/catalogs/moreltechnology";
+const API_FINANCING_URL = process.env.NEXT_PUBLIC_FINANCING_API_URL || "http://localhost:8282/api/company/moreltechnology---/financing/requests";
 
 const formSchema = z.object({
   fullName: z.string().min(3, { message: "El nombre debe tener al menos 3 caracteres." }),
@@ -79,11 +79,11 @@ export function FinancingForm() {
         workTime: values.workTime,
         company: values.company,
         equipment: values.equipment || null,
-        branchId: selectedBranch ? parseInt(selectedBranch.id) : null,
+        branchId: selectedBranch ? selectedBranch.id : null,
         source: "web",
       };
 
-      const res = await fetch(`${API_BASE}/financing/requests`, {
+      const res = await fetch(API_FINANCING_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

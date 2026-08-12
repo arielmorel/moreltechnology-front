@@ -40,7 +40,7 @@ export default function CheckoutPage() {
     phone: "",
     email: "",
     delivery: "pickup",
-    branch: "santo_domingo",
+    branch: "moreltechnology",
     address: "",
   });
 

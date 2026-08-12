@@ -59,7 +59,7 @@ export const bankAccounts = [
 
 export const branches = [
   {
-    id: "santo_domingo",
+    id: "moreltechnology",
     name: "Sucursal Santo Domingo",
     address: "El eden de villa mella, Calle Ceuta Frente a la calle 7",
     phone: "809-617-5517",
@@ -76,7 +76,7 @@ export const branches = [
     color: "from-blue-500/10 to-primary/5",
   },
   {
-    id: "santiago",
+    id: "mts",
     name: "Sucursal Santiago",
     address: "Plaza Pamela 3, Carr. Buena Vista, Santiago",
     phone: "809-421-5517",
