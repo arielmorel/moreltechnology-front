@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -16,15 +17,21 @@ import {
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { branches } from "@/lib/data";
-import { MessageCircle, ShieldCheck, CreditCard } from "lucide-react";
+import { ShieldCheck, CreditCard, Send, CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
-import { WhatsApp } from "./icons";
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL?.replace(/\/products$/, "") || "http://localhost:8282/api/catalogs/moreltechnology";
 
 const formSchema = z.object({
   fullName: z.string().min(3, { message: "El nombre debe tener al menos 3 caracteres." }),
   cedula: z.string().min(11, { message: "La cédula debe tener 11 dígitos." }).max(13),
   phone: z.string().min(10, { message: "Introduce un teléfono válido." }),
+  email: z.string().email({ message: "Introduce un correo válido." }),
+  gender: z.string().optional(),
+  maritalStatus: z.string().optional(),
+  address: z.string().optional(),
   salary: z.string().min(4, { message: "Introduce tu salario mensual en pesos." }),
+  otherIncome: z.string().optional(),
   workTime: z.string().min(2, { message: "Ej: 1 año, 6 meses, etc." }),
   company: z.string().min(2, { message: "Nombre de la empresa donde laboras." }),
   equipment: z.string().optional(),
@@ -32,13 +39,21 @@ const formSchema = z.object({
 });
 
 export function FinancingForm() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema as any),
     defaultValues: {
       fullName: "",
       cedula: "",
       phone: "",
+      email: "",
+      gender: "",
+      maritalStatus: "",
+      address: "",
       salary: "",
+      otherIncome: "",
       workTime: "",
       company: "",
       equipment: "",
@@ -46,33 +61,44 @@ export function FinancingForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Buscar el número de WhatsApp de la sucursal seleccionada
-    const selectedBranch = branches.find((b) => b.id === values.branch);
-    const phoneToSend = selectedBranch ? selectedBranch.whatsappNumber : branches[0].whatsappNumber;
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsSubmitting(true);
+    try {
+      const selectedBranch = branches.find((b) => b.id === values.branch);
+      const payload = {
+        fullName: values.fullName,
+        cedula: values.cedula.replace(/-/g, ""),
+        phone: values.phone,
+        email: values.email,
+        gender: values.gender || null,
+        maritalStatus: values.maritalStatus || null,
+        address: values.address || null,
+        loanAmount: 0,
+        salary: parseFloat(values.salary),
+        otherIncome: values.otherIncome ? parseFloat(values.otherIncome) : null,
+        workTime: values.workTime,
+        company: values.company,
+        equipment: values.equipment || null,
+        branchId: selectedBranch ? parseInt(selectedBranch.id) : null,
+        source: "web",
+      };
 
-    // Crear el mensaje formateado
-    const message = `*SOLICITUD DE FINANCIAMIENTO* 📝
-    
-*Datos Personales:*
-👤 *Nombre:* ${values.fullName}
-🪪 *Cédula:* ${values.cedula}
-📱 *Teléfono:* ${values.phone}
+      const res = await fetch(`${API_BASE}/financing/requests`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-*Datos Laborales:*
-💼 *Empresa:* ${values.company}
-💰 *Salario Mensual:* RD$ ${values.salary}
-⏳ *Tiempo Laborando:* ${values.workTime}
+      if (!res.ok) throw new Error("Error al enviar la solicitud");
 
-*Interés:*
-💻 *Equipo Deseado:* ${values.equipment || 'Aún no he decidido, busco asesoría'}
-📍 *Sucursal Preferida:* ${selectedBranch?.name.replace('Sucursal ', '')}
-
-¡Hola! Me gustaría saber si aplico para financiamiento con estos datos.`;
-
-    // Redirigir a WhatsApp
-    const whatsappUrl = `https://wa.me/${phoneToSend}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, "_blank");
+      setIsSuccess(true);
+      form.reset();
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Hubo un error al enviar tu solicitud. Intenta de nuevo.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -91,6 +117,13 @@ export function FinancingForm() {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          {isSuccess && (
+            <div className="flex items-center gap-3 p-4 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-xl text-green-700 dark:text-green-400">
+              <CheckCircle className="w-5 h-5 flex-shrink-0" />
+              <p className="text-sm font-medium">¡Solicitud enviada correctamente! Te contactaremos pronto.</p>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField
               control={form.control}
@@ -136,6 +169,68 @@ export function FinancingForm() {
             />
             <FormField
               control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Correo Electrónico</FormLabel>
+                  <FormControl>
+                    <Input className="h-11 sm:h-12" type="email" placeholder="Ej. juan@email.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <FormField
+              control={form.control}
+              name="gender"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Género (Opcional)</FormLabel>
+                  <Select onValueChange={(val) => field.onChange(val || "")} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger className="h-11 sm:h-12">
+                        <SelectValue placeholder="Seleccionar" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="M">Masculino</SelectItem>
+                      <SelectItem value="F">Femenino</SelectItem>
+                      <SelectItem value="Otro">Otro</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="maritalStatus"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Estado Civil (Opcional)</FormLabel>
+                  <Select onValueChange={(val) => field.onChange(val || "")} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger className="h-11 sm:h-12">
+                        <SelectValue placeholder="Seleccionar" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="Soltero">Soltero/a</SelectItem>
+                      <SelectItem value="Casado">Casado/a</SelectItem>
+                      <SelectItem value="Divorciado">Divorciado/a</SelectItem>
+                      <SelectItem value="Viudo">Viudo/a</SelectItem>
+                      <SelectItem value="Union Libre">Unión Libre</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="branch"
               render={({ field }) => (
                 <FormItem>
@@ -143,7 +238,7 @@ export function FinancingForm() {
                   <Select onValueChange={(val) => field.onChange(val || "")} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger className="h-11 sm:h-12">
-                        <SelectValue placeholder="Elige la sucursal más cercana" />
+                        <SelectValue placeholder="Elige la sucursal" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -159,6 +254,20 @@ export function FinancingForm() {
               )}
             />
           </div>
+
+          <FormField
+            control={form.control}
+            name="address"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Dirección (Opcional)</FormLabel>
+                <FormControl>
+                  <Input className="h-11 sm:h-12" placeholder="Ej. Calle Principal #123, Santo Domingo" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <div className="bg-muted/30 p-4 sm:p-5 rounded-xl border border-border/50 space-y-5 sm:space-y-6">
             <div className="flex items-center gap-2 mb-3 sm:mb-4 text-primary font-medium">
@@ -195,19 +304,34 @@ export function FinancingForm() {
               />
             </div>
 
-            <FormField
-              control={form.control}
-              name="salary"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Salario Mensual (DOP)</FormLabel>
-                  <FormControl>
-                    <Input className="h-11 sm:h-12" type="number" placeholder="Ej. 35000" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="salary"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Salario Mensual (DOP)</FormLabel>
+                    <FormControl>
+                      <Input className="h-11 sm:h-12" type="number" placeholder="Ej. 35000" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="otherIncome"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Otros Ingresos (Opcional)</FormLabel>
+                    <FormControl>
+                      <Input className="h-11 sm:h-12" type="number" placeholder="Ej. 5000" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
 
           <FormField
@@ -227,6 +351,7 @@ export function FinancingForm() {
             )}
           />
 
+          {/* Botón de WhatsApp comentado - Ahora se envía al servidor
           <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
             <Button
               type="submit"
@@ -236,8 +361,29 @@ export function FinancingForm() {
               Enviar Solicitud por WhatsApp
             </Button>
           </motion.div>
+          */}
+
+          <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full h-14 text-lg font-semibold gap-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl shadow-xl shadow-primary/20 transition-all mt-4"
+            >
+              {isSubmitting ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                  Enviando...
+                </>
+              ) : (
+                <>
+                  <Send className="w-5 h-5" />
+                  Enviar Solicitud
+                </>
+              )}
+            </Button>
+          </motion.div>
           <p className="text-center text-xs text-muted-foreground mt-3 sm:mt-4">
-            Al enviar esta solicitud, nuestro equipo de ventas la evaluará rápidamente vía WhatsApp.
+            Al enviar esta solicitud, nuestro equipo de ventas la evaluará y te contactará pronto.
           </p>
         </form>
       </Form>
