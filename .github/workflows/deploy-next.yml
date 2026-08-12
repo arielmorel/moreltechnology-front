@@ -1,12 +1,7 @@
 name: Deploy MorelTechnologyRD.com (Next.js SSR)
 
 on:
-  push:
-    branches: ["main"]
-    paths:
-      - '**' # Dispara en cualquier cambio en el repo
-
-  workflow_dispatch:  
+  workflow_dispatch:
     
 
 jobs:
