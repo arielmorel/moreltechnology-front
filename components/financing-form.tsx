@@ -76,14 +76,14 @@ export function FinancingForm() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-6 md:p-8 bg-card border border-border/50 rounded-2xl shadow-xl shadow-primary/5">
-      <div className="flex items-center gap-4 mb-8 pb-6 border-b border-border/50">
-        <div className="bg-primary/10 p-3 rounded-full text-primary">
-          <CreditCard className="w-8 h-8" />
+    <div className="max-w-2xl mx-auto p-4 sm:p-6 md:p-8 bg-card border border-border/50 rounded-2xl shadow-xl shadow-primary/5">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-6 sm:mb-8 pb-5 sm:pb-6 border-b border-border/50">
+        <div className="bg-primary/10 p-3 rounded-full text-primary self-start">
+          <CreditCard className="w-7 h-7 sm:w-8 sm:h-8" />
         </div>
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Solicitud Pre-Aprobación</h2>
-          <p className="text-sm text-muted-foreground mt-1">
+          <h2 className="text-xl sm:text-2xl font-bold tracking-tight">Solicitud Pre-Aprobación</h2>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
             Completa tus datos reales. Esta información es 100% confidencial.
           </p>
         </div>
@@ -99,7 +99,7 @@ export function FinancingForm() {
                 <FormItem>
                   <FormLabel>Nombre Completo</FormLabel>
                   <FormControl>
-                    <Input placeholder="Ej. Juan Pérez" {...field} />
+                    <Input className="h-11 sm:h-12" placeholder="Ej. Juan Pérez" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -112,7 +112,7 @@ export function FinancingForm() {
                 <FormItem>
                   <FormLabel>Cédula de Identidad</FormLabel>
                   <FormControl>
-                    <Input placeholder="Sin guiones (Ej. 40200000000)" {...field} />
+                    <Input className="h-11 sm:h-12" placeholder="Sin guiones (Ej. 40200000000)" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -128,7 +128,7 @@ export function FinancingForm() {
                 <FormItem>
                   <FormLabel>Teléfono / WhatsApp</FormLabel>
                   <FormControl>
-                    <Input placeholder="Ej. 809-555-5555" {...field} />
+                    <Input className="h-11 sm:h-12" placeholder="Ej. 809-555-5555" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -142,7 +142,7 @@ export function FinancingForm() {
                   <FormLabel>Sucursal Preferida</FormLabel>
                   <Select onValueChange={(val) => field.onChange(val || "")} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="h-11 sm:h-12">
                         <SelectValue placeholder="Elige la sucursal más cercana" />
                       </SelectTrigger>
                     </FormControl>
@@ -160,8 +160,8 @@ export function FinancingForm() {
             />
           </div>
 
-          <div className="bg-muted/30 p-5 rounded-xl border border-border/50 space-y-6">
-            <div className="flex items-center gap-2 mb-4 text-primary font-medium">
+          <div className="bg-muted/30 p-4 sm:p-5 rounded-xl border border-border/50 space-y-5 sm:space-y-6">
+            <div className="flex items-center gap-2 mb-3 sm:mb-4 text-primary font-medium">
               <ShieldCheck className="w-5 h-5" />
               Datos Laborales
             </div>
@@ -174,7 +174,7 @@ export function FinancingForm() {
                   <FormItem>
                     <FormLabel>Empresa donde laboras</FormLabel>
                     <FormControl>
-                      <Input placeholder="Nombre de la empresa" {...field} />
+                      <Input className="h-11 sm:h-12" placeholder="Nombre de la empresa" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -187,7 +187,7 @@ export function FinancingForm() {
                   <FormItem>
                     <FormLabel>Tiempo Laborando</FormLabel>
                     <FormControl>
-                      <Input placeholder="Ej. 2 años y 4 meses" {...field} />
+                      <Input className="h-11 sm:h-12" placeholder="Ej. 2 años y 4 meses" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -202,7 +202,7 @@ export function FinancingForm() {
                 <FormItem>
                   <FormLabel>Salario Mensual (DOP)</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="Ej. 35000" {...field} />
+                    <Input className="h-11 sm:h-12" type="number" placeholder="Ej. 35000" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -217,7 +217,7 @@ export function FinancingForm() {
               <FormItem>
                 <FormLabel>Equipo de Interés (Opcional)</FormLabel>
                 <FormControl>
-                  <Input placeholder="Ej. MacBook Pro M3 o Asus ROG" {...field} />
+                    <Input className="h-11 sm:h-12" placeholder="Ej. MacBook Pro M3 o Asus ROG" {...field} />
                 </FormControl>
                 <FormDescription>
                   Si ya tienes una laptop en mente, déjanos saber cuál es.
@@ -236,7 +236,7 @@ export function FinancingForm() {
               Enviar Solicitud por WhatsApp
             </Button>
           </motion.div>
-          <p className="text-center text-xs text-muted-foreground mt-4">
+          <p className="text-center text-xs text-muted-foreground mt-3 sm:mt-4">
             Al enviar esta solicitud, nuestro equipo de ventas la evaluará rápidamente vía WhatsApp.
           </p>
         </form>
