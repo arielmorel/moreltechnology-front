@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Phone, ArrowRight } from "lucide-react";
 import { Facebook, Instagram, TikTok } from "@/components/icons";
 
@@ -15,7 +14,7 @@ const branchLinks: Record<string, string> = {
 
 export function BranchesSection() {
   return (
-    <section className="py-24 bg-muted/20">
+    <section className="py-24 bg-background">
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">Visita Nuestras Sucursales</h2>
@@ -33,21 +32,21 @@ export function BranchesSection() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.2 }}
             >
-              <Card className={`h-full overflow-hidden border border-border/50 bg-gradient-to-br ${branch.color} backdrop-blur-sm hover:shadow-lg transition-all`}>
-                <CardContent className="p-8 flex flex-col h-full relative">
-                  {/* Decorational background element */}
-                  <div className="absolute -top-12 -right-12 w-32 h-32 bg-primary/10 rounded-full blur-2xl" />
+              <div className="h-full rounded-3xl overflow-hidden border border-border/50 bg-card hover:shadow-xl hover:shadow-red-500/5 transition-all group">
+                {/* Red top accent */}
+                <div className="h-2 bg-gradient-to-r from-red-600 via-red-500 to-red-600" />
 
-                  <h3 className="text-2xl font-bold mb-6">{branch.name}</h3>
+                <div className="p-8 flex flex-col h-full relative">
+                  <h3 className="text-2xl font-black tracking-tight mb-6">{branch.name}</h3>
 
                   <div className="space-y-4 mb-8 flex-1">
-                    <a 
-                      href={branch.mapLink} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
+                    <a
+                      href={branch.mapLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex items-start gap-3 text-muted-foreground hover:text-foreground transition-colors group/map"
                     >
-                      <MapPin className="w-5 h-5 text-primary shrink-0 mt-0.5 group-hover/map:scale-110 transition-transform" />
+                      <MapPin className="w-5 h-5 text-red-600 shrink-0 mt-0.5 group-hover/map:scale-110 transition-transform" />
                       <span className="group-hover/map:underline">{branch.address}</span>
                     </a>
 
@@ -62,47 +61,46 @@ export function BranchesSection() {
                     </a>
                   </div>
 
-                  <div className="pt-6 border-t border-border/50">
+                  <div className="pt-6 border-t border-border/50 flex items-center justify-between">
                     <Link
                       href={branchLinks[branch.id] || "/contacto"}
-                      className="inline-flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all mb-4"
+                      className="inline-flex items-center gap-2 text-red-600 font-bold hover:gap-3 transition-all"
                     >
                       Visitar sucursal
                       <ArrowRight className="w-4 h-4" />
                     </Link>
-                    <p className="text-sm font-medium mb-4 text-muted-foreground">Nuestras Redes Sociales:</p>
-                    <div className="flex gap-4">
+                    <div className="flex gap-3">
                       <a
                         href={branch.socials.instagram}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-2 bg-background rounded-full shadow-sm hover:shadow-md hover:text-pink-500 transition-all"
+                        className="p-2 bg-muted rounded-full hover:bg-red-50 hover:text-pink-500 transition-all"
                         aria-label="Instagram"
                       >
-                        <Instagram size={20} />
+                        <Instagram size={18} />
                       </a>
                       <a
                         href={branch.socials.facebook}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-2 bg-background rounded-full shadow-sm hover:shadow-md hover:text-blue-600 transition-all"
+                        className="p-2 bg-muted rounded-full hover:bg-red-50 hover:text-blue-600 transition-all"
                         aria-label="Facebook"
                       >
-                        <Facebook size={20} />
+                        <Facebook size={18} />
                       </a>
                       <a
                         href={branch.socials.tiktok}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-2 bg-background rounded-full shadow-sm hover:shadow-md hover:text-black dark:hover:text-white transition-all"
+                        className="p-2 bg-muted rounded-full hover:bg-red-50 hover:text-black dark:hover:text-white transition-all"
                         aria-label="TikTok"
                       >
-                        <TikTok size={20} />
+                        <TikTok size={18} />
                       </a>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             </motion.div>
           ))}
         </div>
