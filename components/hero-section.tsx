@@ -116,15 +116,15 @@ export function HeroSection() {
             Distribuidor Autorizado & Marcas Aliadas
           </p>
           <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-            <div className="flex flex-col items-center gap-2">
+            <Link href="/laptops/lenovo" className="flex flex-col items-center gap-2 hover:opacity-100 transition-opacity">
               <span className="text-xl md:text-2xl font-black tracking-tighter text-foreground">LENOVO</span>
               <span className="text-[10px] bg-primary text-primary-foreground px-2 py-0.5 rounded-full font-bold">AUTORIZADO</span>
-            </div>
-            <span className="text-xl md:text-2xl font-black tracking-tighter text-foreground">DELL</span>
-            <span className="text-xl md:text-2xl font-black tracking-tighter text-foreground">HP</span>
-            <span className="text-xl md:text-2xl font-black tracking-tighter text-foreground">APPLE</span>
-            <span className="text-xl md:text-2xl font-black tracking-tighter text-foreground">ASUS</span>
-            <span className="text-xl md:text-2xl font-black tracking-tighter text-foreground">RAZER</span>
+            </Link>
+            <Link href="/laptops/dell" className="text-xl md:text-2xl font-black tracking-tighter text-foreground hover:text-primary transition-colors">DELL</Link>
+            <Link href="/laptops/hp" className="text-xl md:text-2xl font-black tracking-tighter text-foreground hover:text-primary transition-colors">HP</Link>
+            <Link href="/laptops/apple" className="text-xl md:text-2xl font-black tracking-tighter text-foreground hover:text-primary transition-colors">APPLE</Link>
+            <Link href="/laptops/asus" className="text-xl md:text-2xl font-black tracking-tighter text-foreground hover:text-primary transition-colors">ASUS</Link>
+            <Link href="/laptops/razer" className="text-xl md:text-2xl font-black tracking-tighter text-foreground hover:text-primary transition-colors">RAZER</Link>
           </div>
 
           {/* Payment Methods */}
