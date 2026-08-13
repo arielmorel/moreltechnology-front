@@ -20,7 +20,7 @@ import { branches } from "@/lib/data";
 import { ShieldCheck, CreditCard, Send, CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
-const API_FINANCING_URL = process.env.NEXT_PUBLIC_FINANCING_API_URL || "http://localhost:8282/api/company/moreltechnology---/financing/requests";
+const API_FINANCING_URL = process.env.NEXT_PUBLIC_FINANCING_API_URL || "http://localhost:8282/api/company/moreltechnology/financing/requests";
 
 const formSchema = z.object({
   fullName: z.string().min(3, { message: "El nombre debe tener al menos 3 caracteres." }),

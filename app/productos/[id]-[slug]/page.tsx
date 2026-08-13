@@ -1,13 +1,20 @@
 import { Metadata } from "next";
 import { getProductById } from "@/lib/api";
+import { slugify, productUrl } from "@/lib/utils";
 import ProductDetailClient from "./product-detail-client";
 
 interface PageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ "id-slug": string }>;
+}
+
+function extractId(idSlug: string): string {
+  const dashIndex = idSlug.indexOf("-");
+  return dashIndex === -1 ? idSlug : idSlug.substring(0, dashIndex);
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { id } = await params;
+  const { "id-slug": idSlug } = await params;
+  const id = extractId(idSlug);
   const product = await getProductById(id);
 
   if (!product) {
@@ -27,7 +34,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: `${product.name} | Morel Technology`,
     description: metaDescription.substring(0, 160),
     alternates: {
-      canonical: `/productos/${product.id}`,
+      canonical: productUrl(product.id, product.name),
     },
     openGraph: {
       title: `${product.name} | Morel Technology RD`,
@@ -51,7 +58,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function ProductDetailPage({ params }: PageProps) {
-  const { id } = await params;
+  const { "id-slug": idSlug } = await params;
+  const id = extractId(idSlug);
   const product = await getProductById(id);
 
   const productSchema = product ? {
@@ -94,7 +102,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
         "@type": "ListItem",
         position: 3,
         name: product.name,
-        item: `https://moreltechnologyrd.com/productos/${product.id}`,
+        item: `https://moreltechnologyrd.com${productUrl(product.id, product.name)}`,
       }] : []),
     ],
   };

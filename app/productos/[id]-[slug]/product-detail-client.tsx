@@ -109,13 +109,14 @@ export default function ProductDetailClient({ id, initialProduct }: ProductDetai
   return (
     <div className="min-h-screen pt-24 pb-16">
       <div className="container mx-auto px-4 md:px-6">
-        <Link
-          href="/catalogo"
-          className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-8 group"
-        >
-          <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          Volver al catálogo
-        </Link>
+        {/* Breadcrumbs */}
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
+          <Link href="/" className="hover:text-primary transition-colors">Inicio</Link>
+          <span>/</span>
+          <Link href="/catalogo" className="hover:text-primary transition-colors">Catálogo</Link>
+          <span>/</span>
+          <span className="text-foreground font-medium truncate max-w-[200px]">{product.name}</span>
+        </nav>
 
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
           {/* Left Column: Images */}

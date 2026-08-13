@@ -89,7 +89,7 @@
 - [ ] Optimizar nombres de imágenes ← URLs son hashes, no descriptivos
 - [x] Agregar ALT a las imágenes
 - [ ] Agregar productos relacionados ← NO EXISTE
-- [ ] Agregar breadcrumbs ← NO EXISTEN
+- [x] Agregar breadcrumbs ← Visuales + JSON-LD BreadcrumbList
 - [ ] Implementar Product Schema ← NO EXISTE
 - [ ] Implementar Offer Schema ← NO EXISTE
 - [ ] Implementar Brand Schema ← NO EXISTE
