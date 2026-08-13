@@ -102,7 +102,12 @@ export function Footer() {
                 <li key={branch.id} className="flex items-start gap-3">
                   <MapPin className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                   <div className="flex flex-col gap-1">
-                    <span className="font-medium text-foreground">{branch.name.replace('Sucursal ', '')}</span>
+                    <Link
+                      href={branch.id === "moreltechnology" ? "/tienda-laptops-santo-domingo" : "/tienda-laptops-santiago"}
+                      className="font-medium text-foreground hover:text-primary transition-colors"
+                    >
+                      {branch.name.replace('Sucursal ', '')}
+                    </Link>
                     <span>{branch.address.split(',')[0]}</span>
                     <span className="flex items-center gap-1"><Phone className="h-3 w-3" /> {branch.phone}</span>
                   </div>
