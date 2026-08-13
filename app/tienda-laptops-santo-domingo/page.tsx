@@ -30,7 +30,7 @@ export default async function TiendaSantoDomingoPage() {
     },
     {
       q: "¿Tienen laptops usadas en Santo Domingo?",
-      a: "Sí, contamos con una amplia selección de laptops usadas certificadas (Grado A) de marcas como Lenovo, Dell y HP. Todas con garantía de 3 a 6 meses.",
+      a: "Sí, contamos con una amplia selección de laptops usadas certificadas (Grado A) de marcas como Lenovo, Dell y HP. Todas con garantía de 6 meses.",
     },
     {
       q: "¿Puedo comprar por WhatsApp desde Santo Domingo?",
@@ -133,7 +133,7 @@ export default async function TiendaSantoDomingoPage() {
           <h2 className="text-3xl font-black tracking-tight mb-12 text-center">¿Por qué comprar en <span className="text-primary">Santo Domingo</span>?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { icon: ShieldCheck, title: "Garantía Certificada", desc: "Todos nuestros equipos incluyen garantía real. Los usados tienen 3-6 meses; los nuevos hasta 1 año." },
+              { icon: ShieldCheck, title: "Garantía Certificada", desc: "Todos nuestros equipos incluyen garantía real. Los usados tienen 6 meses; los nuevos hasta 1 año." },
               { icon: Truck, title: "Envío Express", desc: "Recibe tu equipo hoy mismo en Santo Domingo. Servicio de delivery en el mismo día." },
               { icon: CreditCard, title: "Financiamiento", desc: "Aparta tu laptop con cuotas cómodas. Aprobación rápida con solo tu cédula." },
             ].map((b, i) => (

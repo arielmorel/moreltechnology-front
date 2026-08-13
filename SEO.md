@@ -47,7 +47,7 @@
 - [x] Verificar HTTPS
 - [ ] Verificar redirección www → dominio principal
 - [ ] Revisar errores 404
-- [ ] Crear página 404 personalizada
+- [x] Crear página 404 personalizada ← app/not-found.tsx
 - [ ] Revisar páginas indexadas por Google
 - [ ] Revisar páginas excluidas de Google
 - [ ] Revisar Core Web Vitals
@@ -100,13 +100,13 @@
 - [ ] Indexar productos disponibles
 ## 🔥 PRIORIDAD 3 — CATEGORÍAS SEO
 ### Marcas
-- [ ] Crear /laptops/lenovo
-- [ ] Crear /laptops/dell
-- [ ] Crear /laptops/hp
-- [ ] Crear /laptops/apple
-- [ ] Crear /laptops/asus
-- [ ] Crear /laptops/acer
-- [ ] Crear /laptops/razer
+- [x] Crear /laptops/lenovo ← Dinámica via /[brand]
+- [x] Crear /laptops/dell ← Dinámica via /[brand]
+- [x] Crear /laptops/hp ← Dinámica via /[brand]
+- [x] Crear /laptops/apple ← Dinámica via /[brand]
+- [x] Crear /laptops/asus ← Dinámica via /[brand]
+- [x] Crear /laptops/acer ← Dinámica via /[brand]
+- [x] Crear /laptops/razer ← Dinámica via /[brand]
 ### Tipo de laptop
 - [ ] Crear /laptops/gaming
 - [ ] Crear /laptops/empresariales
@@ -117,15 +117,15 @@
 - [ ] Crear /laptops/economicas
 - [ ] Crear /laptops/reacondicionadas
 ### Cada categoría debe tener
-- [ ] H1
-- [ ] Title SEO
-- [ ] Meta description
-- [ ] Texto introductorio
-- [ ] Productos
-- [ ] FAQs
-- [ ] Schema
-- [ ] Enlaces internos
-- [ ] Canonical
+- [x] H1 ← Generado dinámicamente
+- [x] Title SEO ← Generado dinámicamente por marca
+- [x] Meta description ← Generada dinámicamente por marca
+- [x] Texto introductorio ← Descripción larga por marca
+- [x] Productos ← Fetch desde API por marca
+- [x] FAQs ← 3 FAQs por marca
+- [x] Schema ← BreadcrumbList + FAQPage
+- [x] Enlaces internos ← Links a catálogo, WhatsApp, productos
+- [x] Canonical ← Generado dinámicamente
 ## 🔥 PRIORIDAD 4 — SEO LOCAL
 ### Santo Domingo
 - [x] Crear /tienda-laptops-santo-domingo ← CREADO

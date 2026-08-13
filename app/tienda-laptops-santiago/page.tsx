@@ -30,7 +30,7 @@ export default async function TiendaSantiagoPage() {
     },
     {
       q: "¿Tienen laptops usadas en Santiago?",
-      a: "Sí, tenemos una excelente selección de laptops usadas certificadas de marcas como Lenovo, Dell y HP. Todas con garantía de 3 a 6 meses.",
+      a: "Sí, tenemos una excelente selección de laptops usadas certificadas de marcas como Lenovo, Dell y HP. Todas con garantía de 6 meses.",
     },
     {
       q: "¿Puedo comprar por WhatsApp desde Santiago?",
@@ -133,7 +133,7 @@ export default async function TiendaSantiagoPage() {
           <h2 className="text-3xl font-black tracking-tight mb-12 text-center">¿Por qué comprar en <span className="text-primary">Santiago</span>?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { icon: ShieldCheck, title: "Garantía Certificada", desc: "Todos nuestros equipos incluyen garantía real. Los usados tienen 3-6 meses; los nuevos hasta 1 año." },
+              { icon: ShieldCheck, title: "Garantía Certificada", desc: "Todos nuestros equipos incluyen garantía real. Los usados tienen 6 meses; los nuevos hasta 1 año." },
               { icon: Truck, title: "Envío a todo el Cibao", desc: "Realizamos envíos a todas las provincias del Cibao en 24-48 horas a través de servicios de transporte confiables." },
               { icon: CreditCard, title: "Financiamiento", desc: "Aparta tu laptop con cuotas cómodas. Aprobación rápida con solo tu cédula." },
             ].map((b, i) => (

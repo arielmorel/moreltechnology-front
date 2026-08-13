@@ -23,7 +23,7 @@ const faqs = [
     icon: Truck,
     items: [
       {
-        q: "¿Realizan envíos al interior del país?",
+        q: "¿Hacen envíos a todo RD?",
         a: "Sí, realizamos envíos a todas las provincias de la República Dominicana a través de servicios de transporte como Metro Pac, Caribe Pack y BM Cargo. El tiempo de entrega suele ser de 24 a 48 horas laborables."
       },
       {
@@ -37,8 +37,8 @@ const faqs = [
     icon: ShieldCheck,
     items: [
       {
-        q: "¿Qué garantía tienen los equipos usados?",
-        a: "Todos nuestros equipos usados (Open Box / Grado A) incluyen una garantía real de 3 a 6 meses en piezas y servicios. Los equipos nuevos tienen 1 año de garantía directamente con el fabricante o con nosotros."
+        q: "¿Las laptops tienen garantía?",
+        a: "Sí, todos nuestros equipos tienen garantía. Los equipos nuevos tienen hasta 1 año de garantía con el fabricante. Los equipos usados certificados incluyen 6 meses de garantía en piezas y servicios."
       },
       {
         q: "¿Qué cubre la garantía?",
@@ -51,12 +51,16 @@ const faqs = [
     icon: CreditCard,
     items: [
       {
-        q: "¿Cuáles son los métodos de pago?",
-        a: "Aceptamos transferencias bancarias (Banreservas, BHD, Popular), pagos con tarjeta de crédito/débito (aplican comisiones de procesador) y efectivo."
+        q: "¿Aceptan tarjetas?",
+        a: "Sí, aceptamos tarjetas de crédito y débito (aplican comisiones de procesador de pago). También aceptamos transferencias bancarias (Banreservas, BHD, Popular) y efectivo."
       },
       {
-        q: "¿Cómo funciona el financiamiento?",
-        a: "Trabajamos con varias entidades financieras. Solo necesitas tu cédula, una cuenta bancaria activa y comprobante de ingresos. Puedes aplicar directamente en nuestra sección de 'Financiamiento'."
+        q: "¿Ofrecen financiamiento?",
+        a: "Sí, ofrecemos financiamiento con varias entidades financieras. Solo necesitas tu cédula, una cuenta bancaria activa y comprobante de ingresos. Puedes aplicar directamente en nuestra sección de 'Financiamiento'."
+      },
+      {
+        q: "¿Puedo comprar por WhatsApp?",
+        a: "¡Por supuesto! Puedes hacer tu pedido directamente por WhatsApp. Te asesoramos, te enviamos fotos reales del equipo y coordinamos la entrega o recogida en sucursal."
       }
     ]
   }

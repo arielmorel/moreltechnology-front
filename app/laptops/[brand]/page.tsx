@@ -22,7 +22,7 @@ const brands: Record<string, {
     longDescription: "Lenovo es una de las marcas líderes en tecnología a nivel mundial, reconocida por la durabilidad y rendimiento de sus equipos. En Morel Technology ofrecemos una amplia gama de laptops Lenovo para cada necesidad: desde la serie ThinkPad para profesionales, hasta la serie Legion para gaming.",
     faqs: [
       { q: "¿Qué series de Lenovo tienen?", a: "Trabajamos con ThinkPad (profesional), IdeaPad (uso general), Legion (gaming) y Yoga (convertibles). Cada serie está diseñada para un perfil de usuario específico." },
-      { q: "¿Las laptops Lenovo tienen garantía?", a: "Sí, todos nuestros equipos Lenovo incluyen garantía. Los nuevos tienen hasta 1 año y los usados de 3 a 6 meses." },
+      { q: "¿Las laptops Lenovo tienen garantía?", a: "Sí, todos nuestros equipos Lenovo incluyen garantía. Los nuevos tienen hasta 1 año y los usados 6 meses." },
       { q: "¿Puedo financiar una laptop Lenovo?", a: "¡Por supuesto! Ofrecemos financiamiento con varias entidades financieras. Aparta tu laptop Lenovo con cuotas cómodas." },
     ],
   },
