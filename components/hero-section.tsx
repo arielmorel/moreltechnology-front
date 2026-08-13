@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, MessageCircle, ShieldCheck, Users, Laptop } from "lucide-react";
+import { ArrowRight, MessageCircle, ShieldCheck, Users, Laptop, Banknote, Building2, CreditCard } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { WhatsAppDropdown } from "./whatsapp-dropdown";
@@ -125,6 +125,22 @@ export function HeroSection() {
             <span className="text-xl md:text-2xl font-black tracking-tighter text-foreground">APPLE</span>
             <span className="text-xl md:text-2xl font-black tracking-tighter text-foreground">ASUS</span>
             <span className="text-xl md:text-2xl font-black tracking-tighter text-foreground">RAZER</span>
+          </div>
+
+          {/* Payment Methods */}
+          <div className="flex flex-wrap justify-center items-center gap-6 md:gap-10 mt-8 pt-8 border-t border-border/30">
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Banknote className="w-5 h-5 text-green-600" />
+              <span className="text-sm font-medium">Efectivo</span>
+            </div>
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Building2 className="w-5 h-5 text-blue-600" />
+              <span className="text-sm font-medium">Transferencia Bancaria</span>
+            </div>
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <CreditCard className="w-5 h-5 text-primary" />
+              <span className="text-sm font-medium">Tarjetas de Crédito/Débito</span>
+            </div>
           </div>
         </motion.div>
       </div>
