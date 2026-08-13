@@ -38,7 +38,7 @@ export default async function TiendaSantiagoPage() {
     },
     {
       q: "¿Hacen envíos a otras provincias del Cibao?",
-      a: "Sí, realizamos envíos a todas las provincias del Cibao a través de MetroPac, Caribe Pack y BM Cargo. Llega en 24-48 horas.",
+      a: "Sí, realizamos envíos a todas las provincias del Cibao a través de MetroPac, Caribe Pack y BM Cargo. Llega en 24-48 horas. También tenemos motorizado privado en Santiago para entregas en el mismo día.",
     },
   ];
 

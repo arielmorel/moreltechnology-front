@@ -8,6 +8,7 @@ import { HelpCircle, MessageCircle, Truck, ShieldCheck, CreditCard } from "lucid
 import { WhatsAppDropdown } from "@/components/whatsapp-dropdown";
 import { WhatsApp } from "@/components/icons";
 import { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Preguntas Frecuentes - Morel Technology",
@@ -17,14 +18,14 @@ export const metadata: Metadata = {
   },
 };
 
-const faqs = [
+const faqs: { category: string; icon: React.ElementType; items: { q: string; a: React.ReactNode }[] }[] = [
   {
     category: "Envíos",
     icon: Truck,
     items: [
       {
         q: "¿Hacen envíos a todo RD?",
-        a: "Sí, realizamos envíos a todas las provincias de la República Dominicana a través de servicios de transporte como Metro Pac, Caribe Pack y BM Cargo. El tiempo de entrega suele ser de 24 a 48 horas laborables."
+        a: "Sí, realizamos envíos a todas las provincias de la República Dominicana a través de servicios de transporte como Metro Pac, Caribe Pack y BM Cargo. El tiempo de entrega suele ser de 24 a 48 horas laborables. También contamos con servicio de envío por motorizado privado en Santo Domingo y Santiago para entregas en el mismo día."
       },
       {
         q: "¿Cuál es el costo del envío?",
@@ -56,7 +57,7 @@ const faqs = [
       },
       {
         q: "¿Ofrecen financiamiento?",
-        a: "Sí, ofrecemos financiamiento con varias entidades financieras. Solo necesitas tu cédula, una cuenta bancaria activa y comprobante de ingresos. Puedes aplicar directamente en nuestra sección de 'Financiamiento'."
+        a: <>Sí, ofrecemos financiamiento con varias entidades financieras. Solo necesitas tu cédula, una cuenta bancaria activa y comprobante de ingresos. Puedes aplicar directamente en nuestra <Link href="/financiamiento" className="text-primary font-bold hover:underline">página de financiamiento</Link>.</>
       },
       {
         q: "¿Puedo comprar por WhatsApp?",
@@ -76,7 +77,7 @@ export default function FAQPage() {
         name: item.q,
         acceptedAnswer: {
           "@type": "Answer",
-          text: item.a,
+          text: typeof item.a === "string" ? item.a : "Sí, ofrecemos financiamiento. Visita nuestra página de financiamiento para más información.",
         },
       }))
     ),
