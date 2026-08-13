@@ -17,5 +17,5 @@ export function slugify(text: string): string {
 }
 
 export function productUrl(id: string, name: string): string {
-  return `/productos/${id}-${slugify(name)}`
+  return `/productos/${id}/${slugify(name)}`
 }

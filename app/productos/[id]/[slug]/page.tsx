@@ -1,20 +1,14 @@
 import { Metadata } from "next";
 import { getProductById } from "@/lib/api";
-import { slugify, productUrl } from "@/lib/utils";
+import { productUrl } from "@/lib/utils";
 import ProductDetailClient from "./product-detail-client";
 
 interface PageProps {
-  params: Promise<{ "id-slug": string }>;
-}
-
-function extractId(idSlug: string): string {
-  const dashIndex = idSlug.indexOf("-");
-  return dashIndex === -1 ? idSlug : idSlug.substring(0, dashIndex);
+  params: Promise<{ id: string; slug: string }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { "id-slug": idSlug } = await params;
-  const id = extractId(idSlug);
+  const { id } = await params;
   const product = await getProductById(id);
 
   if (!product) {
@@ -58,8 +52,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function ProductDetailPage({ params }: PageProps) {
-  const { "id-slug": idSlug } = await params;
-  const id = extractId(idSlug);
+  const { id } = await params;
   const product = await getProductById(id);
 
   const productSchema = product ? {
