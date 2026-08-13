@@ -1,5 +1,14 @@
 import { ShieldCheck, FileText, CheckCircle2, XCircle, Clock, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Garantía de Laptops - Morel Technology RD",
+  description: "Conoce nuestras políticas de garantía: equipos nuevos con 12 meses, usados con 3-6 meses. Diagnóstico gratis, factura fiscal incluida.",
+  alternates: {
+    canonical: "/garantia",
+  },
+};
 
 export default function GarantiaPage() {
   return (

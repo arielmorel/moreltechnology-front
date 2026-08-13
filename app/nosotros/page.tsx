@@ -1,5 +1,14 @@
 import { ShieldCheck, Users, Trophy, Target } from "lucide-react";
 import Image from "next/image";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Sobre Nosotros - Morel Technology República Dominicana",
+  description: "Conoce Morel Technology: más de 8 años vendiendo laptops en RD. 10k+ clientes satisfechos, 2 sucursales, garantía certificada y financiamiento.",
+  alternates: {
+    canonical: "/nosotros",
+  },
+};
 
 export default function NosotrosPage() {
   return (

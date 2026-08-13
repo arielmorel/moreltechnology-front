@@ -14,6 +14,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/contacto",
     "/nosotros",
     "/envios",
+    "/tienda-laptops-santo-domingo",
+    "/tienda-laptops-santiago",
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date().toISOString(),

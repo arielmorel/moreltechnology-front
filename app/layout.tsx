@@ -15,7 +15,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const SITE_URL = "https://moreltechnologyrd.com";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "Morel Technology - Laptops en República Dominicana",
   description: "Las mejores laptops para estudiar, trabajar y gaming en RD. Equipos nuevos y usados con garantía. Catálogo profesional con atención vía WhatsApp.",
   keywords: ["laptops RD", "laptops en santo domingo", "laptop gamer republica dominicana", "laptops usadas RD", "Morel Technology", "tienda de laptops", "comprar laptop RD"],
@@ -28,14 +31,23 @@ export const metadata: Metadata = {
     ],
     apple: "/apple-touch-icon.png",
   },
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     type: "website",
     locale: "es_DO",
-    url: "https://moreltechnology.com.do",
+    url: SITE_URL,
     title: "Morel Technology - Laptops en República Dominicana",
     description: "Las mejores laptops para estudiar, trabajar y gaming en RD. Equipos nuevos y usados con garantía.",
     siteName: "Morel Technology",
-    images: [{ url: "/og-image.png" }],
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Morel Technology - Laptops en República Dominicana" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Morel Technology - Laptops en República Dominicana",
+    description: "Las mejores laptops para estudiar, trabajar y gaming en RD. Equipos nuevos y usados con garantía.",
+    images: ["/og-image.png"],
   },
 };
 

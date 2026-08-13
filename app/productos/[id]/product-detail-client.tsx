@@ -187,7 +187,7 @@ export default function ProductDetailClient({ id, initialProduct }: ProductDetai
               </div>
               <p className="text-3xl md:text-4xl font-bold text-foreground">
                 ${product.price.toLocaleString()}
-                {product.originalPrice && (
+                {product.originalPrice != null && product.originalPrice > 0 && (
                   <span className="text-xl text-muted-foreground line-through ml-4 font-medium">
                     ${product.originalPrice.toLocaleString()}
                   </span>

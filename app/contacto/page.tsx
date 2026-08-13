@@ -3,6 +3,15 @@ import { Mail, MapPin, Phone, Clock } from "lucide-react";
 import { Facebook, Instagram, TikTok, GoogleMaps } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { WhatsAppDropdown } from "@/components/whatsapp-dropdown";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Contacto - Morel Technology República Dominicana",
+  description: "Contacta a Morel Technology en Santo Domingo o Santiago. WhatsApp, teléfono, correo y ubicaciones con Google Maps. Atención inmediata.",
+  alternates: {
+    canonical: "/contacto",
+  },
+};
 
 export default function ContactoPage() {
   return (

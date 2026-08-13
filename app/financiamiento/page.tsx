@@ -5,6 +5,9 @@ import { ShieldCheck, Clock, CheckCircle2 } from "lucide-react";
 export const metadata: Metadata = {
   title: "Solicitar Financiamiento - Morel Technology",
   description: "Aplica en línea para el financiamiento de tu próxima laptop. Aprobación rápida, requisitos simples y cuotas cómodas.",
+  alternates: {
+    canonical: "/financiamiento",
+  },
 };
 
 export default function FinanciamientoPage() {

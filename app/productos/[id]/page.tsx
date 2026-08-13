@@ -16,12 +16,22 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
+  const specs = [product.processor, product.ram, product.ssd].filter(s => s && s !== "N/A").join(", ");
+  const shortDescription = product.description.length > 155
+    ? product.description.substring(0, 152).trim() + "..."
+    : product.description;
+
+  const metaDescription = `${product.name} (${product.condition}) - ${product.brand}. ${specs}. Precio: RD$${product.price.toLocaleString()}. Garantía certificada en República Dominicana. Morel Technology.`;
+
   return {
     title: `${product.name} | Morel Technology`,
-    description: product.description,
+    description: metaDescription.substring(0, 160),
+    alternates: {
+      canonical: `/productos/${product.id}`,
+    },
     openGraph: {
-      title: `${product.name} - Laptops en RD`,
-      description: `Compra la laptop ${product.name} (${product.condition}) en Morel Technology. Calidad garantizada en República Dominicana.`,
+      title: `${product.name} | Morel Technology RD`,
+      description: shortDescription,
       images: [
         {
           url: product.images[0],
@@ -33,8 +43,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     twitter: {
       card: "summary_large_image",
-      title: product.name,
-      description: product.description,
+      title: `${product.name} | Morel Technology`,
+      description: metaDescription.substring(0, 200),
       images: [product.images[0]],
     },
   };
@@ -44,5 +54,64 @@ export default async function ProductDetailPage({ params }: PageProps) {
   const { id } = await params;
   const product = await getProductById(id);
 
-  return <ProductDetailClient id={id} initialProduct={product} />;
+  const productSchema = product ? {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description: product.description,
+    brand: {
+      "@type": "Brand",
+      name: product.brand,
+    },
+    image: product.images[0],
+    offers: {
+      "@type": "Offer",
+      price: product.price,
+      priceCurrency: "DOP",
+      availability: product.quantity > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      itemCondition: product.condition === "Nuevo" ? "https://schema.org/NewCondition" : "https://schema.org/UsedCondition",
+    },
+    category: product.category,
+  } : null;
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Inicio",
+        item: "https://moreltechnologyrd.com",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Catálogo",
+        item: "https://moreltechnologyrd.com/catalogo",
+      },
+      ...(product ? [{
+        "@type": "ListItem",
+        position: 3,
+        name: product.name,
+        item: `https://moreltechnologyrd.com/productos/${product.id}`,
+      }] : []),
+    ],
+  };
+
+  return (
+    <>
+      {productSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+        />
+      )}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <ProductDetailClient id={id} initialProduct={product} />
+    </>
+  );
 }

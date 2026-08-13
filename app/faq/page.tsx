@@ -7,6 +7,15 @@ import {
 import { HelpCircle, MessageCircle, Truck, ShieldCheck, CreditCard } from "lucide-react";
 import { WhatsAppDropdown } from "@/components/whatsapp-dropdown";
 import { WhatsApp } from "@/components/icons";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Preguntas Frecuentes - Morel Technology",
+  description: "Resolvemos tus dudas sobre laptops, envíos, garantía, pagos y financiamiento en Morel Technology República Dominicana.",
+  alternates: {
+    canonical: "/faq",
+  },
+};
 
 const faqs = [
   {
@@ -54,6 +63,21 @@ const faqs = [
 ];
 
 export default function FAQPage() {
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.flatMap(group =>
+      group.items.map(item => ({
+        "@type": "Question",
+        name: item.q,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: item.a,
+        },
+      }))
+    ),
+  };
+
   return (
     <div className="min-h-screen pt-24 pb-16">
       <div className="container mx-auto px-4 md:px-6 max-w-4xl">
@@ -108,6 +132,11 @@ export default function FAQPage() {
         </div>
 
       </div>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
     </div>
   );
 }
