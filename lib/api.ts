@@ -109,3 +109,18 @@ export const getProductById = async (id: string): Promise<Product | null> => {
     return null;
   }
 };
+
+export const getProductsByBrand = async (brand: string): Promise<Product[]> => {
+  try {
+    const response = await axios.get<ApiResponse>(API_URL, {
+      params: { page: 0, size: 200, search: brand }
+    });
+
+    return response.data.content
+      .map(mapApiProductToProduct)
+      .filter(p => p.brand.toLowerCase() === brand.toLowerCase());
+  } catch (error) {
+    console.error(`Error fetching products for brand ${brand}:`, error);
+    return [];
+  }
+};

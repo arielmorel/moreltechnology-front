@@ -2,6 +2,8 @@ import { MetadataRoute } from "next";
 import { getProducts } from "@/lib/api";
 import { slugify } from "@/lib/utils";
 
+const brands = ["lenovo", "dell", "hp", "apple", "asus", "acer", "razer"];
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://moreltechnologyrd.com/";
 
@@ -24,19 +26,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: route === "" ? 1 : 0.8,
   }));
 
+  // Brand pages
+  const brandPages = brands.map((brand) => ({
+    url: `${baseUrl}/laptops/${brand}`,
+    lastModified: new Date().toISOString(),
+    changeFrequency: "weekly" as const,
+    priority: 0.8,
+  }));
+
   // Product pages
   try {
     const products = await getProducts();
     const productPages = (products as any).products.map((product: any) => ({
-      url: `${baseUrl}/productos/${product.id}-${slugify(product.name)}`,
+      url: `${baseUrl}/productos/${product.id}/${slugify(product.name)}`,
       lastModified: new Date().toISOString(),
       changeFrequency: "weekly" as const,
       priority: 0.6,
     }));
 
-    return [...staticPages, ...productPages];
+    return [...staticPages, ...brandPages, ...productPages];
   } catch (error) {
     console.error("Error generating sitemap products:", error);
-    return staticPages;
+    return [...staticPages, ...brandPages];
   }
 }
