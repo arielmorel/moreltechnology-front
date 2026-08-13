@@ -1,11 +1,17 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
-import { MapPin, Phone } from "lucide-react";
+import { MapPin, Phone, ArrowRight } from "lucide-react";
 import { Facebook, Instagram, TikTok } from "@/components/icons";
 
 import { branches } from "@/lib/data";
+
+const branchLinks: Record<string, string> = {
+  moreltechnology: "/tienda-laptops-santo-domingo",
+  mts: "/tienda-laptops-santiago",
+};
 
 export function BranchesSection() {
   return (
@@ -57,6 +63,13 @@ export function BranchesSection() {
                   </div>
 
                   <div className="pt-6 border-t border-border/50">
+                    <Link
+                      href={branchLinks[branch.id] || "/contacto"}
+                      className="inline-flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all mb-4"
+                    >
+                      Visitar sucursal
+                      <ArrowRight className="w-4 h-4" />
+                    </Link>
                     <p className="text-sm font-medium mb-4 text-muted-foreground">Nuestras Redes Sociales:</p>
                     <div className="flex gap-4">
                       <a
