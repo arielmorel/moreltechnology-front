@@ -58,7 +58,8 @@ export function Navbar() {
               alt="Morel Technology Logo"
               width={140}
               height={40}
-              className="object-contain"
+              className="object-contain h-10 w-auto"
+              style={{ width: "auto", height: "auto" }}
               priority
             />
           </Link>
