@@ -1,6 +1,7 @@
 import { MetadataRoute } from "next";
 import { getProducts } from "@/lib/api";
 import { slugify } from "@/lib/utils";
+import { getAllPosts } from "@/lib/blog";
 
 const brands = ["lenovo", "dell", "hp", "apple", "asus", "acer", "razer"];
 
@@ -34,6 +35,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
+  // Blog pages
+  const blogPages = getAllPosts().map((post) => ({
+    url: `${baseUrl}/blog/${post.slug}`,
+    lastModified: post.date,
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
   // Product pages
   try {
     const products = await getProducts();
@@ -44,9 +53,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     }));
 
-    return [...staticPages, ...brandPages, ...productPages];
+    return [...staticPages, ...brandPages, ...blogPages, ...productPages];
   } catch (error) {
     console.error("Error generating sitemap products:", error);
-    return [...staticPages, ...brandPages];
+    return [...staticPages, ...brandPages, ...blogPages];
   }
 }
