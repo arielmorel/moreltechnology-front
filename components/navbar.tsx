@@ -5,7 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Moon, Sun, Home, ShoppingBag, Sparkles, Tag, CreditCard, Users, Phone, MapPin, BookOpen } from "lucide-react";
+import { Menu, X, Moon, Sun, Home, ShoppingBag, Sparkles, Tag, CreditCard, Users, Phone, MapPin, BookOpen, Smartphone } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -18,6 +18,7 @@ const navLinks = [
   { name: "Recomendador", href: "/recomendador", icon: Sparkles },
   { name: "Ofertas", href: "/ofertas", icon: Tag },
   { name: "Sucursales", href: "/tienda-laptops-santo-domingo", icon: MapPin },
+  { name: "Apps", href: "/apps", icon: Smartphone },
   { name: "Blog", href: "/blog", icon: BookOpen },
   { name: "Financiamiento", href: "/financiamiento", icon: CreditCard },
   { name: "Nosotros", href: "/nosotros", icon: Users },
