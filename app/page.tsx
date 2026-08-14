@@ -1,19 +1,25 @@
 import { HeroSection } from "@/components/hero-section";
+import { HowItWorks } from "@/components/how-it-works";
 import { BenefitsSection } from "@/components/benefits-section";
 import { CategoriesSection } from "@/components/categories-section";
 import { FeaturedProducts } from "@/components/featured-products";
-import { ReviewsSection } from "@/components/reviews-section";
+import { HomeFAQ } from "@/components/home-faq";
 import { BranchesSection } from "@/components/branches-section";
+import { ReviewsSection } from "@/components/reviews-section";
+import { CTASection } from "@/components/cta-section";
 
 export default function Home() {
   return (
     <>
       <HeroSection />
+      <HowItWorks />
+      <FeaturedProducts />
       <BenefitsSection />
       <CategoriesSection />
-      <FeaturedProducts />
+      <HomeFAQ />
       <BranchesSection />
       <ReviewsSection />
+      <CTASection />
 
       <script
         type="application/ld+json"
@@ -77,6 +83,50 @@ export default function Home() {
               target: "https://moreltechnologyrd.com/catalogo?q={search_term_string}",
               "query-input": "required name=search_term_string",
             },
+          }),
+        }}
+      />
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: [
+              {
+                "@type": "Question",
+                name: "¿Qué garantía tienen las laptops?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Ofrecemos 6 meses de garantía en laptops usadas certificadas y 1 año en laptops nuevas. Toda garantía es por escrito y cubre defectos de hardware.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "¿Puedo pagar con tarjeta de crédito o débito?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Sí, aceptamos todas las tarjetas de crédito y débito (Visa, MasterCard, American Express). También puedes pagar en efectivo o por transferencia bancaria.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "¿Hacen envíos a todo el país?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Sí, realizamos envíos a todas las provincias de la República Dominicana a través de MetroPac, Caribe Pack y BM Cargo. En Santo Domingo y Santiago también contamos con delivery por motorizado privado.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "¿Puedo financiar mi compra?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Sí, contamos con opciones de financiamiento flexibles a través de varias entidades financieras. Solo necesitas tu cédula y comprobante de ingresos.",
+                },
+              },
+            ],
           }),
         }}
       />

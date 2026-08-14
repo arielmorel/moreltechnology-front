@@ -234,18 +234,18 @@
 - [ ] ¿Qué laptop recomiendan para gaming?
 - [ ] Implementar FAQ Schema donde corresponda
 ## 🟠 PRIORIDAD 8 — BLOG / CONTENIDO
-- [ ] Crear sección /blog
+- [x] Crear sección /blog ← CREADA con MDX
 - [ ] ¿Dónde comprar laptops en Santo Domingo?
 - [ ] ¿Dónde comprar laptops en Santiago?
 - [ ] ¿Cuánto cuesta una laptop en República Dominicana?
-- [ ] Mejores laptops económicas en RD
-- [ ] Mejores laptops para estudiantes
+- [x] Mejores laptops económicas en RD ← Artículo /blog/que-laptop-comprar-20000-pesos
+- [x] Mejores laptops para estudiantes ← Artikel /blog/mejores-laptops-estudiantes-rd
 - [ ] Mejores laptops para programación
 - [ ] Mejores laptops para diseño gráfico
 - [ ] Mejores laptops gaming
-- [ ] Lenovo vs Dell
+- [x] Lenovo vs Dell ← Artikel /blog/lenovo-vs-dell
 - [ ] Lenovo vs HP
-- [ ] ¿Qué laptop comprar con RD$20,000?
+- [ ] ¿Qué laptop comprar con RD$20,000? ← Ya cubierto en artículo de presupuesto
 - [ ] ¿Qué laptop comprar con RD$30,000?
 - [ ] ¿Qué laptop comprar con RD$40,000?
 - [ ] ¿Vale la pena comprar una laptop reacondicionada?
@@ -254,7 +254,7 @@
 - [ ] Cuánta RAM necesita una laptop
 - [ ] SSD vs HDD
 - [ ] Core i5 vs Core i7
-- [ ] Enlazar artículos con productos
+- [ ] Enlazar artículos con productos ← Ya tienen links a catálogo
 - [ ] Enlazar artículos con categorías
 - [ ] Agregar imágenes propias
 - [ ] Optimizar títulos
