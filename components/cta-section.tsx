@@ -5,10 +5,8 @@ import { MessageCircle } from "lucide-react";
 
 export function CTASection() {
   return (
-    <section className="py-24 relative overflow-hidden">
-      {/* Background - contrasts with page in both modes */}
-      <div className="absolute inset-0 bg-foreground" />
-      <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-[0.08]" />
+    <section className="py-24 relative overflow-hidden bg-neutral-950">
+      <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
       
       <div className="container mx-auto px-4 md:px-6 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
@@ -16,7 +14,7 @@ export function CTASection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-background/10 text-background/80 text-xs font-bold uppercase tracking-widest mb-8 backdrop-blur-sm"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-white/80 text-xs font-bold uppercase tracking-widest mb-8 backdrop-blur-sm"
           >
             <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
             Atención inmediata
@@ -27,7 +25,7 @@ export function CTASection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-background mb-6"
+            className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white mb-6"
           >
             ¿Listo para encontrar tu laptop ideal?
           </motion.h2>
@@ -37,7 +35,7 @@ export function CTASection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-background/70 text-lg md:text-xl max-w-2xl mx-auto mb-10"
+            className="text-white/70 text-lg md:text-xl max-w-2xl mx-auto mb-10"
           >
             Nuestro equipo está listo para asesorarte. Escríbenos ahora y recibe atención personalizada en minutos.
           </motion.p>
@@ -62,7 +60,7 @@ export function CTASection() {
               href="https://wa.me/18094215517"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-background/10 text-background font-bold text-lg hover:bg-background/20 transition-all hover:scale-105 backdrop-blur-sm border border-background/20"
+              className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-white/10 text-white font-bold text-lg hover:bg-white/20 transition-all hover:scale-105 backdrop-blur-sm border border-white/20"
             >
               <MessageCircle className="w-6 h-6" />
               WhatsApp Santiago
@@ -74,7 +72,7 @@ export function CTASection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.4 }}
-            className="mt-12 flex flex-wrap justify-center gap-8 text-background/60 text-sm"
+            className="mt-12 flex flex-wrap justify-center gap-8 text-white/60 text-sm"
           >
             <span className="flex items-center gap-2">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
