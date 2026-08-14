@@ -41,13 +41,13 @@ export const metadata: Metadata = {
     title: "Morel Technology - Laptops en República Dominicana",
     description: "Las mejores laptops para estudiar, trabajar y gaming en RD. Equipos nuevos y usados con garantía.",
     siteName: "Morel Technology",
-    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Morel Technology - Laptops en República Dominicana" }],
+    images: [{ url: `${SITE_URL}/og-image.png`, width: 1200, height: 630, alt: "Morel Technology - Laptops en República Dominicana" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Morel Technology - Laptops en República Dominicana",
     description: "Las mejores laptops para estudiar, trabajar y gaming en RD. Equipos nuevos y usados con garantía.",
-    images: ["/og-image.png"],
+    images: [`${SITE_URL}/og-image.png`],
   },
 };
 
