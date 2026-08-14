@@ -47,7 +47,7 @@ export function FeaturedProducts() {
               Nuestras mejores recomendaciones del mes. Equipos seleccionados por su excelente relación calidad-precio y rendimiento garantizado.
             </p>
           </div>
-          <Link href="/catalogo" className="group h-14 px-8 rounded-2xl bg-white border border-border/50 shadow-sm flex items-center gap-3 font-bold hover:bg-primary hover:text-white transition-all duration-300">
+          <Link href="/catalogo" className="group h-14 px-8 rounded-2xl bg-card border border-border/50 shadow-sm flex items-center gap-3 font-bold hover:bg-primary hover:text-primary-foreground transition-all duration-300">
             Ver catálogo completo 
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Link>

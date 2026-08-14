@@ -93,7 +93,7 @@ export function HowItWorks() {
               transition={{ delay: index * 0.15 }}
               className="relative"
             >
-              <div className="bg-card border border-border/50 rounded-3xl p-8 text-center hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 group h-full flex flex-col">
+              <div className="bg-card border border-border/50 rounded-3xl p-6 sm:p-8 text-center hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 group h-full flex flex-col">
                 {/* Step number */}
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-background border-2 border-border flex items-center justify-center text-xs font-black text-muted-foreground">
                   {step.number}

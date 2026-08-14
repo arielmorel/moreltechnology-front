@@ -16,7 +16,7 @@ export function ReviewsSection() {
   return (
     <section className="py-24 bg-background overflow-hidden">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="flex flex-col md:flex-row items-end justify-between mb-16 gap-8">
+        <div className="flex flex-col md:flex-row items-end justify-between mb-12 md:mb-16 gap-6 md:gap-8">
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-500/10 text-yellow-600 text-xs font-bold uppercase tracking-widest mb-6">
               <Star className="w-4 h-4 fill-current" />

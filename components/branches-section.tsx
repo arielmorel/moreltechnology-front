@@ -74,7 +74,7 @@ export function BranchesSection() {
                         href={branch.socials.instagram}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-2 bg-muted rounded-full hover:bg-red-50 hover:text-pink-500 transition-all"
+                        className="p-2 bg-muted rounded-full hover:bg-pink-500/10 hover:text-pink-500 transition-all"
                         aria-label="Instagram"
                       >
                         <Instagram size={18} />
@@ -83,7 +83,7 @@ export function BranchesSection() {
                         href={branch.socials.facebook}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-2 bg-muted rounded-full hover:bg-red-50 hover:text-blue-600 transition-all"
+                        className="p-2 bg-muted rounded-full hover:bg-blue-500/10 hover:text-blue-600 transition-all"
                         aria-label="Facebook"
                       >
                         <Facebook size={18} />
@@ -92,7 +92,7 @@ export function BranchesSection() {
                         href={branch.socials.tiktok}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-2 bg-muted rounded-full hover:bg-red-50 hover:text-black dark:hover:text-white transition-all"
+                        className="p-2 bg-muted rounded-full hover:bg-foreground/10 hover:text-foreground transition-all"
                         aria-label="TikTok"
                       >
                         <TikTok size={18} />

@@ -45,7 +45,7 @@ export function HomeFAQ() {
       <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-blue-500/5 blur-[120px] rounded-full" />
 
       <div className="container mx-auto px-4 md:px-6 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-16 max-w-6xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 max-w-6xl mx-auto">
           {/* Left side - Title */}
           <div className="flex flex-col justify-center">
             <motion.div
