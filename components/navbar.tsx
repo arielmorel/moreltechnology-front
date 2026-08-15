@@ -5,9 +5,9 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Moon, Sun, Home, ShoppingBag, Sparkles, Tag, CreditCard, Users, Phone, MapPin, BookOpen, Smartphone } from "lucide-react";
+import { Menu, X, Moon, Sun, Home, ShoppingBag, Sparkles, Tag, CreditCard, Users, Phone, MapPin, BookOpen, Smartphone, ChevronDown } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { WhatsAppDropdown } from "./whatsapp-dropdown";
 import { CartSheet } from "./cart-sheet";
 
@@ -16,12 +16,16 @@ const navLinks = [
   { name: "Catálogo", href: "/catalogo/moreltechnology", icon: ShoppingBag },
   { name: "Recomendador", href: "/recomendador", icon: Sparkles },
   { name: "Ofertas", href: "/ofertas", icon: Tag },
-  { name: "Sucursales", href: "/tienda/moreltechnology", icon: MapPin },
   { name: "Apps", href: "/apps", icon: Smartphone },
   { name: "Blog", href: "/blog", icon: BookOpen },
   { name: "Financiamiento", href: "/financiamiento", icon: CreditCard },
   { name: "Nosotros", href: "/nosotros", icon: Users },
   { name: "Contacto", href: "/contacto", icon: Phone },
+];
+
+const sucursalLinks = [
+  { name: "Santo Domingo", href: "/tienda/moreltechnology", icon: MapPin },
+  { name: "Santiago", href: "/tienda/mts", icon: MapPin },
 ];
 
 export function Navbar() {
@@ -30,6 +34,8 @@ export function Navbar() {
   const [mounted, setMounted] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [sucursalOpen, setSucursalOpen] = useState(false);
+  const sucursalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -50,6 +56,16 @@ export function Navbar() {
       document.body.style.overflow = "";
     };
   }, [mobileMenuOpen]);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (sucursalRef.current && !sucursalRef.current.contains(e.target as Node)) {
+        setSucursalOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <header
@@ -109,6 +125,49 @@ export function Navbar() {
               </Link>
             );
           })}
+
+          {/* Sucursales Dropdown */}
+          <div ref={sucursalRef} className="relative">
+            <button
+              onClick={() => setSucursalOpen(!sucursalOpen)}
+              className={cn(
+                "relative text-sm font-medium px-3 py-2 rounded-lg transition-colors flex items-center gap-2",
+                mounted && sucursalLinks.some(l => pathname === l.href)
+                  ? "text-foreground"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+              )}
+            >
+              <MapPin className={cn(
+                "w-3.5 h-3.5",
+                mounted && sucursalLinks.some(l => pathname === l.href) ? "text-foreground" : "text-muted-foreground"
+              )} />
+              Sucursales
+              <ChevronDown className={cn(
+                "w-3 h-3 transition-transform",
+                sucursalOpen && "rotate-180"
+              )} />
+            </button>
+            {sucursalOpen && (
+              <div className="absolute top-full right-0 mt-1 w-48 bg-card border border-border/50 rounded-xl shadow-xl py-1 z-50">
+                {sucursalLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setSucursalOpen(false)}
+                    className={cn(
+                      "flex items-center gap-3 px-4 py-2.5 text-sm font-medium transition-colors",
+                      mounted && pathname === link.href
+                        ? "bg-primary/10 text-primary"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    )}
+                  >
+                    <link.icon className="w-4 h-4" />
+                    {link.name}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
         </nav>
 
         <div className="hidden md:flex items-center gap-4">

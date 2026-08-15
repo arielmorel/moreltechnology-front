@@ -148,31 +148,27 @@ export default async function TiendaBranchPage({ params }: PageProps) {
   return (
     <div className="min-h-screen">
       {/* Hero */}
-      <section className="relative pt-32 pb-20 overflow-hidden bg-gradient-to-br from-primary via-primary/90 to-primary/70 text-white">
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }} />
-        </div>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -mr-48 -mt-48 blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full -ml-32 -mb-32 blur-2xl" />
+      <section className="relative pt-16 pb-20 overflow-hidden bg-background">
+        <div className="absolute inset-0 bg-gradient-to-br from-muted/50 via-background to-muted/30" />
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full -mr-64 -mt-64 blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-primary/5 rounded-full -ml-48 -mb-48 blur-3xl" />
         <div className="container mx-auto px-4 md:px-6 relative z-10">
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 backdrop-blur-sm text-sm font-bold uppercase tracking-widest mb-6 border border-white/20">
+          <div className="max-w-3xl pt-16">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-bold uppercase tracking-widest mb-6 border border-primary/20">
               <MapPin className="w-4 h-4" />
               {city}
             </div>
-            <h1 className="text-4xl md:text-6xl font-black tracking-tighter mb-6 leading-tight">
+            <h1 className="text-4xl md:text-6xl font-black tracking-tighter mb-6 leading-tight text-foreground">
               Tienda de Laptops en <br className="hidden md:block" />
-              <span className="text-white/60">{city}</span>
+              <span className="text-primary">{city}</span>
             </h1>
-            <p className="text-xl text-white/80 leading-relaxed mb-8 max-w-xl">
+            <p className="text-xl text-muted-foreground leading-relaxed mb-8 max-w-xl">
               La mejor tienda de tecnología {branch === "mts" ? "del Cibao" : "de Santo Domingo"}. Equipos nuevos y usados con garantía real, financiamiento accesible y envío a toda {branch === "mts" ? "la región norte" : "la ciudad"}.
             </p>
             <div className="flex flex-wrap gap-4">
               <WhatsAppDropdown
                 message={`Hola, estoy interesado en una laptop en la sucursal de ${city}.`}
-                className="h-14 px-8 rounded-2xl text-lg font-bold bg-white text-primary hover:bg-white/90 shadow-xl"
+                className="h-14 px-8 rounded-2xl text-lg font-bold shadow-xl shadow-primary/20"
               >
                 Consultar por WhatsApp
               </WhatsAppDropdown>
