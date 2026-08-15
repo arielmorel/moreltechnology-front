@@ -238,6 +238,27 @@ export function Navbar() {
               {link.name}
             </Link>
           ))}
+
+          {/* Mobile Sucursales */}
+          <div className="px-3 pt-1">
+            <div className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2 px-5">Sucursales</div>
+            {sucursalLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className={cn(
+                  "text-base font-semibold px-5 py-4 rounded-2xl transition-all active:scale-[0.98] flex items-center gap-4",
+                  mounted && pathname === link.href
+                    ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25"
+                    : "hover:bg-muted text-muted-foreground active:bg-muted/80"
+                )}
+              >
+                <link.icon className={cn("w-5 h-5", mounted && pathname === link.href ? "text-primary-foreground" : "text-primary")} />
+                {link.name}
+              </Link>
+            ))}
+          </div>
           <div className="px-4 pt-2 pb-1">
             {mounted && (
               <WhatsAppDropdown className="w-full rounded-full font-medium shadow-md" />
