@@ -1,5 +1,11 @@
 export type ProductCondition = "Nuevo" | "Usado - Como Nuevo" | "Usado - Buen Estado";
 
+export interface ProductPrice {
+  currency: string;
+  priceOut: number;
+  offerPrice: number | null;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -10,6 +16,7 @@ export interface Product {
   ssd: string;
   price: number;
   originalPrice?: number;
+  prices: ProductPrice[];
   condition: ProductCondition;
   images: string[];
   description: string;

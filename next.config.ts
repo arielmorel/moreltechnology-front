@@ -8,7 +8,10 @@ const nextConfig: NextConfig = {
         pathname: "/images/**",
       },
       {
-        pathname: "/*",
+        pathname: "/morel_technology_logo.png",
+      },
+      {
+        pathname: "/laptop.jpeg",
       },
     ],
     remotePatterns: [

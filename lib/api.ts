@@ -1,8 +1,12 @@
 import axios from "axios";
-import { Product, ProductCondition } from "./data";
+import { Product, ProductCondition, ProductPrice } from "./data";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8282";
 const DEFAULT_BRANCH = "moreltechnology";
+
+export const PAGE_SIZE_DEFAULT = 20;
+export const PAGE_SIZE_SEARCH = 10;
+export const PAGE_SIZE_ALL = 100;
 
 function getCatalogUrl(branchId?: string): string {
   const branch = branchId || DEFAULT_BRANCH;
@@ -28,7 +32,14 @@ export interface ApiProduct {
   quantity: number;
   tags: string[];
   pinned: boolean;
-
+  prices: {
+    id: string;
+    currency: string;
+    priceOut: number;
+    offerPrice: number | null;
+    isPrimary: boolean;
+    active: boolean;
+  }[];
 }
 
 export interface ApiResponse {
@@ -55,10 +66,20 @@ export const mapApiProductToProduct = (apiProduct: ApiProduct): Product => {
   else if (name.includes("razer")) brand = "Razer";
   else if (name.includes("msi")) brand = "MSI";
 
-  // Price logic: If offerPrice > 0, that's our main price and priceOut is the original
-  const hasOffer = apiProduct.offerPrice > 0;
-  const price = hasOffer ? apiProduct.offerPrice : apiProduct.priceOut;
-  const originalPrice = hasOffer ? apiProduct.priceOut : undefined;
+  const productPrices: ProductPrice[] = (apiProduct.prices || [])
+    .filter(p => p.active)
+    .map(p => ({
+      currency: p.currency,
+      priceOut: p.priceOut,
+      offerPrice: p.offerPrice,
+    }));
+
+  const dopPrice = productPrices.find(p => p.currency === "DOP");
+  const usdPrice = productPrices.find(p => p.currency === "USD");
+  const primaryPrice = dopPrice || usdPrice;
+
+  const price = primaryPrice ? (primaryPrice.offerPrice && primaryPrice.offerPrice > 0 ? primaryPrice.offerPrice : primaryPrice.priceOut) : apiProduct.priceOut;
+  const originalPrice = primaryPrice && primaryPrice.offerPrice && primaryPrice.offerPrice > 0 ? primaryPrice.priceOut : undefined;
 
   // Condition detection
   let condition: ProductCondition = "Nuevo";
@@ -79,6 +100,7 @@ export const mapApiProductToProduct = (apiProduct: ApiProduct): Product => {
     ssd: parts[2] || "N/A",
     price: price,
     originalPrice: originalPrice,
+    prices: productPrices,
     condition: condition,
     images: apiProduct.imageUrls && apiProduct.imageUrls.length > 0
       ? apiProduct.imageUrls
@@ -90,11 +112,14 @@ export const mapApiProductToProduct = (apiProduct: ApiProduct): Product => {
   };
 };
 
-export const getProducts = async (page = 0, size = 20, category?: string, branchId?: string): Promise<{ products: Product[], total: number }> => {
+export const getProducts = async (page = 0, size = PAGE_SIZE_DEFAULT, category?: string, branchId?: string, tags?: string): Promise<{ products: Product[], total: number }> => {
   try {
     const params: Record<string, string | number> = { page, size };
     if (category && category !== "todas") {
       params.category = category;
+    }
+    if (tags) {
+      params.tags = tags;
     }
     const response = await axios.get<ApiResponse>(getCatalogUrl(branchId), { params });
 
@@ -110,12 +135,9 @@ export const getProducts = async (page = 0, size = 20, category?: string, branch
 
 export const getProductById = async (id: string, branchId?: string): Promise<Product | null> => {
   try {
-    const response = await axios.get<ApiResponse>(getCatalogUrl(branchId), {
-      params: { page: 0, size: 200 }
-    });
-
-    const apiProduct = response.data.content.find(p => p.id.toString() === id);
-    return apiProduct ? mapApiProductToProduct(apiProduct) : null;
+    const catalogUrl = getCatalogUrl(branchId);
+    const response = await axios.get<ApiProduct>(`${catalogUrl}/${id}`);
+    return mapApiProductToProduct(response.data);
   } catch (error) {
     console.error(`Error fetching product ${id}:`, error);
     return null;
@@ -124,8 +146,9 @@ export const getProductById = async (id: string, branchId?: string): Promise<Pro
 
 export const getProductsByBrand = async (brand: string, branchId?: string): Promise<Product[]> => {
   try {
-    const response = await axios.get<ApiResponse>(getCatalogUrl(branchId), {
-      params: { page: 0, size: 200, search: brand }
+    const catalogUrl = getCatalogUrl(branchId);
+    const response = await axios.get<ApiResponse>(`${catalogUrl}/search`, {
+      params: { page: 0, size: PAGE_SIZE_DEFAULT, query: brand }
     });
 
     return response.data.content
@@ -137,11 +160,14 @@ export const getProductsByBrand = async (brand: string, branchId?: string): Prom
   }
 };
 
-export const searchProducts = async (query: string, page = 0, size = 20, category?: string, branchId?: string): Promise<{ products: Product[], total: number }> => {
+export const searchProducts = async (query: string, page = 0, size = PAGE_SIZE_DEFAULT, category?: string, branchId?: string, tags?: string): Promise<{ products: Product[], total: number }> => {
   try {
     const params: Record<string, string | number> = { query, page, size };
     if (category && category !== "todas") {
       params.category = category;
+    }
+    if (tags) {
+      params.tags = tags;
     }
     const response = await axios.get<ApiResponse>(`${getCatalogUrl(branchId)}/search`, { params });
 

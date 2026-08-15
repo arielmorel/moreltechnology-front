@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import Image from "next/image";
-import { getProducts } from "@/lib/api";
+import { getProducts, PAGE_SIZE_DEFAULT } from "@/lib/api";
 
 export const metadata = {
   title: "Laptops Gaming en República Dominicana | Morel Technology",
@@ -20,7 +20,7 @@ export const metadata = {
 };
 
 export default async function LaptopsGamingPage() {
-  const { products } = await getProducts(0, 100);
+  const { products } = await getProducts(0, PAGE_SIZE_DEFAULT, undefined, undefined, "gamer");
   const gamingProducts = products.filter(p => p.category === "gaming").slice(0, 6);
 
   return (
@@ -123,6 +123,21 @@ export default async function LaptopsGamingPage() {
                   </div>
                 )}
               </div>
+
+              {/* All Gaming Products */}
+              {products.length > gamingProducts.length && (
+                <div className="space-y-8 pt-10">
+                  <div className="flex items-center gap-4">
+                    <Gamepad2 className="w-8 h-8 text-primary" />
+                    <h3 className="text-3xl font-black">Todo el Inventario Gaming</h3>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    {products.map(product => (
+                      <ProductCard key={product.id} product={product} />
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Content Block 2 */}
               <div className="prose prose-lg dark:prose-invert max-w-none pt-10">

@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo } from "react";
 import { categories, Product } from "@/lib/data";
-import { getProducts } from "@/lib/api";
+import { getProducts, PAGE_SIZE_ALL } from "@/lib/api";
 import { ProductCard } from "@/components/product-card";
 import { Button } from "@/components/ui/button";
 import { 
@@ -50,7 +50,7 @@ export default function RecomendadorPage() {
   useEffect(() => {
     const loadProducts = async () => {
       setIsLoading(true);
-      const { products: fetchedProducts } = await getProducts(0, 100);
+      const { products: fetchedProducts } = await getProducts(0, PAGE_SIZE_ALL);
       setProducts(fetchedProducts);
       setIsLoading(false);
     };

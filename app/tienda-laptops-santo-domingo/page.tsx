@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import Script from "next/script";
-import { getProducts } from "@/lib/api";
+import { getProducts, PAGE_SIZE_DEFAULT } from "@/lib/api";
 import { TiendaSantoDomingoClient } from "@/components/tienda-santo-domingo-client";
 
 export const metadata: Metadata = {
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 export default async function TiendaSantoDomingoPage() {
-  const { products } = await getProducts(0, 20);
+        const { products } = await getProducts(0, PAGE_SIZE_DEFAULT);
 
   return (
     <>

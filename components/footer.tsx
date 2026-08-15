@@ -78,7 +78,7 @@ export function Footer() {
             <h2 className="font-semibold text-lg tracking-tight">Categorías</h2>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
-                <Link href="/catalogo/moreltechnology?categoria=gaming" className="hover:text-primary transition-colors">
+                <Link href="/laptops-gaming-rd" className="hover:text-primary transition-colors">
                   Gaming
                 </Link>
               </li>

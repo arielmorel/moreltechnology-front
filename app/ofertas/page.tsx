@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Product } from "@/lib/data";
-import { getProducts } from "@/lib/api";
+import { getProducts, PAGE_SIZE_ALL } from "@/lib/api";
 import { ProductCard } from "@/components/product-card";
 import { ProductCardSkeleton } from "@/components/product-card-skeleton";
 import { BadgePercent, Sparkles } from "lucide-react";
@@ -15,7 +15,7 @@ export default function OfertasPage() {
     const loadDeals = async () => {
       setIsLoading(true);
       try {
-        const { products } = await getProducts(0, 100);
+        const { products } = await getProducts(0, PAGE_SIZE_ALL);
         // Filtramos solo los que tienen precio original (están en oferta)
         const filteredDeals = products.filter(p => p.originalPrice && p.originalPrice > p.price);
         setDeals(filteredDeals);

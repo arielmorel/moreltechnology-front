@@ -134,6 +134,7 @@ export default function ProductDetailClient({ id, initialProduct }: ProductDetai
                 src={product.images[activeImage]}
                 alt={product.name}
                 fill
+                unoptimized={product.images[activeImage].includes("localhost:9000")}
                 className="object-contain p-8 md:p-12"
                 priority
               />
@@ -178,7 +179,7 @@ export default function ProductDetailClient({ id, initialProduct }: ProductDetai
                       activeImage === idx ? "border-primary shadow-lg scale-95" : "border-border/50 hover:border-primary/50"
                     )}
                   >
-                    <Image src={img} alt={`${product.name} ${idx + 1}`} fill className="object-cover" />
+                    <Image src={img} alt={`${product.name} ${idx + 1}`} fill unoptimized={img.includes("localhost:9000")} className="object-cover" />
                   </button>
                 ))}
               </div>
@@ -186,7 +187,7 @@ export default function ProductDetailClient({ id, initialProduct }: ProductDetai
           </div>
 
           {/* Right Column: Content */}
-          <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-6">
             <div className="space-y-4">
               <div className="space-y-2">
                 <p className="text-primary font-bold tracking-widest uppercase text-sm">{product.brand}</p>
@@ -194,14 +195,45 @@ export default function ProductDetailClient({ id, initialProduct }: ProductDetai
                   {product.name}
                 </h2>
               </div>
-              <p className="text-3xl md:text-4xl font-bold text-foreground">
-                ${product.price.toLocaleString("es-DO")}
-                {product.originalPrice != null && product.originalPrice > 0 && (
-                  <span className="text-xl text-muted-foreground line-through ml-4 font-medium">
-                    ${product.originalPrice.toLocaleString("es-DO")}
-                  </span>
-                )}
-              </p>
+
+              {/* Prices */}
+              <div className="flex flex-col gap-1">
+                {(product.prices || []).filter(p => p.priceOut > 0).map((p) => {
+                  const symbol = p.currency === "USD" ? "US$" : "RD$";
+                  const hasDiscount = p.offerPrice != null && p.offerPrice > 0;
+                  const displayPrice = hasDiscount ? p.offerPrice! : p.priceOut;
+                  return (
+                    <div key={p.currency} className="flex items-baseline gap-2">
+                      <span className={cn(
+                        "font-bold",
+                        p.currency === "USD" ? "text-lg text-muted-foreground" : "text-3xl md:text-4xl text-foreground",
+                        hasDiscount && "text-red-600"
+                      )}>
+                        {symbol} {displayPrice.toLocaleString("es-DO")}
+                      </span>
+                      {hasDiscount && (
+                        <span className="text-sm text-muted-foreground line-through">
+                          {symbol} {p.priceOut.toLocaleString("es-DO")}
+                        </span>
+                      )}
+                      {p.currency === "USD" && (
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground bg-muted px-1.5 py-0.5 rounded">USD</span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Tags */}
+              {product.tags.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {product.tags.map((tag) => (
+                    <span key={tag} className="text-xs font-semibold uppercase tracking-wider px-2.5 py-1 bg-primary/10 text-primary rounded-lg">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="grid grid-cols-2 gap-3 md:gap-4">
