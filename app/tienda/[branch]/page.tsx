@@ -148,20 +148,25 @@ export default async function TiendaBranchPage({ params }: PageProps) {
   return (
     <div className="min-h-screen">
       {/* Hero */}
-      <section className="relative pt-32 pb-20 overflow-hidden bg-primary text-white">
-        <div className="absolute inset-0 opacity-10">
-          <MapPin className="w-full h-full scale-150 -translate-x-1/4 translate-y-1/4" />
+      <section className="relative pt-32 pb-20 overflow-hidden bg-gradient-to-br from-primary via-primary/90 to-primary/70 text-white">
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          }} />
         </div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -mr-48 -mt-48 blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full -ml-32 -mb-32 blur-2xl" />
         <div className="container mx-auto px-4 md:px-6 relative z-10">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 text-xs font-bold uppercase tracking-widest mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 backdrop-blur-sm text-sm font-bold uppercase tracking-widest mb-6 border border-white/20">
               <MapPin className="w-4 h-4" />
               {city}
             </div>
-            <h1 className="text-4xl md:text-6xl font-black tracking-tighter mb-6">
-              Tienda de Laptops en <span className="text-black/30">{city}</span>
+            <h1 className="text-4xl md:text-6xl font-black tracking-tighter mb-6 leading-tight">
+              Tienda de Laptops en <br className="hidden md:block" />
+              <span className="text-white/60">{city}</span>
             </h1>
-            <p className="text-xl text-primary-foreground/80 leading-relaxed mb-8">
+            <p className="text-xl text-white/80 leading-relaxed mb-8 max-w-xl">
               La mejor tienda de tecnología {branch === "mts" ? "del Cibao" : "de Santo Domingo"}. Equipos nuevos y usados con garantía real, financiamiento accesible y envío a toda {branch === "mts" ? "la región norte" : "la ciudad"}.
             </p>
             <div className="flex flex-wrap gap-4">
