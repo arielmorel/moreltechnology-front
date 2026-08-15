@@ -78,28 +78,69 @@ export function Footer() {
             <h2 className="font-semibold text-lg tracking-tight">Categorías</h2>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
-                <Link href="/laptops-gaming-rd" className="hover:text-primary transition-colors">
+                <Link href="/laptops/gaming" className="hover:text-primary transition-colors">
                   Gaming
                 </Link>
               </li>
               <li>
-                <Link href="/catalogo/moreltechnology?categoria=oficina" className="hover:text-primary transition-colors">
-                  Oficina & Productividad
+                <Link href="/laptops/programacion" className="hover:text-primary transition-colors">
+                  Programación
                 </Link>
               </li>
               <li>
-                <Link href="/catalogo/moreltechnology?categoria=estudiantes" className="hover:text-primary transition-colors">
+                <Link href="/laptops/estudiantes" className="hover:text-primary transition-colors">
                   Estudiantes
                 </Link>
               </li>
               <li>
-                <Link href="/catalogo/moreltechnology?categoria=diseno" className="hover:text-primary transition-colors">
-                  Diseño Gráfico
+                <Link href="/laptops/diseno" className="hover:text-primary transition-colors">
+                  Diseño & Arquitectura
                 </Link>
               </li>
               <li>
-                <Link href="/catalogo/moreltechnology?categoria=apple" className="hover:text-primary transition-colors">
-                  MacBooks
+                <Link href="/laptops/oficina" className="hover:text-primary transition-colors">
+                  Oficina
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div className="space-y-4">
+            <h2 className="font-semibold text-lg tracking-tight">Marcas</h2>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li>
+                <Link href="/laptops/dell" className="hover:text-primary transition-colors">
+                  Dell
+                </Link>
+              </li>
+              <li>
+                <Link href="/laptops/lenovo" className="hover:text-primary transition-colors">
+                  Lenovo
+                </Link>
+              </li>
+              <li>
+                <Link href="/laptops/hp" className="hover:text-primary transition-colors">
+                  HP
+                </Link>
+              </li>
+              <li>
+                <Link href="/laptops/apple" className="hover:text-primary transition-colors">
+                  Apple (MacBook)
+                </Link>
+              </li>
+              <li>
+                <Link href="/laptops/asus" className="hover:text-primary transition-colors">
+                  ASUS
+                </Link>
+              </li>
+              <li>
+                <Link href="/laptops/acer" className="hover:text-primary transition-colors">
+                  Acer
+                </Link>
+              </li>
+              <li>
+                <Link href="/laptops/razer" className="hover:text-primary transition-colors">
+                  Razer
                 </Link>
               </li>
             </ul>

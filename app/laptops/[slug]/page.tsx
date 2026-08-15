@@ -2,8 +2,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Script from "next/script";
-import { getProductsByBrand } from "@/lib/api";
-import { productUrl } from "@/lib/utils";
+import { getProducts, getProductsByBrand, PAGE_SIZE_ALL } from "@/lib/api";
 import { ProductCard } from "@/components/product-card";
 import { WhatsAppDropdown } from "@/components/whatsapp-dropdown";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -75,7 +74,7 @@ const brands: Record<string, {
     name: "Acer",
     title: "Laptops Acer en República Dominicana | Morel Technology",
     description: "Compra laptops Acer en RD. Predator, Nitro, Aspire, Swift. Garantía certificada, financiamiento y envío a todo el país.",
-    longDescription: "Acer ofrece laptops para todos los presupuestos, desde la serie Predator para gaming de alta gama hasta la serie Aspire para uso diario economically. En Morel Technology tenemos las mejores laptops Acer con garantía local.",
+    longDescription: "Acer ofrece laptops para todos los presupuestos, desde la serie Predator para gaming de alta gama hasta la serie Aspire para uso diario. En Morel Technology tenemos las mejores laptops Acer con garantía local.",
     faqs: [
       { q: "¿Acer Predator es buena para gaming?", a: "Sí, la serie Predator es la línea gaming premium de Acer, con componentes de alto rendimiento y sistemas de enfriamiento avanzados." },
       { q: "¿Qué es la serie Nitro?", a: "Acer Nitro es la línea gaming de rango medio, ofreciendo excelente relación calidad-precio para gamers que buscan potencia sin gastar de más." },
@@ -95,40 +94,135 @@ const brands: Record<string, {
   },
 };
 
+const categories: Record<string, {
+  name: string;
+  title: string;
+  description: string;
+  longDescription: string;
+  tags: string[];
+  faqs: { q: string; a: string }[];
+}> = {
+  gaming: {
+    name: "Gaming",
+    title: "Laptops Gaming en República Dominicana | Morel Technology",
+    description: "Compra las mejores laptops gaming en RD. ASUS ROG, Razer, Alienware y más. Garantía certificada, financiamiento y envío a todo el país.",
+    longDescription: "El mundo del gaming ha evolucionado y hoy en día, una laptop gaming en República Dominicana no es solo para jugar; es una estación de trabajo móvil para creadores de contenido, ingenieros y arquitectos. La potencia de procesamiento que ofrecen marcas como ASUS ROG, Razer y Dell Alienware supera a muchas computadoras de escritorio tradicionales.",
+    tags: ["gamer", "gaming"],
+    faqs: [
+      { q: "¿Qué specs necesita una laptop gaming?", a: "Mínimo 16GB RAM, procesador Intel i7 o AMD Ryzen 7, y tarjeta gráfica dedicada (NVIDIA RTX 3060 o superior). Para gaming competitivo recomendamos 32GB RAM y RTX 4070." },
+      { q: "¿Las laptops gaming son buenas para trabajo?", a: "Sí! La potencia de una laptop gaming la hace ideal para edición de video, diseño 3D, programación pesada y cualquier tarea que requiera alto rendimiento." },
+      { q: "¿Ofrecen garantía en laptops gaming?", a: "Sí, todas nuestras laptops gaming incluyen garantía de 6 meses a 1 año según el estado del equipo." },
+    ],
+  },
+  programacion: {
+    name: "Programación",
+    title: "Laptops para Programar en República Dominicana | Morel Technology",
+    description: "Laptops para desarrollo de software en RD. 16GB+ RAM, procesadores potentes. Docker, VS Code y más.",
+    longDescription: "Sabemos que como desarrollador, tu laptop no es un gasto, es tu herramienta de producción. Encuentra equipos que soporten Docker, VS Code y compilación pesada sin despeinarse. En Morel Technology tenemos las mejores laptops para programar en RD con garantía local.",
+    tags: ["programacion", "developer"],
+    faqs: [
+      { q: "¿Cuánta RAM necesito para programar?", a: "Mínimo 16GB para desarrollo web. Si usas Docker, VMs o Android Studio, recomendamos 32GB para un flujo de trabajo sin interrupciones." },
+      { q: "¿Mac o Windows para programar?", a: "Depende de tu stack. macOS es ideal para iOS/web development. Windows/Linux es mejor para .NET, game development y DevOps. Ambas opciones son excelentes." },
+      { q: "¿Qué procesador es mejor para desarrollo?", a: "Intel Core i7/i9 o Apple Silicon M1/M2/M3. Para compilación pesada y containers, los chips Apple Silicon ofrecen mejor rendimiento por vatio." },
+    ],
+  },
+  estudiantes: {
+    name: "Estudiantes",
+    title: "Laptops para Estudiantes en República Dominicana | Morel Technology",
+    description: "Laptops económicas para estudiantes en RD. Garantía, financiamiento y envío a todo el país.",
+    longDescription: "En Morel Technology sabemos que un estudiante necesita una laptop confiable sin romper el presupuesto. Ofrecemos laptops para estudiantes en RD que combinan portabilidad, batería duradera y rendimiento suficiente para tareas académicas, investigaciones y proyectos.",
+    tags: ["estudiantes", "estudio"],
+    faqs: [
+      { q: "¿Cuánto debe costar una laptop para estudiantes?", a: "Desde RD$15,000 hasta RD$35,000 puedes encontrar excelentes opciones. Lo importante es que tenga al menos 8GB de RAM y SSD para que sea rápida." },
+      { q: "¿Necesito una laptop potente para la universidad?", a: "Depende de la carrera. Para derecho, administración o humanidades, con 8GB RAM y un procesador i5 es suficiente. Para ingeniería o arquitectura, necesitarás más potencia." },
+      { q: "¿Tienen opciones de financiamiento para estudiantes?", a: "Sí! Ofrecemos facilidades de pago para que puedas tener tu laptop sin esperar. Consulta las opciones disponibles." },
+    ],
+  },
+  diseno: {
+    name: "Diseño y Arquitectura",
+    title: "Laptops para Diseño y Arquitectura en República Dominicana | Morel Technology",
+    description: "Laptops para diseño gráfico, arquitectura y edición en RD. Pantallas de alta calidad y GPU potente.",
+    longDescription: "Los diseñadores gráficos, arquitectos y creadores de contenido necesitan laptops con pantallas de color preciso y tarjetas gráficas potentes para ejecutar Adobe Creative Suite, AutoCAD, Revit y Blender sin problemas. En Morel Technology tenemos las mejores laptops para diseño en RD.",
+    tags: ["diseno", "arquitectura", "diseño"],
+    faqs: [
+      { q: "¿Qué GPU necesito para diseño?", a: "Para diseño gráfico 2D, con Intel Iris X o AMD Radeon es suficiente. Para 3D, video editing y arquitectura, necesitas NVIDIA RTX con al menos 6GB VRAM." },
+      { q: "¿Son buenas las MacBook para diseño?", a: "Excelentes. Los chips Apple Silicon ofrecen rendimiento excepcional para Adobe Creative Suite y la pantalla Retina tiene excelente reproducción de color." },
+      { q: "¿Puedo correr AutoCAD en una laptop?", a: "Sí, con al menos 16GB RAM y una GPU dedicada. Para renderizado 3D en Revit, recomendamos 32GB RAM y RTX 3060 o superior." },
+    ],
+  },
+  oficina: {
+    name: "Oficina",
+    title: "Laptops de Oficina en República Dominicana | Morel Technology",
+    description: "Laptops para trabajo de oficina en RD. Excelente batería, portabilidad y rendimiento para productividad.",
+    longDescription: "Para el día a día en la oficina, necesitas una laptop que combine portabilidad, batería duradera y rendimiento suficiente para multitarea con Excel, Word, PowerPoint y navegadores. En Morel Technology ofrecemos laptops de oficina en RD con garantía local.",
+    tags: ["oficina", "productividad", "trabajo"],
+    faqs: [
+      { q: "¿Qué specs para una laptop de oficina?", a: "8GB RAM mínimo (16GB recomendado), procesador Intel i5 o superior, SSD de 256GB y buena batería. No necesitas GPU dedicada." },
+      { q: "¿Cuánto dura la batería?", a: "Nuestras laptops de oficina ofrecen entre 6 y 12 horas de batería, dependiendo del modelo y uso. Las series Dell Latitude y Lenovo ThinkPad tienen la mejor duración." },
+      { q: "¿Cuál es la mejor laptop para oficina?", a: "Depende del presupuesto. Dell Latitude, Lenovo ThinkPad y HP EliteBook son las más confiables para entornos corporativos." },
+    ],
+  },
+};
+
+function isBrand(slug: string): boolean {
+  return slug in brands;
+}
+
+function isCategory(slug: string): boolean {
+  return slug in categories;
+}
+
 interface PageProps {
-  params: Promise<{ brand: string }>;
+  params: Promise<{ slug: string }>;
+}
+
+export async function generateStaticParams() {
+  const brandSlugs = Object.keys(brands);
+  const categorySlugs = Object.keys(categories);
+  return [...brandSlugs, ...categorySlugs].map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { brand } = await params;
-  const brandData = brands[brand.toLowerCase()];
+  const { slug } = await params;
+  const brandData = brands[slug];
+  const categoryData = categories[slug];
 
-  if (!brandData) {
-    return { title: "Marca no encontrada | Morel Technology" };
-  }
-
-  return {
-    title: brandData.title,
-    description: brandData.description,
-    alternates: {
-      canonical: `/laptops/${brand}`,
-    },
-    openGraph: {
+  if (brandData) {
+    return {
       title: brandData.title,
       description: brandData.description,
-    },
-  };
+      alternates: { canonical: `/laptops/${slug}` },
+      openGraph: { title: brandData.title, description: brandData.description },
+    };
+  }
+
+  if (categoryData) {
+    return {
+      title: categoryData.title,
+      description: categoryData.description,
+      alternates: { canonical: `/laptops/${slug}` },
+      openGraph: { title: categoryData.title, description: categoryData.description },
+    };
+  }
+
+  return { title: "No encontrada | Morel Technology" };
 }
 
-export default async function BrandPage({ params }: PageProps) {
-  const { brand } = await params;
-  const brandData = brands[brand.toLowerCase()];
+export default async function LaptopSlugPage({ params }: PageProps) {
+  const { slug } = await params;
+  const brandData = brands[slug];
+  const categoryData = categories[slug];
 
-  if (!brandData) {
+  if (!brandData && !categoryData) {
     notFound();
   }
 
-  const products = await getProductsByBrand(brandData.name);
+  const isBrandPage = !!brandData;
+  const data = brandData || categoryData!;
+
+  const products = isBrandPage
+    ? await getProductsByBrand(brandData!.name)
+    : (await getProducts(0, PAGE_SIZE_ALL, undefined, undefined, categoryData!.tags[0])).products;
 
   const breadcrumbSchema = {
     "@context": "https://schema.org",
@@ -136,19 +230,23 @@ export default async function BrandPage({ params }: PageProps) {
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Inicio", item: "https://moreltechnologyrd.com" },
       { "@type": "ListItem", position: 2, name: "Laptops", item: "https://moreltechnologyrd.com/catalogo" },
-      { "@type": "ListItem", position: 3, name: brandData.name, item: `https://moreltechnologyrd.com/laptops/${brand}` },
+      { "@type": "ListItem", position: 3, name: data.name, item: `https://moreltechnologyrd.com/laptops/${slug}` },
     ],
   };
 
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: brandData.faqs.map(faq => ({
+    mainEntity: data.faqs.map(faq => ({
       "@type": "Question",
       name: faq.q,
       acceptedAnswer: { "@type": "Answer", text: faq.a },
     })),
   };
+
+  const whatsappMessage = isBrandPage
+    ? `Hola, estoy interesado en una laptop ${data.name}. ¿Qué tienen disponible?`
+    : `Hola, estoy buscando una laptop para ${data.name.toLowerCase()}. ¿Qué tienen disponible?`;
 
   return (
     <div className="min-h-screen">
@@ -160,7 +258,7 @@ export default async function BrandPage({ params }: PageProps) {
             <span>/</span>
             <Link href="/catalogo" className="hover:text-primary transition-colors">Laptops</Link>
             <span>/</span>
-            <span className="text-foreground font-medium">{brandData.name}</span>
+            <span className="text-foreground font-medium">{data.name}</span>
           </nav>
         </div>
       </div>
@@ -171,20 +269,20 @@ export default async function BrandPage({ params }: PageProps) {
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest mb-6">
               <Tag className="w-4 h-4" />
-              {brandData.name}
+              {data.name}
             </div>
             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-6">
-              Laptops {brandData.name} en <span className="text-primary">República Dominicana</span>
+              {isBrandPage ? `Laptops ${data.name}` : `Laptops ${data.name}`} en <span className="text-primary">República Dominicana</span>
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-              {brandData.longDescription}
+              {data.longDescription}
             </p>
             <div className="flex flex-wrap gap-4">
               <WhatsAppDropdown
-                message={`Hola, estoy interesado en una laptop ${brandData.name}. ¿Qué tienen disponible?`}
+                message={whatsappMessage}
                 className="h-14 px-8 rounded-2xl text-lg font-bold shadow-xl shadow-green-600/20"
               >
-                Consultar Inventario {brandData.name}
+                Consultar Inventario
               </WhatsAppDropdown>
             </div>
           </div>
@@ -206,7 +304,7 @@ export default async function BrandPage({ params }: PageProps) {
           <div className="flex items-center justify-between mb-12">
             <div>
               <h2 className="text-3xl font-black tracking-tight">
-                Laptops {brandData.name} Disponibles
+                {isBrandPage ? `Laptops ${data.name} Disponibles` : `Laptops para ${data.name} Disponibles`}
               </h2>
               <p className="text-muted-foreground mt-2">
                 {products.length > 0
@@ -224,10 +322,12 @@ export default async function BrandPage({ params }: PageProps) {
             </div>
           ) : (
             <div className="p-16 text-center bg-muted/30 rounded-[2rem] border border-dashed border-border/50 space-y-4">
-              <p className="text-xl font-bold">No tenemos laptops {brandData.name} en stock actualmente</p>
+              <p className="text-xl font-bold">
+                No tenemos {isBrandPage ? `laptops ${data.name}` : `laptops para ${data.name.toLowerCase()}`} en stock actualmente
+              </p>
               <p className="text-muted-foreground">Contáctanos por WhatsApp y te ayudamos a encontrar el equipo ideal.</p>
               <WhatsAppDropdown
-                message={`Hola, busco una laptop ${brandData.name}. ¿Tienen disponibilidad?`}
+                message={whatsappMessage}
                 className="h-12 px-6 rounded-xl font-bold"
               >
                 Consultar Disponibilidad
@@ -241,10 +341,12 @@ export default async function BrandPage({ params }: PageProps) {
       <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4 md:px-6 max-w-3xl">
           <h2 className="text-3xl font-black tracking-tight mb-12 text-center">
-            Preguntas Frecuentes sobre {brandData.name}
+            {isBrandPage
+              ? `Preguntas Frecuentes sobre ${data.name}`
+              : `Preguntas Frecuentes sobre Laptops para ${data.name}`}
           </h2>
           <Accordion className="space-y-4">
-            {brandData.faqs.map((faq, i) => (
+            {data.faqs.map((faq, i) => (
               <AccordionItem key={i} value={`faq-${i}`} className="border border-border/50 bg-card rounded-2xl px-6 overflow-hidden">
                 <AccordionTrigger className="hover:no-underline py-6 font-semibold text-left">{faq.q}</AccordionTrigger>
                 <AccordionContent className="text-muted-foreground pb-6 leading-relaxed">{faq.a}</AccordionContent>
@@ -258,9 +360,13 @@ export default async function BrandPage({ params }: PageProps) {
       <section className="py-20 text-center bg-primary text-primary-foreground">
         <div className="container mx-auto px-4 md:px-6 max-w-2xl space-y-6">
           <h2 className="text-3xl font-bold">¿No encontraste lo que buscas?</h2>
-          <p className="text-primary-foreground/80">Escríbenos y te ayudamos a encontrar la laptop {brandData.name} perfecta para ti.</p>
+          <p className="text-primary-foreground/80">
+            {isBrandPage
+              ? `Escríbenos y te ayudamos a encontrar la laptop ${data.name} perfecta para ti.`
+              : `Escríbenos y te ayudamos a encontrar la laptop ideal para ${data.name.toLowerCase()}.`}
+          </p>
           <WhatsAppDropdown
-            message={`Hola, necesito ayuda para elegir una laptop ${brandData.name}.`}
+            message={whatsappMessage}
             className="h-14 px-8 rounded-2xl text-lg font-bold bg-white text-primary hover:bg-white/90 shadow-xl"
           >
             Hablar con un asesor
@@ -269,8 +375,8 @@ export default async function BrandPage({ params }: PageProps) {
       </section>
 
       {/* Schemas */}
-      <Script id="brand-breadcrumb-schema" type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
-      <Script id="brand-faq-schema" type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <Script id="laptop-breadcrumb-schema" type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <Script id="laptop-faq-schema" type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
     </div>
   );
 }
