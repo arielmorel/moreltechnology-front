@@ -38,7 +38,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 src={product.images[0]}
                 alt={product.name}
                 fill
-                unoptimized={product.images[0].includes("localhost:9000")}
+                unoptimized={product.images[0].includes("minio") || product.images[0].includes("localhost:9000")}
                 className="object-cover transition-transform duration-500 group-hover:scale-110"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />

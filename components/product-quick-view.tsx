@@ -55,7 +55,7 @@ export function ProductQuickView({ product, children }: ProductQuickViewProps) {
                         src={image}
                         alt={`${product.name} - Imagen ${index + 1}`}
                         fill
-                        unoptimized={image.includes("localhost:9000")}
+                        unoptimized={image.includes("minio") || image.includes("localhost:9000")}
                         className="object-cover"
                         sizes="(max-width: 768px) 100vw, 50vw"
                         priority

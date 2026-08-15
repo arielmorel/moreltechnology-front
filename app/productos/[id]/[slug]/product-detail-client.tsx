@@ -134,7 +134,7 @@ export default function ProductDetailClient({ id, initialProduct }: ProductDetai
                 src={product.images[activeImage]}
                 alt={product.name}
                 fill
-                unoptimized={product.images[activeImage].includes("localhost:9000")}
+                unoptimized={product.images[activeImage].includes("minio") || product.images[activeImage].includes("localhost:9000")}
                 className="object-contain p-8 md:p-12"
                 priority
               />
@@ -179,7 +179,7 @@ export default function ProductDetailClient({ id, initialProduct }: ProductDetai
                       activeImage === idx ? "border-primary shadow-lg scale-95" : "border-border/50 hover:border-primary/50"
                     )}
                   >
-                    <Image src={img} alt={`${product.name} ${idx + 1}`} fill unoptimized={img.includes("localhost:9000")} className="object-cover" />
+                    <Image src={img} alt={`${product.name} ${idx + 1}`} fill unoptimized={img.includes("minio") || img.includes("localhost:9000")} className="object-cover" />
                   </button>
                 ))}
               </div>

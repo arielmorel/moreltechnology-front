@@ -31,6 +31,7 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "minio.sm.novuswise.com",
+        port: "9000",
       },
       {
         protocol: "https",

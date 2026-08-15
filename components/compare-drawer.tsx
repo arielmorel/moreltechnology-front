@@ -42,7 +42,7 @@ export function CompareDrawer() {
                 {compareItems.map((item) => (
                   <div key={item.id} className="relative group">
                     <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl border-2 border-background overflow-hidden bg-muted">
-                      <Image src={item.images[0]} alt={item.name} fill className="object-cover" />
+                      <Image src={item.images[0]} alt={item.name} fill unoptimized={item.images[0].includes("minio") || item.images[0].includes("localhost:9000")} className="object-cover" />
                     </div>
                     <button 
                       onClick={() => removeFromCompare(item.id)}
@@ -91,7 +91,7 @@ export function CompareDrawer() {
                             <th key={item.id} className="p-4 min-w-[200px]">
                               <div className="flex flex-col items-center gap-4 text-center">
                                 <div className="relative w-32 h-32 rounded-2xl overflow-hidden bg-muted border border-border/50">
-                                  <Image src={item.images[0]} alt={item.name} fill className="object-cover" />
+                                  <Image src={item.images[0]} alt={item.name} fill unoptimized={item.images[0].includes("minio") || item.images[0].includes("localhost:9000")} className="object-cover" />
                                 </div>
                                 <div className="space-y-1">
                                   <Badge variant="outline" className="text-[10px] uppercase tracking-widest">{item.brand}</Badge>
