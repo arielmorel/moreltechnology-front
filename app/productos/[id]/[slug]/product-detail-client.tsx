@@ -210,6 +210,7 @@ export default function ProductDetailClient({ id, initialProduct }: ProductDetai
                     <ShieldCheck className="w-3 h-3" />
                     {product.condition}
                   </Badge>
+                  <ConditionGuide />
                 </div>
                 <h2 className="text-3xl md:text-5xl font-black tracking-tight text-foreground leading-tight">
                   {product.name}
