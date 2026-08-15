@@ -16,7 +16,7 @@ const navLinks = [
   { name: "Catálogo", href: "/catalogo/moreltechnology", icon: ShoppingBag },
   { name: "Recomendador", href: "/recomendador", icon: Sparkles },
   { name: "Ofertas", href: "/ofertas", icon: Tag },
-  { name: "Sucursales", href: "/tienda-laptops-santo-domingo", icon: MapPin },
+  { name: "Sucursales", href: "/tienda/moreltechnology", icon: MapPin },
   { name: "Apps", href: "/apps", icon: Smartphone },
   { name: "Blog", href: "/blog", icon: BookOpen },
   { name: "Financiamiento", href: "/financiamiento", icon: CreditCard },

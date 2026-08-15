@@ -154,7 +154,7 @@ export function Footer() {
                   <MapPin className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                   <div className="flex flex-col gap-1">
                     <Link
-                      href={branch.id === "moreltechnology" ? "/tienda-laptops-santo-domingo" : "/tienda-laptops-santiago"}
+                      href={`/tienda/${branch.id}`}
                       className="font-medium text-foreground hover:text-primary transition-colors"
                     >
                       {branch.name.replace('Sucursal ', '')}

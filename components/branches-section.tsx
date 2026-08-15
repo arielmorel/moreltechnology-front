@@ -7,8 +7,8 @@ import { Facebook, Instagram, TikTok } from "@/components/icons";
 import { branches } from "@/lib/data";
 
 const branchLinks: Record<string, string> = {
-  moreltechnology: "/tienda-laptops-santo-domingo",
-  mts: "/tienda-laptops-santiago",
+  moreltechnology: "/tienda/moreltechnology",
+  mts: "/tienda/mts",
 };
 
 export function BranchesSection() {

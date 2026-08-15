@@ -32,7 +32,7 @@ const faqs = [
   },
   {
     question: "¿Dónde están ubicados?",
-    answer: "Tenemos dos sucursales: en Santo Domingo (El Edén de Villa Mella) y en Santiago (Plaza Pamela 3). Puedes <a href='/tienda-laptops-santo-domingo' class='text-primary font-semibold hover:underline'>ver ubicaciones con mapas aquí</a>.",
+    answer: "Tenemos dos sucursales: en Santo Domingo (El Edén de Villa Mella) y en Santiago (Plaza Pamela 3). Puedes <a href='/tienda/moreltechnology' class='text-primary font-semibold hover:underline'>ver ubicaciones con mapas aquí</a>.",
   },
 ];
 
