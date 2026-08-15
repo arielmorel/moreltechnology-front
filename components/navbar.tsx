@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Menu, X, Moon, Sun, Home, ShoppingBag, Sparkles, Tag, CreditCard, Users, Phone, MapPin, BookOpen, Smartphone } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { WhatsAppDropdown } from "./whatsapp-dropdown";
 import { CartSheet } from "./cart-sheet";
 
@@ -37,9 +36,20 @@ export function Navbar() {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileMenuOpen]);
 
   return (
     <header
@@ -56,10 +66,9 @@ export function Navbar() {
             <Image
               src="/morel_technology_logo.png"
               alt="Morel Technology Logo"
-              width={140}
-              height={40}
-              className="object-contain h-10 w-auto"
-              style={{ width: "auto", height: "auto" }}
+              width={120}
+              height={32}
+              className="object-contain h-7 md:h-8 w-auto"
               priority
             />
           </Link>
@@ -112,6 +121,7 @@ export function Navbar() {
               size="icon"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="rounded-full"
+              aria-label="Cambiar tema de color"
             >
               {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </Button>
@@ -128,42 +138,37 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Navigation */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-b bg-background/95 backdrop-blur-md"
-          >
-            <nav className="container mx-auto px-4 py-4 flex flex-col gap-4">
-              {navLinks.map((link) => (
-                <motion.div key={link.href} whileTap={{ scale: 0.98 }}>
-                  <Link
-                    href={link.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={cn(
-                      "text-base font-semibold px-5 py-4 rounded-2xl transition-all flex items-center gap-4",
-                      pathname === link.href
-                        ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25"
-                        : "hover:bg-muted text-muted-foreground active:bg-muted/80"
-                    )}
-                  >
-                    <link.icon className={cn("w-5 h-5", pathname === link.href ? "text-primary-foreground" : "text-primary")} />
-                    {link.name}
-                  </Link>
-                </motion.div>
-              ))}
-              <div className="px-4 pt-2 pb-1">
-                {mounted && (
-                  <WhatsAppDropdown className="w-full rounded-full font-medium shadow-md" />
-                )}
-              </div>
-            </nav>
-          </motion.div>
+      {/* Mobile Navigation - CSS transitions, no forced reflow */}
+      <div
+        className={cn(
+          "md:hidden border-b bg-background/95 backdrop-blur-md overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out",
+          mobileMenuOpen ? "max-h-[80vh] opacity-100" : "max-h-0 opacity-0"
         )}
-      </AnimatePresence>
+      >
+        <nav className="container mx-auto px-4 py-4 flex flex-col gap-4">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={() => setMobileMenuOpen(false)}
+              className={cn(
+                "text-base font-semibold px-5 py-4 rounded-2xl transition-all active:scale-[0.98] flex items-center gap-4",
+                pathname === link.href
+                  ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25"
+                  : "hover:bg-muted text-muted-foreground active:bg-muted/80"
+              )}
+            >
+              <link.icon className={cn("w-5 h-5", pathname === link.href ? "text-primary-foreground" : "text-primary")} />
+              {link.name}
+            </Link>
+          ))}
+          <div className="px-4 pt-2 pb-1">
+            {mounted && (
+              <WhatsAppDropdown className="w-full rounded-full font-medium shadow-md" />
+            )}
+          </div>
+        </nav>
+      </div>
     </header>
   );
 }

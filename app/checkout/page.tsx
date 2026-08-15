@@ -63,7 +63,7 @@ export default function CheckoutPage() {
   };
 
   const sendWhatsApp = () => {
-    const message = `Hola Morel Technology! 👋\n\nAcabo de realizar un pedido en la web.\n\n*Orden:* ${orderId}\n*Cliente:* ${formData.name}\n*Total:* RD$ ${totalPrice().toLocaleString()}\n*Método:* Transferencia Bancaria\n\nAquí adjunto mi comprobante de pago.`;
+    const message = `Hola Morel Technology! 👋\n\nAcabo de realizar un pedido en la web.\n\n*Orden:* ${orderId}\n*Cliente:* ${formData.name}\n*Total:* RD$ ${totalPrice().toLocaleString("es-DO")}\n*Método:* Transferencia Bancaria\n\nAquí adjunto mi comprobante de pago.`;
     window.open(`https://wa.me/18096175517?text=${encodeURIComponent(message)}`, "_blank");
     clearCart();
   };
@@ -78,6 +78,7 @@ export default function CheckoutPage() {
           <h2 className="text-2xl font-bold">Tu carrito está vacío</h2>
           <p className="text-muted-foreground">Agrega algunos productos para continuar con el pago.</p>
           <Button
+            nativeButton={false}
             render={<Link href="/catalogo" />}
             className="rounded-2xl px-8 h-12"
           >
@@ -416,7 +417,7 @@ export default function CheckoutPage() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="font-bold truncate">{item.name}</p>
-                            <p className="text-muted-foreground text-xs">{item.quantity} x RD$ {item.price.toLocaleString()}</p>
+                            <p className="text-muted-foreground text-xs">{item.quantity} x RD$ {item.price.toLocaleString("es-DO")}</p>
                           </div>
                         </div>
                       ))}
@@ -427,7 +428,7 @@ export default function CheckoutPage() {
                     <div className="space-y-2 pt-2">
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Subtotal</span>
-                        <span className="font-medium">RD$ {totalPrice().toLocaleString()}</span>
+                        <span className="font-medium">RD$ {totalPrice().toLocaleString("es-DO")}</span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Envío</span>
@@ -437,7 +438,7 @@ export default function CheckoutPage() {
                       <div className="flex justify-between items-end">
                         <span className="font-bold">Total del Pedido</span>
                         <div className="text-right">
-                          <div className="text-2xl font-black text-primary">RD$ {totalPrice().toLocaleString()}</div>
+                          <div className="text-2xl font-black text-primary">RD$ {totalPrice().toLocaleString("es-DO")}</div>
                         </div>
                       </div>
                     </div>

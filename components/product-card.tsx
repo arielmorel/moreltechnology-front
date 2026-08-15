@@ -93,14 +93,14 @@ export function ProductCard({ product }: ProductCardProps) {
             <div className="flex flex-col">
               {product.originalPrice && (
                 <span className="text-[10px] text-muted-foreground line-through decoration-primary/30">
-                  RD$ {product.originalPrice.toLocaleString()}
+                  RD$ {product.originalPrice.toLocaleString("es-DO")}
                 </span>
               )}
               <span className={cn(
                 "text-xl font-bold transition-colors",
                 product.originalPrice ? "text-red-600" : "text-primary"
               )}>
-                RD$ {product.price.toLocaleString()}
+                RD$ {product.price.toLocaleString("es-DO")}
               </span>
             </div>
             <div className="flex gap-2">

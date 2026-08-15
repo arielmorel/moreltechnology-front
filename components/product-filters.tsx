@@ -155,7 +155,7 @@ export function ProductFilters({
         <div className="flex items-center justify-between">
           <label className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">Presupuesto</label>
           <span className="text-xs font-bold text-primary bg-primary/10 px-2 py-1 rounded-md">
-            ${priceRange[0].toLocaleString()} - ${priceRange[1].toLocaleString()}
+            ${priceRange[0].toLocaleString("es-DO")} - ${priceRange[1].toLocaleString("es-DO")}
           </span>
         </div>
         <div className="px-2">
@@ -170,7 +170,7 @@ export function ProductFilters({
         </div>
         <div className="flex justify-between text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-1">
           <span>Min: $0</span>
-          <span>Max: ${maxPrice.toLocaleString()}</span>
+          <span>Max: ${maxPrice.toLocaleString("es-DO")}</span>
         </div>
       </div>
 

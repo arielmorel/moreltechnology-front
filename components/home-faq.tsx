@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { HelpCircle } from "lucide-react";
 import {
   Accordion,
@@ -48,39 +47,17 @@ export function HomeFAQ() {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 max-w-6xl mx-auto">
           {/* Left side - Title */}
           <div className="flex flex-col justify-center">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest mb-6 w-fit"
-            >
+            <div className="animate-slide-right inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest mb-6 w-fit">
               <HelpCircle className="w-4 h-4" />
               Preguntas Frecuentes
-            </motion.div>
-            <motion.h2
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="text-4xl md:text-5xl font-black tracking-tight mb-6"
-            >
+            </div>
+            <h2 className="animate-slide-right-delay-1 text-4xl md:text-5xl font-black tracking-tight mb-6">
               ¿Tienes dudas?
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="text-muted-foreground text-lg leading-relaxed mb-8"
-            >
+            </h2>
+            <p className="animate-slide-right-delay-2 text-muted-foreground text-lg leading-relaxed mb-8">
               Resolvemos las preguntas más comunes de nuestros clientes. Si no encuentras lo que buscas, escríbenos por WhatsApp.
-            </motion.p>
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
-            >
+            </p>
+            <div className="animate-slide-right-delay-3">
               <a
                 href="https://wa.me/18096175517"
                 target="_blank"
@@ -92,16 +69,11 @@ export function HomeFAQ() {
                 </svg>
                 Escribir por WhatsApp
               </a>
-            </motion.div>
+            </div>
           </div>
 
           {/* Right side - FAQ */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-          >
+          <div className="animate-slide-left-delay-2">
             <Accordion className="space-y-3">
               {faqs.map((faq, index) => (
                 <AccordionItem
@@ -127,7 +99,7 @@ export function HomeFAQ() {
                 Ver todas las preguntas frecuentes →
               </Link>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

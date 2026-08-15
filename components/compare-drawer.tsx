@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { useState, useEffect } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 
 export function CompareDrawer() {
   const { compareItems, removeFromCompare, clearCompare } = useCart();
@@ -26,12 +25,8 @@ export function CompareDrawer() {
   if (!mounted || compareItems.length === 0) return null;
 
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[90vw] max-w-2xl">
-      <AnimatePresence>
-        <motion.div 
-          initial={{ y: 100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 100, opacity: 0 }}
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[90vw] max-w-2xl animate-slide-up">
+        <div 
           className="bg-card/80 backdrop-blur-xl border border-primary/20 shadow-2xl rounded-3xl p-4 md:p-6"
         >
           <div className="flex flex-col md:flex-row items-center gap-6">
@@ -114,7 +109,7 @@ export function CompareDrawer() {
                           </td>
                           {compareItems.map(item => (
                             <td key={item.id} className="p-4 text-center">
-                              <span className="text-xl font-black text-primary">US${item.price.toLocaleString()}</span>
+                              <span className="text-xl font-black text-primary">US${item.price.toLocaleString("en-US")}</span>
                             </td>
                           ))}
                         </tr>
@@ -180,8 +175,7 @@ export function CompareDrawer() {
               </Dialog>
             </div>
           </div>
-        </motion.div>
-      </AnimatePresence>
+        </div>
     </div>
   );
 }

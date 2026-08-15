@@ -96,6 +96,7 @@ export default function ProductDetailClient({ id, initialProduct }: ProductDetai
           <h1 className="text-3xl font-bold">Producto no encontrado</h1>
           <p className="text-muted-foreground text-lg">Lo sentimos, el producto que buscas no existe o fue retirado.</p>
           <Button
+            nativeButton={false}
             render={<Link href="/catalogo" />}
             className="rounded-full px-8"
           >
@@ -187,10 +188,10 @@ export default function ProductDetailClient({ id, initialProduct }: ProductDetai
                 </h1>
               </div>
               <p className="text-3xl md:text-4xl font-bold text-foreground">
-                ${product.price.toLocaleString()}
+                ${product.price.toLocaleString("es-DO")}
                 {product.originalPrice != null && product.originalPrice > 0 && (
                   <span className="text-xl text-muted-foreground line-through ml-4 font-medium">
-                    ${product.originalPrice.toLocaleString()}
+                    ${product.originalPrice.toLocaleString("es-DO")}
                   </span>
                 )}
               </p>
@@ -283,6 +284,7 @@ export default function ProductDetailClient({ id, initialProduct }: ProductDetai
               </div>
               <Button
                 variant="link"
+                nativeButton={false}
                 render={<Link href="/catalogo" className="text-primary font-bold p-0 text-lg group" />}
               >
                 Ver todo el catálogo

@@ -15,9 +15,9 @@ export function Footer() {
               <Image
                 src="/morel_technology_logo.png"
                 alt="Morel Technology Logo"
-                width={160}
-                height={50}
-                className="object-contain"
+                width={140}
+                height={36}
+                className="object-contain h-9 w-auto"
               />
             </Link>
             <p className="text-muted-foreground text-sm max-w-xs">

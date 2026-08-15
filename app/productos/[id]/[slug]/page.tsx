@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Script from "next/script";
 import { getProductById } from "@/lib/api";
 import { productUrl } from "@/lib/utils";
 import ProductDetailClient from "./product-detail-client";
@@ -22,7 +23,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     ? product.description.substring(0, 152).trim() + "..."
     : product.description;
 
-  const metaDescription = `${product.name} (${product.condition}) - ${product.brand}. ${specs}. Precio: RD$${product.price.toLocaleString()}. Garantía certificada en República Dominicana. Morel Technology.`;
+  const metaDescription = `${product.name} (${product.condition}) - ${product.brand}. ${specs}. Precio: RD$${product.price.toLocaleString("es-DO")}. Garantía certificada en República Dominicana. Morel Technology.`;
 
   return {
     title: `${product.name} | Morel Technology`,
@@ -103,13 +104,17 @@ export default async function ProductDetailPage({ params }: PageProps) {
   return (
     <>
       {productSchema && (
-        <script
+        <Script
+          id="product-schema"
           type="application/ld+json"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
         />
       )}
-      <script
+      <Script
+        id="product-breadcrumb-schema"
         type="application/ld+json"
+        strategy="beforeInteractive"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <ProductDetailClient id={id} initialProduct={product} />

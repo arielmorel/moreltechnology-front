@@ -31,6 +31,7 @@ export default function NotFound() {
           <Button
             size="lg"
             className="rounded-full font-medium h-12 px-8 shadow-lg"
+            nativeButton={false}
             render={<Link href="/" className="flex items-center gap-2" />}
           >
             <Home className="w-4 h-4" />
@@ -40,6 +41,7 @@ export default function NotFound() {
             variant="outline"
             size="lg"
             className="rounded-full font-medium h-12 px-8"
+            nativeButton={false}
             render={<Link href="/catalogo" className="flex items-center gap-2" />}
           >
             Ver catálogo

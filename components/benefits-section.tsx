@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Shield, Truck, HeadphonesIcon, CheckCircle2, CreditCard, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -61,47 +60,26 @@ export function BenefitsSection() {
 
       <div className="container mx-auto px-4 md:px-6 relative z-10">
         <div className="text-center mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest mb-6"
-          >
+          <div className="animate-slide-up inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest mb-6">
             <span className="w-2 h-2 rounded-full bg-primary" />
             ¿Por qué elegirnos?
-          </motion.div>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="text-4xl md:text-5xl font-black tracking-tight mb-4"
-          >
+          </div>
+          <h2 className="animate-slide-up-delay-1 text-4xl md:text-5xl font-black tracking-tight mb-4">
             Compra con confianza
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="text-muted-foreground text-lg max-w-2xl mx-auto"
-          >
+          </h2>
+          <p className="animate-slide-up-delay-2 text-muted-foreground text-lg max-w-2xl mx-auto">
             Nos comprometemos a brindarte la mejor experiencia de compra, con equipos de alta calidad y un servicio al cliente excepcional.
-          </motion.p>
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
           {benefits.map((benefit, index) => {
             const CardContent = (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className={cn(
-                  "flex flex-col items-center text-center p-6 h-full bg-card rounded-3xl border border-border/50 transition-all duration-300 group",
+              <div
+                className={`animate-slide-up flex flex-col items-center text-center p-6 h-full bg-card rounded-3xl border border-border/50 transition-all duration-300 group ${
                   benefit.href ? "hover:shadow-xl hover:shadow-primary/5 hover:border-primary/20 hover:-translate-y-1 cursor-pointer" : ""
-                )}
+                }`}
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
                 {/* Icon */}
                 <div className={cn("p-4 rounded-2xl mb-5 transition-transform group-hover:scale-110 group-hover:rotate-3", benefit.bgColor)}>
@@ -121,7 +99,7 @@ export function BenefitsSection() {
                     <ArrowRight className="w-4 h-4" />
                   </div>
                 )}
-              </motion.div>
+              </div>
             );
 
             if (benefit.href) {

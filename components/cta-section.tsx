@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { MessageCircle } from "lucide-react";
 
 export function CTASection() {
@@ -10,43 +9,20 @@ export function CTASection() {
       
       <div className="container mx-auto px-4 md:px-6 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-white/80 text-xs font-bold uppercase tracking-widest mb-8 backdrop-blur-sm"
-          >
+          <div className="animate-slide-up inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-white/80 text-xs font-bold uppercase tracking-widest mb-8 backdrop-blur-sm">
             <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
             Atención inmediata
-          </motion.div>
+          </div>
 
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white mb-6"
-          >
+          <h2 className="animate-slide-up-delay-1 text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white mb-6">
             ¿Listo para encontrar tu laptop ideal?
-          </motion.h2>
+          </h2>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="text-white/70 text-lg md:text-xl max-w-2xl mx-auto mb-10"
-          >
+          <p className="animate-slide-up-delay-2 text-white/70 text-lg md:text-xl max-w-2xl mx-auto mb-10">
             Nuestro equipo está listo para asesorarte. Escríbenos ahora y recibe atención personalizada en minutos.
-          </motion.p>
+          </p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-            className="flex flex-col gap-4 justify-center"
-          >
+          <div className="animate-slide-up-delay-3 flex flex-col gap-4 justify-center">
             <a
               href="https://wa.me/18096175517"
               target="_blank"
@@ -65,15 +41,9 @@ export function CTASection() {
               <MessageCircle className="w-6 h-6" />
               WhatsApp Santiago
             </a>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4 }}
-            className="mt-12 flex flex-wrap justify-center gap-8 text-white/60 text-sm"
-          >
+          <div className="animate-slide-up-delay-4 mt-12 flex flex-wrap justify-center gap-8 text-white/60 text-sm">
             <span className="flex items-center gap-2">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -92,7 +62,7 @@ export function CTASection() {
               </svg>
               Sin compromiso
             </span>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

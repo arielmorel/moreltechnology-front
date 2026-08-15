@@ -2,7 +2,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Aplicaciones Móviles - Morel Technology República Dominicana",
-  description: "Descubre nuestras apps móviles para aprender conjugación de verbos en inglés, francés, alemán, italiano, portugués y español. Descarga gratuita y versión PRO disponible.",
+  description: "Apps para aprender conjugación de verbos en 6 idiomas. Descarga gratuita y versión PRO.",
   alternates: {
     canonical: "/apps",
   },

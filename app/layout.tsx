@@ -4,15 +4,18 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
+import { ClientProviders } from "@/components/client-providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const SITE_URL = "https://moreltechnologyrd.com";
@@ -20,7 +23,7 @@ const SITE_URL = "https://moreltechnologyrd.com";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "Morel Technology - Laptops en República Dominicana",
-  description: "Las mejores laptops para estudiar, trabajar y gaming en RD. Equipos nuevos y usados con garantía. Catálogo profesional con atención vía WhatsApp.",
+  description: "Laptops nuevas y usadas con garantía en RD. Estudio, trabajo y gaming con atención por WhatsApp.",
   keywords: ["laptops RD", "laptops en santo domingo", "laptop gamer republica dominicana", "laptops usadas RD", "Morel Technology", "tienda de laptops", "comprar laptop RD"],
   authors: [{ name: "Morel Technology" }],
   creator: "Morel Technology",
@@ -33,27 +36,27 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "/",
+    languages: {
+      "es": "/",
+      "es-DO": "/",
+    },
   },
   openGraph: {
     type: "website",
     locale: "es_DO",
     url: SITE_URL,
     title: "Morel Technology - Laptops en República Dominicana",
-    description: "Las mejores laptops para estudiar, trabajar y gaming en RD. Equipos nuevos y usados con garantía.",
+    description: "Laptops nuevas y usadas con garantía en RD. Estudio, trabajo y gaming con atención por WhatsApp.",
     siteName: "Morel Technology",
     images: [{ url: `${SITE_URL}/og-image.png`, width: 1200, height: 630, alt: "Morel Technology - Laptops en República Dominicana" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Morel Technology - Laptops en República Dominicana",
-    description: "Las mejores laptops para estudiar, trabajar y gaming en RD. Equipos nuevos y usados con garantía.",
+    description: "Laptops nuevas y usadas con garantía en RD. Estudio, trabajo y gaming con atención por WhatsApp.",
     images: [`${SITE_URL}/og-image.png`],
   },
 };
-
-import { Toaster } from "@/components/ui/sonner";
-import { CompareDrawer } from "@/components/compare-drawer";
-import { FloatingWhatsApp } from "@/components/floating-whatsapp";
 
 export default function RootLayout({
   children,
@@ -62,6 +65,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+      <head>
+        {/* Preconnect to external origins */}
+        <link rel="preconnect" href="https://minio.sm.novuswise.com" />
+        <link rel="preconnect" href="https://images.unsplash.com" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+
+        {/* Preload hero image for LCP */}
+        <link rel="preload" as="image" href="/laptop.jpeg" />
+
+        {/* Preload logo */}
+        <link rel="preload" as="image" href="/morel_technology_logo.png" />
+      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-primary/30">
         <ThemeProvider
           attribute="class"
@@ -74,9 +90,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
-          <Toaster position="bottom-right" />
-          <CompareDrawer />
-          <FloatingWhatsApp />
+          <ClientProviders />
         </ThemeProvider>
       </body>
     </html>

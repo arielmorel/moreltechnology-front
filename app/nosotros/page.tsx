@@ -4,7 +4,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Sobre Nosotros - Morel Technology República Dominicana",
-  description: "Conoce Morel Technology: más de 8 años vendiendo laptops en RD. 10k+ clientes satisfechos, 2 sucursales, garantía certificada y financiamiento.",
+  description: "Morel Technology: 8+ años vendiendo laptops en RD. 10k+ clientes, 2 sucursales, garantía y financiamiento.",
   alternates: {
     canonical: "/nosotros",
   },

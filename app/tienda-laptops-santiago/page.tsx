@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Script from "next/script";
 import { MapPin, Phone, Clock, ShieldCheck, Truck, CreditCard, MessageCircle } from "lucide-react";
 import { WhatsAppDropdown } from "@/components/whatsapp-dropdown";
 import { ProductCard } from "@/components/product-card";
@@ -10,7 +11,7 @@ const branch = branches.find(b => b.id === "mts")!;
 
 export const metadata: Metadata = {
   title: "Tienda de Laptops en Santiago | Morel Technology",
-  description: "Compra laptops nuevas y usadas en Santiago. Lenovo, Dell, HP, ASUS con garantía certificada. Financiamiento disponible. Visítanos en Plaza Pamela.",
+  description: "Laptops nuevas y usadas en Santiago con garantía. Lenovo, Dell, HP, ASUS. Financiamiento disponible.",
   alternates: {
     canonical: "/tienda-laptops-santiago",
   },
@@ -196,8 +197,10 @@ export default async function TiendaSantiagoPage() {
       </section>
 
       {/* LocalBusiness Schema */}
-      <script
+      <Script
+        id="santiago-schema"
         type="application/ld+json"
+        strategy="beforeInteractive"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",

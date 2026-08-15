@@ -1,36 +1,13 @@
-"use client";
-
-import { useState, useEffect, useRef } from "react";
 import { Product } from "@/lib/data";
-import { getProducts } from "@/lib/api";
 import { ProductCard } from "./product-card";
-import { ProductCardSkeleton } from "./product-card-skeleton";
 import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
 
-export function FeaturedProducts() {
-  const [featured, setFeatured] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const isInitialMount = useRef(true);
+interface FeaturedProductsProps {
+  products: Product[];
+}
 
-  useEffect(() => {
-    if (!isInitialMount.current) return;
-
-    const loadFeatured = async () => {
-      setIsLoading(true);
-      try {
-        const { products } = await getProducts(0, 20);
-        // Filter for pinned/featured or just take the first 4 if none are featured
-        const filtered = products.filter(p => p.featured).slice(0, 4);
-        setFeatured(filtered.length > 0 ? filtered : products.slice(0, 4));
-      } finally {
-        setIsLoading(false);
-        isInitialMount.current = false;
-      }
-    };
-    loadFeatured();
-  }, []);
-
+export function FeaturedProducts({ products }: FeaturedProductsProps) {
   return (
     <section className="py-24 bg-muted/30 relative overflow-hidden">
       <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-96 h-96 bg-primary/5 blur-[120px] rounded-full" />
@@ -54,13 +31,9 @@ export function FeaturedProducts() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {isLoading ? (
-            [...Array(4)].map((_, i) => <ProductCardSkeleton key={i} />)
-          ) : (
-            featured.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))
-          )}
+          {products.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
         </div>
       </div>
     </section>

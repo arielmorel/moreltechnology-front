@@ -8,6 +8,7 @@ import { HelpCircle, MessageCircle, Truck, ShieldCheck, CreditCard } from "lucid
 import { WhatsAppDropdown } from "@/components/whatsapp-dropdown";
 import { WhatsApp } from "@/components/icons";
 import { Metadata } from "next";
+import Script from "next/script";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -138,8 +139,10 @@ export default function FAQPage() {
 
       </div>
 
-      <script
+      <Script
+        id="faq-schema"
         type="application/ld+json"
+        strategy="beforeInteractive"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
     </div>

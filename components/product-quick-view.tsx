@@ -89,7 +89,7 @@ export function ProductQuickView({ product, children }: ProductQuickViewProps) {
             <div className="flex flex-col">
               {product.originalPrice && (
                 <span className="text-sm text-muted-foreground line-through decoration-red-500/30 font-medium">
-                  RD$ {product.originalPrice.toLocaleString()}
+                  RD$ {product.originalPrice.toLocaleString("es-DO")}
                 </span>
               )}
               <div className="flex items-baseline gap-3">
@@ -97,7 +97,7 @@ export function ProductQuickView({ product, children }: ProductQuickViewProps) {
                   "text-4xl font-black transition-colors",
                   product.originalPrice ? "text-red-600" : "text-primary"
                 )}>
-                  RD$ {product.price.toLocaleString()}
+                  RD$ {product.price.toLocaleString("es-DO")}
                 </span>
                 <Badge variant="outline" className={cn(
                   "animate-pulse px-3 py-1 rounded-lg border-2",

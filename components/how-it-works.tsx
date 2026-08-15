@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Search, ShoppingCart, Truck, MessageCircle, Shield, CreditCard } from "lucide-react";
 import Link from "next/link";
 
@@ -51,33 +50,16 @@ export function HowItWorks() {
 
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest mb-6"
-          >
+          <div className="animate-slide-up inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest mb-6">
             <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
             Proceso Simple
-          </motion.div>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="text-4xl md:text-5xl font-black tracking-tight mb-4"
-          >
+          </div>
+          <h2 className="animate-slide-up-delay-1 text-4xl md:text-5xl font-black tracking-tight mb-4">
             ¿Cómo funciona?
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="text-muted-foreground text-lg max-w-2xl mx-auto"
-          >
+          </h2>
+          <p className="animate-slide-up-delay-2 text-muted-foreground text-lg max-w-2xl mx-auto">
             Comprar tu laptop ideal es fácil. Solo 3 pasos.
-          </motion.p>
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto relative">
@@ -85,13 +67,10 @@ export function HowItWorks() {
           <div className="hidden md:block absolute top-24 left-[20%] right-[20%] h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
           {steps.map((step, index) => (
-            <motion.div
+            <div
               key={step.number}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.15 }}
-              className="relative"
+              className={`animate-slide-up relative`}
+              style={{ animationDelay: `${0.1 + index * 0.15}s` }}
             >
               <div className="bg-card border border-border/50 rounded-3xl p-6 sm:p-8 text-center hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 group h-full flex flex-col">
                 {/* Step number */}
@@ -129,18 +108,12 @@ export function HowItWorks() {
                   </Link>
                 )}
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
 
         {/* Bottom trust indicators */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.4 }}
-          className="flex flex-wrap justify-center gap-8 mt-16 pt-8 border-t border-border/50"
-        >
+        <div className="animate-slide-up-delay-4 flex flex-wrap justify-center gap-8 mt-16 pt-8 border-t border-border/50">
           <div className="flex items-center gap-3 text-sm text-muted-foreground">
             <CreditCard className="w-5 h-5 text-primary" />
             <span><strong className="text-foreground">Aceptamos</strong> todas las tarjetas</span>
@@ -153,7 +126,7 @@ export function HowItWorks() {
             <Shield className="w-5 h-5 text-primary" />
             <span><strong className="text-foreground">Garantía</strong> certificada</span>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

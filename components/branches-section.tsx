@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { MapPin, Phone, ArrowRight } from "lucide-react";
 import { Facebook, Instagram, TikTok } from "@/components/icons";
 
@@ -17,20 +16,18 @@ export function BranchesSection() {
     <section className="py-24 bg-background">
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">Visita Nuestras Sucursales</h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+          <h2 className="animate-slide-up text-3xl md:text-4xl font-bold tracking-tight mb-4">Visita Nuestras Sucursales</h2>
+          <p className="animate-slide-up-delay-1 text-muted-foreground text-lg max-w-2xl mx-auto">
             Estamos cada vez más cerca de ti. Ven y conoce nuestros equipos en persona o contáctanos por tus redes favoritas.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {branches.map((branch, index) => (
-            <motion.div
+            <div
               key={branch.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.2 }}
+              className="animate-slide-up"
+              style={{ animationDelay: `${index * 0.2}s` }}
             >
               <div className="h-full rounded-3xl overflow-hidden border border-border/50 bg-card hover:shadow-xl hover:shadow-red-500/5 transition-all group">
                 {/* Red top accent */}
@@ -101,7 +98,7 @@ export function BranchesSection() {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

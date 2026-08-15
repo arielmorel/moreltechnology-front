@@ -5,7 +5,7 @@ import { Calendar, ArrowRight, Tag } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Blog - Morel Technology República Dominicana",
-  description: "Artículos sobre laptops, tecnología, guías de compra y comparativas en República Dominicana. Consejos de expertos para elegir tu laptop ideal.",
+  description: "Guías de compra, comparativas y consejos sobre laptops en República Dominicana. Expertos ayudándote a elegir.",
   alternates: {
     canonical: "/blog",
   },

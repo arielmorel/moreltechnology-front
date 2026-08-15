@@ -28,8 +28,8 @@ export function CartSheet() {
   if (!mounted) return null;
 
   const orderMessage = () => {
-    const itemsText = items.map(item => `- ${item.name} (${item.quantity}x) - RD$ ${(item.price * item.quantity).toLocaleString()}`).join("\n");
-    return `*NUEVO PEDIDO DESDE LA WEB* 🛒\n\n${itemsText}\n\n*Total:* RD$ ${totalPrice().toLocaleString()}\n\n¡Hola! Me interesa comprar estos equipos. ¿Están disponibles?`;
+    const itemsText = items.map(item => `- ${item.name} (${item.quantity}x) - RD$ ${(item.price * item.quantity).toLocaleString("es-DO")}`).join("\n");
+    return `*NUEVO PEDIDO DESDE LA WEB* 🛒\n\n${itemsText}\n\n*Total:* RD$ ${totalPrice().toLocaleString("es-DO")}\n\n¡Hola! Me interesa comprar estos equipos. ¿Están disponibles?`;
   };
 
   return (
@@ -84,7 +84,7 @@ export function CartSheet() {
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
-                  <p className="text-primary font-bold text-sm mt-1">US${item.price.toLocaleString()}</p>
+                  <p className="text-primary font-bold text-sm mt-1">US${item.price.toLocaleString("en-US")}</p>
 
                   <div className="flex items-center gap-3 mt-3">
                     <div className="flex items-center border border-border rounded-lg bg-background overflow-hidden">
@@ -114,12 +114,12 @@ export function CartSheet() {
             <div className="space-y-1.5 w-full">
               <div className="flex justify-between items-center text-sm">
                 <span className="text-muted-foreground font-medium">Subtotal</span>
-                <span className="font-bold">RD$ {totalPrice().toLocaleString()}</span>
+                <span className="font-bold">RD$ {totalPrice().toLocaleString("es-DO")}</span>
               </div>
               <div className="flex justify-between items-center pt-2 border-t border-border/50">
                 <span className="text-base font-bold">Total del Pedido</span>
                 <div className="text-right">
-                  <p className="text-xl font-black text-primary leading-none">RD$ {totalPrice().toLocaleString()}</p>
+                  <p className="text-xl font-black text-primary leading-none">RD$ {totalPrice().toLocaleString("es-DO")}</p>
                 </div>
               </div>
             </div>
@@ -128,6 +128,7 @@ export function CartSheet() {
               <SheetClose 
                 render={
                   <Button 
+                    nativeButton={false}
                     render={<Link href="/checkout" className="flex items-center justify-center gap-2 whitespace-nowrap" />}
                     className="w-full h-14 rounded-2xl text-lg font-black shadow-xl shadow-primary/20" 
                   />

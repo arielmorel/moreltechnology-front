@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Script from "next/script";
 import { AppCard } from "@/components/app-card";
 import { apps, appCategories } from "@/lib/data";
 import { Smartphone, Star, Download } from "lucide-react";
@@ -120,8 +121,10 @@ export default function AppsPage() {
         </section>
 
         {/* Schema Markup */}
-        <script
+        <Script
+          id="apps-schema"
           type="application/ld+json"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",

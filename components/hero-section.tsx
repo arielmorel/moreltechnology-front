@@ -61,6 +61,7 @@ export function HeroSection() {
               <Button
                 size="lg"
                 className="rounded-2xl font-bold h-14 px-8 shadow-xl shadow-primary/20 hover:shadow-primary/30 transition-all text-base group bg-primary text-primary-foreground hover:bg-primary/90"
+                nativeButton={false}
                 render={
                   <Link href="/catalogo" className="flex items-center justify-center whitespace-nowrap" />
                 }
@@ -124,7 +125,7 @@ export function HeroSection() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="relative lg:ml-auto w-full max-w-[400px] sm:max-w-[500px] lg:max-w-[600px] aspect-square lg:aspect-auto lg:h-[600px]"
+            className="relative lg:ml-auto w-full max-w-[400px] sm:max-w-[500px] lg:max-w-[600px] aspect-square lg:aspect-auto lg:h-[600px] overflow-hidden"
           >
             {/* Glow effect */}
             <div className="absolute inset-0 bg-gradient-to-tr from-primary/30 via-blue-500/20 to-transparent rounded-full blur-[80px] mix-blend-multiply dark:mix-blend-overlay" />
@@ -136,7 +137,7 @@ export function HeroSection() {
                 src="/laptop.jpeg"
                 alt="Laptops Modernas"
                 fill
-                className="object-contain drop-shadow-2xl z-10 hover:scale-105 transition-transform duration-700 p-8"
+                className="object-contain drop-shadow-2xl z-0 hover:scale-105 transition-transform duration-700 p-12 sm:p-16"
                 priority
               />
             </div>

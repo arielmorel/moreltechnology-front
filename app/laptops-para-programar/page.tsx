@@ -19,7 +19,7 @@ import { getProducts } from "@/lib/api";
 
 export const metadata = {
   title: "Laptops para Programar en RD | Morel Technology",
-  description: "Encuentra las mejores laptops para desarrollo de software, Docker y VS Code en República Dominicana. Equipos con 16GB+ RAM y procesadores de alto rendimiento.",
+  description: "Laptops para desarrollo de software en RD. 16GB+ RAM, procesadores potentes. Docker, VS Code y más.",
 };
 
 export default async function LaptopsProgramarPage() {
@@ -61,6 +61,7 @@ export default async function LaptopsProgramarPage() {
               <Button 
                 size="lg" 
                 className="bg-blue-600 hover:bg-blue-700 text-white rounded-full h-14 px-8 text-lg font-bold shadow-xl shadow-blue-500/20" 
+                nativeButton={false}
                 render={<Link href="#equipos" />}
               >
                 Ver Equipos Recomendados
@@ -125,6 +126,7 @@ export default async function LaptopsProgramarPage() {
               </p>
             </div>
             <Button 
+              nativeButton={false}
               render={<Link href="/catalogo" />}
               variant="outline" 
               className="rounded-full font-bold group border-blue-500/20 text-blue-500 hover:bg-blue-500/5"
