@@ -160,13 +160,6 @@ export default function ProductDetailClient({ id, initialProduct }: ProductDetai
                 priority
               />
 
-              {/* Condition Badge */}
-              <div className="absolute top-6 left-6 flex flex-col gap-2">
-                <Badge className="bg-primary text-primary-foreground px-4 py-1.5 rounded-full text-sm font-bold shadow-lg">
-                  {product.condition}
-                </Badge>
-                <ConditionGuide />
-              </div>
 
               {/* Stock Urgency Badge */}
               <div className="absolute top-6 right-6">
@@ -211,7 +204,13 @@ export default function ProductDetailClient({ id, initialProduct }: ProductDetai
           <div className="flex flex-col gap-6">
             <div className="space-y-4">
               <div className="space-y-2">
-                <p className="text-primary font-bold tracking-widest uppercase text-sm">{product.brand}</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-primary font-bold tracking-widest uppercase text-sm">{product.brand}</p>
+                  <Badge className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                    <ShieldCheck className="w-3 h-3" />
+                    {product.condition}
+                  </Badge>
+                </div>
                 <h2 className="text-3xl md:text-5xl font-black tracking-tight text-foreground leading-tight">
                   {product.name}
                 </h2>
