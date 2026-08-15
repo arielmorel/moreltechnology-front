@@ -72,7 +72,7 @@ export default function SoportePage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   return (
-    <div className="min-h-screen pt-24 pb-20">
+    <div className="min-h-screen pt-16 pb-20">
       {/* Hero Section */}
       <section className="relative py-20 md:py-28 overflow-hidden">
         {/* Background */}
@@ -165,7 +165,7 @@ export default function SoportePage() {
                       <HeadphonesIcon className="w-8 h-8 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-lg">Soporte Premium</h3>
+                      <h2 className="font-bold text-lg">Soporte Premium</h2>
                       <p className="text-sm text-muted-foreground">Siempre contigo</p>
                     </div>
                   </div>
@@ -291,7 +291,7 @@ export default function SoportePage() {
 
               <div className="w-full lg:w-[380px] shrink-0">
                 <div className="bg-white/10 backdrop-blur-xl border border-white/10 p-8 rounded-[2rem] space-y-6">
-                  <h4 className="font-bold text-center uppercase tracking-widest text-xs">Pasos para soporte</h4>
+                  <h3 className="font-bold text-center uppercase tracking-widest text-xs">Pasos para soporte</h3>
                   <div className="space-y-4">
                     {[
                       "Descarga e instala AnyDesk en tu laptop.",
@@ -359,7 +359,7 @@ export default function SoportePage() {
                   )}
                 >
                   <div className="flex items-center justify-between gap-4">
-                    <h4 className="font-bold text-base md:text-lg">{faq.q}</h4>
+                    <h3 className="font-bold text-base md:text-lg">{faq.q}</h3>
                     <ChevronDown
                       className={cn(
                         "w-5 h-5 text-muted-foreground shrink-0 transition-transform duration-200",

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function FinanciamientoPage() {
   return (
-    <div className="min-h-screen bg-muted/20 pt-20 sm:pt-24 pb-12 sm:pb-16">
+    <div className="min-h-screen bg-muted/20 pt-20 sm:pt-16 pb-12 sm:pb-16">
       <div className="container mx-auto px-4 sm:px-6">
 
         {/* Header Section */}
@@ -27,17 +27,17 @@ export default function FinanciamientoPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 text-left">
             <div className="flex flex-col gap-2 p-4 bg-background border border-border/50 rounded-xl">
               <Clock className="w-6 h-6 text-primary" />
-              <h3 className="font-semibold">Respuesta Rápida</h3>
+              <h2 className="font-semibold">Respuesta Rápida</h2>
               <p className="text-sm text-muted-foreground">Evaluamos tu solicitud en menos de 24 horas laborables.</p>
             </div>
             <div className="flex flex-col gap-2 p-4 bg-background border border-border/50 rounded-xl">
               <CheckCircle2 className="w-6 h-6 text-green-500" />
-              <h3 className="font-semibold">Sin Papeleo Físico</h3>
+              <h2 className="font-semibold">Sin Papeleo Físico</h2>
               <p className="text-sm text-muted-foreground">Todo el proceso inicial se hace digital vía WhatsApp.</p>
             </div>
             <div className="flex flex-col gap-2 p-4 bg-background border border-border/50 rounded-xl">
               <ShieldCheck className="w-6 h-6 text-blue-500" />
-              <h3 className="font-semibold">Seguridad Total</h3>
+              <h2 className="font-semibold">Seguridad Total</h2>
               <p className="text-sm text-muted-foreground">Tus datos están protegidos y solo se usan para evaluación.</p>
             </div>
           </div>

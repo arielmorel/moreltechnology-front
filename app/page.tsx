@@ -138,9 +138,9 @@ export default async function Home() {
       <LazySection>
         <HowItWorks />
       </LazySection>
-      <LazySection>
+      {/* <LazySection>
         <FeaturedProducts products={featuredProducts} />
-      </LazySection>
+      </LazySection> */}
       <LazySection>
         <BenefitsSection />
       </LazySection>

@@ -82,28 +82,28 @@ export default async function TiendaSantiagoPage() {
               <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
                 <MapPin className="w-6 h-6" />
               </div>
-              <h3 className="font-bold">Dirección</h3>
+              <h2 className="font-bold">Dirección</h2>
               <p className="text-sm text-muted-foreground">{branch.address}</p>
             </div>
             <div className="p-6 bg-card border border-border/50 rounded-3xl space-y-3">
               <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
                 <Phone className="w-6 h-6" />
               </div>
-              <h3 className="font-bold">Teléfono</h3>
+              <h2 className="font-bold">Teléfono</h2>
               <p className="text-sm text-muted-foreground">809-421-5517</p>
             </div>
             <div className="p-6 bg-card border border-border/50 rounded-3xl space-y-3">
               <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
                 <Clock className="w-6 h-6" />
               </div>
-              <h3 className="font-bold">Horario</h3>
+              <h2 className="font-bold">Horario</h2>
               <p className="text-sm text-muted-foreground">Lun - Sáb: 9:00 AM - 7:00 PM</p>
             </div>
             <div className="p-6 bg-card border border-border/50 rounded-3xl space-y-3">
               <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
                 <MessageCircle className="w-6 h-6" />
               </div>
-              <h3 className="font-bold">WhatsApp</h3>
+              <h2 className="font-bold">WhatsApp</h2>
               <p className="text-sm text-muted-foreground">Respuesta inmediata</p>
             </div>
           </div>

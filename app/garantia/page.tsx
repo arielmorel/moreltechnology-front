@@ -1,6 +1,7 @@
 import { ShieldCheck, FileText, CheckCircle2, XCircle, Clock, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Metadata } from "next";
+import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Garantía de Laptops - Morel Technology RD",
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function GarantiaPage() {
   return (
-    <div className="min-h-screen pt-24 pb-16">
+    <div className="min-h-screen pt-16 pb-16">
       <div className="container mx-auto px-4 md:px-6">
         
         {/* Header Section */}
@@ -35,26 +36,26 @@ export default function GarantiaPage() {
               icon: Clock,
               title: "Tiempos de Garantía",
               desc: "Nuevos: 12 meses. Usados Grado A: 6 meses. Usados Grado B: 3 meses. Todas las baterías tienen 1 mes de garantía.",
-              color: "blue"
+              iconClass: "bg-blue-500/10 text-blue-600"
             },
             {
               icon: Search,
               title: "Diagnóstico Gratis",
               desc: "Si el equipo presenta fallas dentro del periodo de garantía, el diagnóstico y la mano de obra son totalmente libres de costo.",
-              color: "purple"
+              iconClass: "bg-purple-500/10 text-purple-600"
             },
             {
               icon: FileText,
               title: "Factura Fiscal",
               desc: "Cada compra incluye una factura timbrada con el número de serie único del equipo para validar tu garantía legal.",
-              color: "green"
+              iconClass: "bg-green-500/10 text-green-600"
             }
           ].map((item, i) => (
             <div key={i} className="p-8 bg-card border border-border/50 rounded-3xl space-y-4 shadow-sm">
-              <div className={`p-3 bg-${item.color}-500/10 text-${item.color}-600 rounded-2xl w-fit`}>
+              <div className={cn("p-3 rounded-2xl w-fit", item.iconClass)}>
                 <item.icon className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-bold">{item.title}</h3>
+               <h2 className="text-xl font-bold">{item.title}</h2>
               <p className="text-muted-foreground text-sm leading-relaxed">{item.desc}</p>
             </div>
           ))}
@@ -121,7 +122,7 @@ export default function GarantiaPage() {
                   <div className="absolute left-0 top-0 w-6 h-6 rounded-full bg-primary text-primary-foreground text-[10px] flex items-center justify-center font-bold">
                     {item.step}
                   </div>
-                  <h4 className="font-bold">{item.title}</h4>
+                   <h3 className="font-bold">{item.title}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
                 </div>
               ))}

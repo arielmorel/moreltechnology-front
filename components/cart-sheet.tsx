@@ -36,7 +36,7 @@ export function CartSheet() {
     <Sheet>
       <SheetTrigger 
         render={
-          <Button variant="outline" size="icon" className="relative rounded-full border-primary/20 hover:bg-primary/5" />
+          <Button variant="outline" size="icon" className="relative rounded-full border-primary/20 hover:bg-primary/5" aria-label="Abrir carrito" />
         }
       >
         <ShoppingCart className="h-5 w-5" />

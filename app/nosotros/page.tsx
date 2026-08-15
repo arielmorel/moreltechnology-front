@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function NosotrosPage() {
   return (
-    <div className="min-h-screen pt-24 pb-16">
+    <div className="min-h-screen pt-16 pb-16">
       <div className="container mx-auto px-4 md:px-6">
 
         {/* Header */}
@@ -45,7 +45,7 @@ export default function NosotrosPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-24">
           <div className="relative aspect-video lg:aspect-square rounded-3xl overflow-hidden shadow-2xl">
             <Image
-              src="/images/team.png?q=80&w=2070&auto=format&fit=crop"
+              src="/images/team.png"
               alt="Equipo MorelTechnology"
               fill
               className="object-cover"
@@ -62,7 +62,7 @@ export default function NosotrosPage() {
                   <ShieldCheck className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <h4 className="font-bold">Confianza Total</h4>
+                   <h3 className="font-bold">Confianza Total</h3>
                   <p className="text-sm text-muted-foreground">Cada equipo que sale de nuestras tiendas pasa por una rigurosa inspección técnica.</p>
                 </div>
               </div>
@@ -71,7 +71,7 @@ export default function NosotrosPage() {
                   <Target className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <h4 className="font-bold">Enfoque al Cliente</h4>
+                   <h3 className="font-bold">Enfoque al Cliente</h3>
                   <p className="text-sm text-muted-foreground">No vendemos por vender; asesoramos para que te lleves el equipo que realmente necesitas.</p>
                 </div>
               </div>

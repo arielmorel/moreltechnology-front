@@ -24,20 +24,20 @@ export function Footer() {
               Las mejores laptops para estudiar, trabajar y gaming en República Dominicana. Equipos garantizados y de alta calidad.
             </p>
             <div className="flex gap-2">
-              <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:text-foreground">
+              <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:text-foreground" aria-label="Instagram">
                 <Instagram size={18} />
               </Button>
-              <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:text-foreground">
+              <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:text-foreground" aria-label="Facebook">
                 <Facebook size={18} />
               </Button>
             </div>
           </div>
 
           <div className="space-y-4">
-            <h3 className="font-semibold text-lg tracking-tight">Enlaces Rápidos</h3>
+            <h2 className="font-semibold text-lg tracking-tight">Enlaces Rápidos</h2>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
-                <Link href="/catalogo" className="hover:text-primary transition-colors">
+                <Link href="/catalogo/moreltechnology" className="hover:text-primary transition-colors">
                   Catálogo de Laptops
                 </Link>
               </li>
@@ -62,6 +62,11 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/metodos-de-pago" className="hover:text-primary transition-colors">
+                  Métodos de Pago
+                </Link>
+              </li>
+              <li>
                 <Link href="/faq" className="hover:text-primary transition-colors">
                   Preguntas Frecuentes
                 </Link>
@@ -70,30 +75,30 @@ export function Footer() {
           </div>
 
           <div className="space-y-4">
-            <h3 className="font-semibold text-lg tracking-tight">Categorías</h3>
+            <h2 className="font-semibold text-lg tracking-tight">Categorías</h2>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
-                <Link href="/catalogo?categoria=gaming" className="hover:text-primary transition-colors">
+                <Link href="/catalogo/moreltechnology?categoria=gaming" className="hover:text-primary transition-colors">
                   Gaming
                 </Link>
               </li>
               <li>
-                <Link href="/catalogo?categoria=oficina" className="hover:text-primary transition-colors">
+                <Link href="/catalogo/moreltechnology?categoria=oficina" className="hover:text-primary transition-colors">
                   Oficina & Productividad
                 </Link>
               </li>
               <li>
-                <Link href="/catalogo?categoria=estudiantes" className="hover:text-primary transition-colors">
+                <Link href="/catalogo/moreltechnology?categoria=estudiantes" className="hover:text-primary transition-colors">
                   Estudiantes
                 </Link>
               </li>
               <li>
-                <Link href="/catalogo?categoria=diseno" className="hover:text-primary transition-colors">
+                <Link href="/catalogo/moreltechnology?categoria=diseno" className="hover:text-primary transition-colors">
                   Diseño Gráfico
                 </Link>
               </li>
               <li>
-                <Link href="/catalogo?categoria=apple" className="hover:text-primary transition-colors">
+                <Link href="/catalogo/moreltechnology?categoria=apple" className="hover:text-primary transition-colors">
                   MacBooks
                 </Link>
               </li>
@@ -101,7 +106,7 @@ export function Footer() {
           </div>
 
           <div className="space-y-4">
-            <h3 className="font-semibold text-lg tracking-tight">Contacto</h3>
+            <h2 className="font-semibold text-lg tracking-tight">Contacto</h2>
             <ul className="space-y-4 text-sm text-muted-foreground">
               {branches.map(branch => (
                 <li key={branch.id} className="flex items-start gap-3">

@@ -26,11 +26,11 @@ const faqs: { category: string; icon: React.ElementType; items: { q: string; a: 
     items: [
       {
         q: "¿Hacen envíos a todo RD?",
-        a: "Sí, realizamos envíos a todas las provincias de la República Dominicana a través de servicios de transporte como Metro Pac, Caribe Pack y BM Cargo. El tiempo de entrega suele ser de 24 a 48 horas laborables. También contamos con servicio de envío por motorizado privado en Santo Domingo y Santiago para entregas en el mismo día."
+        a: <>Sí, realizamos envíos a todas las provincias de la República Dominicana a través de servicios de transporte como Metro Pac, Caribe Pack y BM Cargo. El tiempo de entrega suele ser de 24 a 48 horas laborables. También contamos con servicio de envío por motorizado privado en Santo Domingo y Santiago para entregas en el mismo día. Consulta nuestra <Link href="/envios" className="text-primary font-bold hover:underline">página de envíos</Link> para más detalles.</>
       },
       {
         q: "¿Cuál es el costo del envío?",
-        a: "El envío es GRATIS dentro del Distrito Nacional y Santo Domingo. Para el interior, el costo depende del transporte elegido, pero suele oscilar entre RD$300 y RD$500."
+        a: <>El envío es GRATIS dentro del Distrito Nacional y Santo Domingo. Para el interior, el costo depende del transporte elegido, pero suele oscilar entre RD$300 y RD$500. Revisa nuestras <Link href="/envios" className="text-primary font-bold hover:underline">políticas de envío</Link> completas.</>
       }
     ]
   },
@@ -40,7 +40,7 @@ const faqs: { category: string; icon: React.ElementType; items: { q: string; a: 
     items: [
       {
         q: "¿Las laptops tienen garantía?",
-        a: "Sí, todos nuestros equipos tienen garantía. Los equipos nuevos tienen hasta 1 año de garantía con el fabricante. Los equipos usados certificados incluyen 6 meses de garantía en piezas y servicios."
+        a: <>Sí, todos nuestros equipos tienen garantía. Los equipos nuevos tienen hasta 1 año de garantía con el fabricante. Los equipos usados certificados incluyen 6 meses de garantía en piezas y servicios. Consulta los <Link href="/garantia" className="text-primary font-bold hover:underline">detalles completos de nuestra garantía</Link>.</>
       },
       {
         q: "¿Qué cubre la garantía?",
@@ -54,7 +54,7 @@ const faqs: { category: string; icon: React.ElementType; items: { q: string; a: 
     items: [
       {
         q: "¿Aceptan tarjetas?",
-        a: "Sí, aceptamos tarjetas de crédito y débito (aplican comisiones de procesador de pago). También aceptamos transferencias bancarias (Banreservas, BHD, Popular) y efectivo."
+        a: <>Sí, aceptamos tarjetas de crédito y débito (aplican comisiones de procesador de pago). También aceptamos transferencias bancarias (Banreservas, BHD, Popular) y efectivo. Consulta todos los <Link href="/metodos-de-pago" className="text-primary font-bold hover:underline">métodos de pago aceptados</Link>.</>
       },
       {
         q: "¿Ofrecen financiamiento?",
@@ -85,7 +85,7 @@ export default function FAQPage() {
   };
 
   return (
-    <div className="min-h-screen pt-24 pb-16">
+    <div className="min-h-screen pt-16 pb-16">
       <div className="container mx-auto px-4 md:px-6 max-w-4xl">
 
         <div className="text-center mb-16 space-y-4">

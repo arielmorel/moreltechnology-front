@@ -15,7 +15,8 @@ import {
   Truck,
   ShoppingCart,
   ChevronLeft,
-  MessageCircle
+  MessageCircle,
+  ArrowLeft
 } from "lucide-react";
 import { WhatsAppDropdown } from "@/components/whatsapp-dropdown";
 import { Button } from "@/components/ui/button";
@@ -71,7 +72,7 @@ export default function ProductDetailClient({ id, initialProduct }: ProductDetai
 
   if (isLoading) {
     return (
-      <div className="min-h-screen pt-24 pb-16">
+      <div className="min-h-screen pt-16 pb-16">
         <div className="container mx-auto px-4">
           <div className="animate-pulse space-y-8">
             <div className="h-10 w-48 bg-muted rounded" />
@@ -112,9 +113,15 @@ export default function ProductDetailClient({ id, initialProduct }: ProductDetai
       <div className="container mx-auto px-4 md:px-6">
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
+          <button
+            onClick={() => window.history.back()}
+            className="md:hidden flex items-center gap-1 hover:text-primary transition-colors -ml-1 shrink-0"
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </button>
           <Link href="/" className="hover:text-primary transition-colors">Inicio</Link>
           <span>/</span>
-          <Link href="/catalogo" className="hover:text-primary transition-colors">Catálogo</Link>
+          <Link href="/catalogo/moreltechnology" className="hover:text-primary transition-colors">Catálogo</Link>
           <span>/</span>
           <span className="text-foreground font-medium truncate max-w-[200px]">{product.name}</span>
         </nav>
@@ -183,9 +190,9 @@ export default function ProductDetailClient({ id, initialProduct }: ProductDetai
             <div className="space-y-4">
               <div className="space-y-2">
                 <p className="text-primary font-bold tracking-widest uppercase text-sm">{product.brand}</p>
-                <h1 className="text-4xl md:text-5xl font-black italic tracking-tighter text-foreground leading-none">
-                  {product.name.toUpperCase()}
-                </h1>
+                <h2 className="text-3xl md:text-5xl font-black tracking-tight text-foreground leading-tight">
+                  {product.name}
+                </h2>
               </div>
               <p className="text-3xl md:text-4xl font-bold text-foreground">
                 ${product.price.toLocaleString("es-DO")}
@@ -197,41 +204,41 @@ export default function ProductDetailClient({ id, initialProduct }: ProductDetai
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-muted/50 p-4 rounded-2xl border border-border/50 flex items-center gap-4">
-                <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
-                  <Cpu className="w-5 h-5" />
+            <div className="grid grid-cols-2 gap-3 md:gap-4">
+              <div className="bg-muted/50 p-3 md:p-4 rounded-2xl border border-border/50 flex items-center gap-3">
+                <div className="w-9 h-9 md:w-10 md:h-10 bg-blue-500/10 rounded-xl flex items-center justify-center text-blue-600 shrink-0">
+                  <Cpu className="w-4 h-4 md:w-5 md:h-5" />
                 </div>
-                <div>
-                  <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Procesador</p>
-                  <p className="font-bold text-sm truncate">{product.processor}</p>
-                </div>
-              </div>
-              <div className="bg-muted/50 p-4 rounded-2xl border border-border/50 flex items-center gap-4">
-                <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
-                  <MemoryStick className="w-5 h-5" />
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">RAM</p>
-                  <p className="font-bold text-sm">{product.ram}</p>
+                <div className="min-w-0">
+                  <p className="text-[10px] md:text-xs text-muted-foreground font-medium uppercase tracking-wider">Procesador</p>
+                  <p className="font-bold text-xs md:text-sm break-words">{product.processor}</p>
                 </div>
               </div>
-              <div className="bg-muted/50 p-4 rounded-2xl border border-border/50 flex items-center gap-4">
-                <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
-                  <HardDrive className="w-5 h-5" />
+              <div className="bg-muted/50 p-3 md:p-4 rounded-2xl border border-border/50 flex items-center gap-3">
+                <div className="w-9 h-9 md:w-10 md:h-10 bg-purple-500/10 rounded-xl flex items-center justify-center text-purple-600 shrink-0">
+                  <MemoryStick className="w-4 h-4 md:w-5 md:h-5" />
                 </div>
-                <div>
-                  <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Almacenamiento</p>
-                  <p className="font-bold text-sm">{product.ssd}</p>
+                <div className="min-w-0">
+                  <p className="text-[10px] md:text-xs text-muted-foreground font-medium uppercase tracking-wider">RAM</p>
+                  <p className="font-bold text-xs md:text-sm">{product.ram}</p>
                 </div>
               </div>
-              <div className="bg-muted/50 p-4 rounded-2xl border border-border/50 flex items-center gap-4">
-                <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
-                  <ShieldCheck className="w-5 h-5" />
+              <div className="bg-muted/50 p-3 md:p-4 rounded-2xl border border-border/50 flex items-center gap-3">
+                <div className="w-9 h-9 md:w-10 md:h-10 bg-orange-500/10 rounded-xl flex items-center justify-center text-orange-600 shrink-0">
+                  <HardDrive className="w-4 h-4 md:w-5 md:h-5" />
                 </div>
-                <div>
-                  <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Garantía</p>
-                  <p className="font-bold text-sm">Certificada</p>
+                <div className="min-w-0">
+                  <p className="text-[10px] md:text-xs text-muted-foreground font-medium uppercase tracking-wider">Almacenamiento</p>
+                  <p className="font-bold text-xs md:text-sm">{product.ssd}</p>
+                </div>
+              </div>
+              <div className="bg-muted/50 p-3 md:p-4 rounded-2xl border border-border/50 flex items-center gap-3">
+                <div className="w-9 h-9 md:w-10 md:h-10 bg-green-500/10 rounded-xl flex items-center justify-center text-green-600 shrink-0">
+                  <ShieldCheck className="w-4 h-4 md:w-5 md:h-5" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[10px] md:text-xs text-muted-foreground font-medium uppercase tracking-wider">Garantía</p>
+                  <p className="font-bold text-xs md:text-sm">Certificada</p>
                 </div>
               </div>
             </div>
@@ -246,18 +253,18 @@ export default function ProductDetailClient({ id, initialProduct }: ProductDetai
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 pt-6">
+            <div className="flex flex-col gap-3 pt-4 md:pt-6">
               <Button
                 onClick={handleAddToCart}
                 disabled={product.quantity === 0}
-                className="flex-1 h-14 rounded-2xl text-lg font-black bg-primary hover:bg-primary/90 shadow-xl shadow-primary/20 gap-3"
+                className="w-full h-13 md:h-14 rounded-2xl text-base md:text-lg font-bold bg-primary hover:bg-primary/90 shadow-xl shadow-primary/20 gap-3"
               >
-                <ShoppingCart className="w-6 h-6" />
-                AÑADIR AL CARRITO
+                <ShoppingCart className="w-5 h-5" />
+                Añadir al carrito
               </Button>
               <WhatsAppDropdown
                 message={`Hola, estoy interesado en la laptop ${product.name}.`}
-                className="flex-1 h-14 rounded-2xl text-lg font-bold border-2"
+                className="w-full h-13 md:h-14 rounded-2xl text-base md:text-lg font-semibold border-2"
                 variant="outline"
               />
             </div>
@@ -279,7 +286,7 @@ export default function ProductDetailClient({ id, initialProduct }: ProductDetai
           <div className="mt-32 space-y-12">
             <div className="flex items-end justify-between border-b border-border/50 pb-8">
               <div className="space-y-2">
-                <h2 className="text-3xl md:text-4xl font-black italic tracking-tighter">EQUIPOS RELACIONADOS</h2>
+                <h2 className="text-2xl md:text-4xl font-black tracking-tight">EQUIPOS RELACIONADOS</h2>
                 <p className="text-muted-foreground">Otras opciones que podrían interesarte</p>
               </div>
               <Button

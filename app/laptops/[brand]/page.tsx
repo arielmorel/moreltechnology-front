@@ -153,7 +153,7 @@ export default async function BrandPage({ params }: PageProps) {
   return (
     <div className="min-h-screen">
       {/* Breadcrumbs */}
-      <div className="bg-muted/30 pt-24 pb-4">
+      <div className="bg-muted/30 pt-16 pb-4">
         <div className="container mx-auto px-4 md:px-6">
           <nav className="flex items-center gap-2 text-sm text-muted-foreground">
             <Link href="/" className="hover:text-primary transition-colors">Inicio</Link>

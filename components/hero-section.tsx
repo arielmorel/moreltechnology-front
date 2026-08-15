@@ -63,7 +63,7 @@ export function HeroSection() {
                 className="rounded-2xl font-bold h-14 px-8 shadow-xl shadow-primary/20 hover:shadow-primary/30 transition-all text-base group bg-primary text-primary-foreground hover:bg-primary/90"
                 nativeButton={false}
                 render={
-                  <Link href="/catalogo" className="flex items-center justify-center whitespace-nowrap" />
+                  <Link href="/catalogo/moreltechnology" className="flex items-center justify-center whitespace-nowrap" />
                 }
                 aria-label="Ver catálogo de laptops"
               >
@@ -137,6 +137,7 @@ export function HeroSection() {
                 src="/laptop.jpeg"
                 alt="Laptops Modernas"
                 fill
+                sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-contain drop-shadow-2xl z-0 hover:scale-105 transition-transform duration-700 p-12 sm:p-16"
                 priority
               />
@@ -192,7 +193,6 @@ export function HeroSection() {
           <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
             <Link href="/laptops/lenovo" className="flex flex-col items-center gap-2 hover:opacity-100 transition-opacity group">
               <span className="text-xl md:text-2xl font-black tracking-tighter text-foreground group-hover:text-primary transition-colors">LENOVO</span>
-              <span className="text-[10px] bg-primary text-primary-foreground px-2 py-0.5 rounded-full font-bold">AUTORIZADO</span>
             </Link>
             <Link href="/laptops/dell" className="text-xl md:text-2xl font-black tracking-tighter text-foreground hover:text-primary transition-colors">DELL</Link>
             <Link href="/laptops/hp" className="text-xl md:text-2xl font-black tracking-tighter text-foreground hover:text-primary transition-colors">HP</Link>

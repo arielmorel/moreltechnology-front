@@ -108,6 +108,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 size="icon" 
                 variant={compareItems.find(item => item.id === product.id) ? "default" : "outline"}
                 className="rounded-xl border-primary/20 h-10 w-10 shrink-0"
+                aria-label="Comparar producto"
                 onClick={() => {
                   if (compareItems.find(item => item.id === product.id)) {
                     removeFromCompare(product.id);
@@ -127,6 +128,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 size="icon" 
                 variant="outline" 
                 className="rounded-xl border-primary/20 hover:bg-primary/5 h-10 w-10 shrink-0"
+                aria-label="Agregar al carrito"
                 onClick={() => {
                   addItem(product);
                   toast.success(`${product.name} añadido al carrito`);

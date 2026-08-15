@@ -23,6 +23,7 @@ interface WhatsAppDropdownProps {
   showIcon?: boolean;
   side?: "top" | "bottom" | "left" | "right";
   align?: "start" | "center" | "end";
+  ariaLabel?: string;
 }
 
 export function WhatsAppDropdown({
@@ -32,7 +33,8 @@ export function WhatsAppDropdown({
   children,
   showIcon = true,
   side = "bottom",
-  align = "end"
+  align = "end",
+  ariaLabel = "Contactar por WhatsApp"
 }: WhatsAppDropdownProps) {
 
   const handleWhatsApp = (number: string) => {
@@ -42,11 +44,12 @@ export function WhatsAppDropdown({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
+        aria-label={ariaLabel}
         className={cn(
           buttonVariants({ variant, className }),
           "gap-2 transition-all",
           variant === "default" && "bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-600/20",
-          variant === "outline" && "border-green-600 text-green-600 hover:bg-green-50 dark:hover:bg-green-950/30"
+          variant === "outline" && "border-green-700 text-green-700 hover:bg-green-50 dark:hover:bg-green-950/30"
         )}
       >
         {showIcon && <WhatsApp size={20} />}

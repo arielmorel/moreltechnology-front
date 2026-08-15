@@ -15,6 +15,7 @@ const methods = [
     details: ["Llega en 24-48 horas", "Número de seguimiento", "Seguro incluido opcional"],
     color: "text-blue-600 dark:text-blue-400",
     bgColor: "bg-blue-500/10",
+    dotColor: "bg-blue-500",
     borderColor: "hover:border-blue-500/30",
   },
   {
@@ -24,6 +25,7 @@ const methods = [
     details: ["Entrega express (2-4 horas)", "Pago contra entrega disponible", "Personal capacitado"],
     color: "text-green-600 dark:text-green-400",
     bgColor: "bg-green-500/10",
+    dotColor: "bg-green-500",
     borderColor: "hover:border-green-500/30",
   },
   {
@@ -33,6 +35,7 @@ const methods = [
     details: ["Sin costo adicional", "Asesoría técnica presencial", "Configuración inicial gratis"],
     color: "text-red-600 dark:text-red-400",
     bgColor: "bg-red-500/10",
+    dotColor: "bg-red-500",
     borderColor: "hover:border-red-500/30",
   },
 ];
@@ -48,7 +51,7 @@ const provinces = [
 
 export default function EnviosPage() {
   return (
-    <div className="min-h-screen pt-24 pb-20">
+    <div className="min-h-screen pt-16 pb-20">
       {/* Hero Section */}
       <section className="relative py-20 md:py-28 overflow-hidden">
         {/* Background */}
@@ -137,7 +140,7 @@ export default function EnviosPage() {
                       <Globe className="w-8 h-8 text-red-400" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-lg text-white">Cobertura Nacional</h3>
+                      <h2 className="font-bold text-lg text-white">Cobertura Nacional</h2>
                       <p className="text-sm text-neutral-400">32 provincias</p>
                     </div>
                   </div>
@@ -230,7 +233,7 @@ export default function EnviosPage() {
                 <ul className="space-y-3">
                   {method.details.map((detail, j) => (
                     <li key={j} className="flex items-center gap-3 text-sm font-medium text-foreground">
-                      <div className={cn("w-1.5 h-1.5 rounded-full", method.bgColor.replace("/10", ""))} />
+                      <div className={cn("w-1.5 h-1.5 rounded-full", method.dotColor)} />
                       {detail}
                     </li>
                   ))}
@@ -296,7 +299,7 @@ export default function EnviosPage() {
               {/* Stats card */}
               <div className="w-full lg:w-[380px] shrink-0">
                 <div className="bg-gradient-to-br from-neutral-900 to-neutral-950 rounded-[2rem] p-8 text-white space-y-6">
-                  <h4 className="font-bold text-center uppercase tracking-widest text-xs text-neutral-400">Números que hablan</h4>
+                  <h3 className="font-bold text-center uppercase tracking-widest text-xs text-neutral-400">Números que hablan</h3>
                   <div className="space-y-4">
                     {[
                       { value: "32", label: "Provincias cubiertas", icon: <Globe className="w-5 h-5" /> },

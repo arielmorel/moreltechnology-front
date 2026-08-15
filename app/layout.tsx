@@ -69,11 +69,9 @@ export default function RootLayout({
         {/* Preconnect to external origins */}
         <link rel="preconnect" href="https://minio.sm.novuswise.com" />
         <link rel="preconnect" href="https://images.unsplash.com" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
         {/* Preload hero image for LCP */}
-        <link rel="preload" as="image" href="/laptop.jpeg" />
+        <link rel="preload" as="image" href="/laptop.jpeg" fetchPriority="high" />
 
         {/* Preload logo */}
         <link rel="preload" as="image" href="/morel_technology_logo.png" />
@@ -86,7 +84,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Navbar />
-          <main className="flex-1 flex flex-col pt-16">
+          <main className="flex-1 flex flex-col pt-0">
             {children}
           </main>
           <Footer />

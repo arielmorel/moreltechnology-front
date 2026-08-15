@@ -75,7 +75,7 @@ export default function CheckoutPage() {
           <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mx-auto">
             <CreditCard className="w-10 h-10 text-muted-foreground" />
           </div>
-          <h2 className="text-2xl font-bold">Tu carrito está vacío</h2>
+          <h1 className="text-2xl font-bold">Tu carrito está vacío</h1>
           <p className="text-muted-foreground">Agrega algunos productos para continuar con el pago.</p>
           <Button
             nativeButton={false}
@@ -90,12 +90,12 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen pt-24 pb-16 bg-muted/20">
+    <div className="min-h-screen pt-16 pb-16 bg-muted/20">
       <div className="container mx-auto px-4 max-w-6xl">
 
         <div className="flex items-center gap-4 mb-8">
           {step !== "success" && (
-            <Button variant="ghost" size="icon" onClick={() => step === "payment" ? setStep("info") : null} disabled={step === "info"}>
+            <Button variant="ghost" size="icon" onClick={() => step === "payment" ? setStep("info") : null} disabled={step === "info"} aria-label="Volver">
               <ChevronLeft className="w-5 h-5" />
             </Button>
           )}
@@ -270,10 +270,10 @@ export default function CheckoutPage() {
                 >
                   <Card className="rounded-[2rem] border-border/50 shadow-xl overflow-hidden">
                     <CardHeader className="bg-primary/5 border-b border-primary/10">
-                      <CardTitle className="flex items-center gap-3">
+                      <h2 className="font-heading text-base leading-snug font-medium flex items-center gap-3">
                         <Banknote className="w-6 h-6 text-primary" />
                         Método de Pago
-                      </CardTitle>
+                      </h2>
                       <CardDescription>Selecciona cómo deseas pagar</CardDescription>
                     </CardHeader>
                     <CardContent className="p-0">
@@ -304,10 +304,10 @@ export default function CheckoutPage() {
                         </div>
 
                         <div className="space-y-4 pt-4">
-                          <h4 className="font-bold flex items-center gap-2">
+                          <h3 className="font-bold flex items-center gap-2">
                             <Clock className="w-4 h-4 text-primary" />
                             ¿Cómo funciona?
-                          </h4>
+                          </h3>
                           <ol className="text-sm space-y-3 text-muted-foreground">
                             <li className="flex gap-3">
                               <span className="flex-shrink-0 w-6 h-6 rounded-full bg-muted flex items-center justify-center text-xs font-bold">1</span>
@@ -326,7 +326,7 @@ export default function CheckoutPage() {
                       </div>
 
                       <div className="bg-muted/30 p-8 border-t border-border/50">
-                        <h4 className="font-bold mb-6">Nuestras Cuentas Bancarias</h4>
+                        <h3 className="font-bold mb-6">Nuestras Cuentas Bancarias</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           {bankAccounts.map((acc, idx) => (
                             <div key={idx} className="bg-card p-5 rounded-2xl border border-border/50 shadow-sm space-y-3 group hover:border-primary/30 transition-colors">
@@ -341,6 +341,7 @@ export default function CheckoutPage() {
                                   size="icon"
                                   className="h-8 w-8 text-muted-foreground hover:text-primary"
                                   onClick={() => handleCopy(acc.accountNumber, "Número de cuenta")}
+                                  aria-label="Copiar número de cuenta"
                                 >
                                   <Copy className="w-4 h-4" />
                                 </Button>

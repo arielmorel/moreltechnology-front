@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function ContactoPage() {
   return (
-    <div className="min-h-screen pt-24 pb-16">
+    <div className="min-h-screen pt-16 pb-16">
       <div className="container mx-auto px-4 md:px-6">
 
         {/* Hero Section */}
@@ -63,6 +63,7 @@ export default function ContactoPage() {
                         size="icon" 
                         render={<a href={branch.socials.instagram} target="_blank" rel="noreferrer" />}
                         className="rounded-full"
+                        aria-label="Instagram"
                       >
                         <Instagram size={18} />
                       </Button>
@@ -71,6 +72,7 @@ export default function ContactoPage() {
                         size="icon" 
                         render={<a href={branch.socials.facebook} target="_blank" rel="noreferrer" />}
                         className="rounded-full"
+                        aria-label="Facebook"
                       >
                         <Facebook size={18} />
                       </Button>
@@ -79,6 +81,7 @@ export default function ContactoPage() {
                         size="icon" 
                         render={<a href={branch.socials.tiktok} target="_blank" rel="noreferrer" />}
                         className="rounded-full"
+                        aria-label="TikTok"
                       >
                         <TikTok size={18} />
                       </Button>

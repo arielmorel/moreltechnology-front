@@ -84,12 +84,12 @@ export default async function LaptopsGamingPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-10">
                   <div className="p-6 bg-muted/40 rounded-3xl border border-border/50">
                     <Cpu className="w-10 h-10 text-primary mb-4" />
-                    <h4 className="font-bold text-xl mb-2">Procesadores de Última Gen</h4>
+                    <h3 className="font-bold text-xl mb-2">Procesadores de Última Gen</h3>
                     <p className="text-sm text-muted-foreground">Equipos con Intel Core i7/i9 de 13ra y 14ta generación o AMD Ryzen 7/9 serie 8000.</p>
                   </div>
                   <div className="p-6 bg-muted/40 rounded-3xl border border-border/50">
                     <Zap className="w-10 h-10 text-primary mb-4" />
-                    <h4 className="font-bold text-xl mb-2">Gráficas NVIDIA RTX</h4>
+                    <h3 className="font-bold text-xl mb-2">Gráficas NVIDIA RTX</h3>
                     <p className="text-sm text-muted-foreground">Disfruta del Ray Tracing y DLSS 3.5 con las series RTX 4060, 4070, 4080 y 4090.</p>
                   </div>
                 </div>
@@ -184,7 +184,7 @@ export default async function LaptopsGamingPage() {
                 </div>
 
                 <div className="p-8 bg-card border border-border/50 rounded-[2.5rem] space-y-6">
-                  <h4 className="font-bold text-lg">¿Por qué nosotros?</h4>
+                  <h3 className="font-bold text-lg">¿Por qué nosotros?</h3>
                   <ul className="space-y-4">
                     <li className="flex items-start gap-3">
                       <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />

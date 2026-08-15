@@ -2,7 +2,15 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    unoptimized: true,
+    formats: ["image/avif", "image/webp"],
+    localPatterns: [
+      {
+        pathname: "/images/**",
+      },
+      {
+        pathname: "/*",
+      },
+    ],
     remotePatterns: [
       {
         protocol: "https",
@@ -20,6 +28,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "minio.sm.novuswise.com",
+      },
+      {
+        protocol: "https",
+        hostname: "play-lh.googleusercontent.com",
       },
     ],
   },
