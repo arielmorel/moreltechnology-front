@@ -21,7 +21,7 @@ import { WhatsAppDropdown } from "./whatsapp-dropdown";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/lib/store";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
+import { cn, isMinioImage } from "@/lib/utils";
 import {
   Carousel,
   CarouselContent,
@@ -55,7 +55,7 @@ export function ProductQuickView({ product, children }: ProductQuickViewProps) {
                         src={image}
                         alt={`${product.name} - Imagen ${index + 1}`}
                         fill
-                        unoptimized={image.includes("minio") || image.includes("localhost:9000")}
+                        unoptimized={isMinioImage(image)}
                         className="object-cover"
                         sizes="(max-width: 768px) 100vw, 50vw"
                         priority

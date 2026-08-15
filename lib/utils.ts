@@ -19,3 +19,7 @@ export function slugify(text: string): string {
 export function productUrl(id: string, name: string): string {
   return `/productos/${id}/${slugify(name)}`
 }
+
+export function isMinioImage(src: string): boolean {
+  return src.includes("localhost:9000") || src.includes("minio");
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { Product } from "@/lib/data";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -11,14 +12,11 @@ import { ProductQuickView } from "./product-quick-view";
 import { Button } from "./ui/button";
 import { useCart } from "@/lib/store";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
+import { cn, isMinioImage, productUrl } from "@/lib/utils";
 
 interface ProductCardProps {
   product: Product;
 }
-
-import Link from "next/link";
-import { productUrl } from "@/lib/utils";
 
 export function ProductCard({ product }: ProductCardProps) {
   const { addItem, addToCompare, removeFromCompare, compareItems } = useCart();
@@ -38,7 +36,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 src={product.images[0]}
                 alt={product.name}
                 fill
-                unoptimized={product.images[0].includes("minio") || product.images[0].includes("localhost:9000")}
+                unoptimized={isMinioImage(product.images[0])}
                 className="object-cover transition-transform duration-500 group-hover:scale-110"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
