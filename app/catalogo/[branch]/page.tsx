@@ -7,7 +7,7 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { ProductCard } from "@/components/product-card";
 import { ProductCardSkeleton } from "@/components/product-card-skeleton";
 import { Input } from "@/components/ui/input";
-import { Search, SlidersHorizontal, MapPin, ChevronDown } from "lucide-react";
+import { Search, SlidersHorizontal, MapPin, ChevronDown, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/sheet";
 import { ProductFilters } from "@/components/product-filters";
 import { branches } from "@/lib/data";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const VALID_BRANCHES = branches.map(b => b.id);
 const DEFAULT_BRANCH = "moreltechnology";
@@ -38,11 +38,39 @@ function getBranchLabel(branchId: string): string {
 
 export default function CatalogoBranchPage({ params }: { params: Promise<{ branch: string }> }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const PRODUCTS_PAGE_SIZE = 20;
   const SEARCH_PAGE_SIZE = 10;
 
   const [branch, setBranch] = useState<string>("");
   const [branchReady, setBranchReady] = useState(false);
+
+  const buildShareUrl = useCallback(() => {
+    const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
+    const params = new URLSearchParams(searchParams.toString());
+    return `${baseUrl}/catalogo/${branch}?${params.toString()}`;
+  }, [branch, searchParams]);
+
+  const handleShare = async () => {
+    const url = buildShareUrl();
+    const title = `Catálogo Morel Technology - ${getBranchLabel(branch)}`;
+    const text = `Mira estos equipos disponibles en ${getBranchLabel(branch)}`;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({ title, text, url });
+      } catch (err) {
+        if (err instanceof DOMException && err.name === "AbortError") return;
+        // Fallback: copy to clipboard
+        await navigator.clipboard.writeText(url);
+        alert("¡Enlace copiado al portapapeles!");
+      }
+    } else {
+      // Fallback: copy to clipboard
+      await navigator.clipboard.writeText(url);
+      alert("¡Enlace copiado al portapapeles!");
+    }
+  };
 
   useEffect(() => {
     params.then(p => {
@@ -169,6 +197,17 @@ export default function CatalogoBranchPage({ params }: { params: Promise<{ branc
                 </SelectContent>
               </Select>
             </div>
+
+            {/* Share Button */}
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={handleShare}
+              className="rounded-xl h-10 w-10"
+              aria-label="Compartir catálogo"
+            >
+              <Share2 className="h-5 w-5" />
+            </Button>
 
             <div className="bg-background/50 backdrop-blur-sm border border-border/50 rounded-lg p-1 flex items-center">
               <span className="text-[10px] md:text-xs font-bold px-2 py-0.5 text-primary uppercase">
