@@ -16,7 +16,8 @@ import {
   ShoppingCart,
   ChevronLeft,
   MessageCircle,
-  ArrowLeft
+  ArrowLeft,
+  Share2
 } from "lucide-react";
 import { WhatsAppDropdown } from "@/components/whatsapp-dropdown";
 import { Button } from "@/components/ui/button";
@@ -37,6 +38,26 @@ export default function ProductDetailClient({ id, initialProduct }: ProductDetai
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [activeImage, setActiveImage] = useState(0);
   const { addItem } = useCart();
+
+  const handleShare = async () => {
+    if (!product) return;
+    const url = typeof window !== "undefined" ? window.location.href : "";
+    const title = `${product.name} - ${product.brand}`;
+    const text = `${product.name} por ${product.brand} - Disponible en Morel Technology`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title, text, url });
+      } catch (err) {
+        if (err instanceof DOMException && err.name === "AbortError") return;
+        await navigator.clipboard.writeText(url);
+        toast.success("¡Enlace copiado!");
+      }
+    } else {
+      await navigator.clipboard.writeText(url);
+      toast.success("¡Enlace copiado!");
+    }
+  };
 
   useEffect(() => {
     async function loadData() {
@@ -234,6 +255,20 @@ export default function ProductDetailClient({ id, initialProduct }: ProductDetai
                   ))}
                 </div>
               )}
+
+              {/* Share Button */}
+              <div className="flex items-center gap-2 pt-2 border-t border-border/50">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={handleShare}
+                  className="rounded-xl h-10 w-10"
+                  aria-label="Compartir producto"
+                >
+                  <Share2 className="h-5 w-5" />
+                </Button>
+                <span className="text-sm text-muted-foreground">Compartir</span>
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3 md:gap-4">
