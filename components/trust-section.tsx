@@ -32,42 +32,42 @@ const galleryImages = [
     caption: "Tienda física - Santo Domingo",
     category: "Tienda",
   },
-  {
-    src: "/images/trust/team-working.jpg",
-    alt: "Equipo MorelTechnology asesorando clientes",
-    caption: "Nuestro equipo asesorando",
-    category: "Empleados",
-  },
-  {
-    src: "/images/trust/warehouse.jpg",
-    alt: "Almacén de laptops MorelTechnology",
-    caption: "Almacén principal",
-    category: "Almacén",
-  },
+  // {
+  //   src: "/images/trust/team-working.jpg",
+  //   alt: "Equipo MorelTechnology asesorando clientes",
+  //   caption: "Nuestro equipo asesorando",
+  //   category: "Empleados",
+  // },
+  // {
+  //   src: "/images/trust/warehouse.jpg",
+  //   alt: "Almacén de laptops MorelTechnology",
+  //   caption: "Almacén principal",
+  //   category: "Almacén",
+  // },
   {
     src: "/images/trust/products-display.jpg",
     alt: "Laptops en exhibición",
     caption: "Productos en exhibición",
     category: "Productos",
   },
-  {
-    src: "/images/trust/customer-pickup.jpg",
-    alt: "Cliente recogiendo su laptop",
-    caption: "Cliente feliz con su compra",
-    category: "Clientes",
-  },
+  // {
+  //   src: "/images/trust/customer-pickup.jpg",
+  //   alt: "Cliente recogiendo su laptop",
+  //   caption: "Cliente feliz con su compra",
+  //   category: "Clientes",
+  // },
   {
     src: "/images/trust/packaging.jpg",
     alt: "Empaque seguro para envío",
     caption: "Empaque profesional",
     category: "Empaques",
   },
-  {
-    src: "/images/trust/quality-check.jpg",
-    alt: "Proceso de revisión técnica",
-    caption: "Control de calidad",
-    category: "Revisión",
-  },
+  // {
+  //   src: "/images/trust/quality-check.jpg",
+  //   alt: "Proceso de revisión técnica",
+  //   caption: "Control de calidad",
+  //   category: "Revisión",
+  // },
 ];
 
 export function TrustSection() {

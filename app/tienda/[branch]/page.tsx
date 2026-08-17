@@ -7,12 +7,14 @@ import { ProductCard } from "@/components/product-card";
 import { getProducts, PAGE_SIZE_DEFAULT } from "@/lib/api";
 import { branches } from "@/lib/data";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { StoreGallery } from "@/components/store-gallery";
 
 const branchData: Record<string, {
   title: string;
   description: string;
   canonical: string;
   phone: string;
+  media: { type: "image" | "video"; src: string; alt: string; poster?: string }[];
   benefits: { title: string; desc: string }[];
   faqs: { q: string; a: string }[];
   schema: {
@@ -27,6 +29,11 @@ const branchData: Record<string, {
     description: "Laptops nuevas y usadas en Santo Domingo con garantía. Lenovo, Dell, HP, ASUS. Financiamiento y envío express.",
     canonical: "/tienda/moreltechnology",
     phone: "809-617-5517",
+    media: [
+      { type: "image", src: "/images/store/santo-domingo/entrada-santo-domingo.webp", alt: "Entrada Morel Technology Santo Domingo" },
+      { type: "image", src: "/images/store/santo-domingo/inside-santo-domingo.jpeg", alt: "Interior Morel Technology Santo Domingo" },
+      { type: "video", src: "/images/store/santo-domingo/inside-santo-domingo-video.mp4", alt: "Recorrido Morel Technology Santo Domingo" },
+    ],
     benefits: [
       { title: "Garantía Certificada", desc: "Todos nuestros equipos incluyen garantía real. Los usados tienen 6 meses; los nuevos hasta 1 año." },
       { title: "Envío Express", desc: "Envío el mismo día en Santo Domingo. También realizamos envíos a todo el país." },
@@ -50,6 +57,14 @@ const branchData: Record<string, {
     description: "Laptops nuevas y usadas en Santiago con garantía. Lenovo, Dell, HP, ASUS. Financiamiento disponible.",
     canonical: "/tienda/mts",
     phone: "809-421-5517",
+    media: [
+      { type: "image", src: "/images/store/santiago/santiago-1.jpg", alt: "Morel Technology Santiago" },
+      { type: "image", src: "/images/store/santiago/santiago-2.jpg", alt: "Morel Technology Santiago" },
+      { type: "image", src: "/images/store/santiago/santiago-3.jpg", alt: "Morel Technology Santiago" },
+      { type: "image", src: "/images/store/santiago/santiago-4.jpg", alt: "Morel Technology Santiago" },
+      { type: "video", src: "/images/store/santiago/inside-santiago-video.mp4", alt: "Recorrido Morel Technology Santiago" },
+      { type: "video", src: "/images/store/santiago/printing-santiago-video.mp4", alt: "Impresoras Morel Technology Santiago" },
+    ],
     benefits: [
       { title: "Garantía Certificada", desc: "Todos nuestros equipos incluyen garantía real. Los usados tienen 6 meses; los nuevos hasta 1 año." },
       { title: "Envío a todo el Cibao", desc: "Realizamos envíos a todas las provincias del Cibao en 24-48 horas a través de servicios de transporte confiables." },
@@ -232,6 +247,9 @@ export default async function TiendaBranchPage({ params }: PageProps) {
           </div>
         </section>
       )}
+
+      {/* Store Gallery */}
+      <StoreGallery media={data.media} title={city} />
 
       {/* Benefits */}
       <section className="py-20 bg-muted/30">

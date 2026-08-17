@@ -48,7 +48,7 @@ export function HappyClients() {
             <div
               className="flex gap-4 shrink-0"
               style={{
-                animation: "scroll 30s linear infinite",
+                animation: "scroll 80s linear infinite",
                 animationPlayState: isPaused ? "paused" : "running",
               }}
             >

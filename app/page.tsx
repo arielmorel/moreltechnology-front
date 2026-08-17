@@ -164,9 +164,9 @@ export default async function Home() {
       <LazySection>
         <ReviewsSection />
       </LazySection>
-      <LazySection>
+      {/* <LazySection>
         <CTASection />
-      </LazySection>
+      </LazySection> */}
     </>
   );
 }
