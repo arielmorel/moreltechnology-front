@@ -4,15 +4,10 @@ import { useState, useRef } from "react";
 import Image from "next/image";
 import { Heart } from "lucide-react";
 
-const clientImages = [
-  { src: "/images/happy-clients/client-1.jpg", alt: "Cliente Morel Technology" },
-  { src: "/images/happy-clients/WhatsApp Image 2026-08-17 at 9.53.08 AM.jpeg", alt: "Cliente Morel Technology" },
-  { src: "/images/happy-clients/WhatsApp Image 2026-08-17 at 9.53.08 AM (1).jpeg", alt: "Cliente Morel Technology" },
-  { src: "/images/happy-clients/WhatsApp Image 2026-08-17 at 9.53.08 AM (2).jpeg", alt: "Cliente Morel Technology" },
-  { src: "/images/happy-clients/WhatsApp Image 2026-08-17 at 9.53.09 AM (1).jpeg", alt: "Cliente Morel Technology" },
-  { src: "/images/happy-clients/WhatsApp Image 2026-08-17 at 9.53.09 AM (2).jpeg", alt: "Cliente Morel Technology" },
-  { src: "/images/happy-clients/WhatsApp Image 2026-08-17 at 9.53.09 AM (3).jpeg", alt: "Cliente Morel Technology" },
-];
+const clientImages = Array.from({ length: 40 }, (_, i) => ({
+  src: `/images/happy-clients/client-${i + 1}.jpg`,
+  alt: "Cliente Morel Technology",
+}));
 
 export function HappyClients() {
   const [isPaused, setIsPaused] = useState(false);
