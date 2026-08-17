@@ -30,13 +30,13 @@ export const categories = [
     id: "laptop",
     name: "Laptops",
     description: "Equipos de alto rendimiento, nuevos y usados certificados",
-    image: "/images/category-laptop.png?q=80&w=2068&auto=format&fit=crop",
+    image: "/images/accessories/laptops.png",
   },
   {
     id: "accesorios",
     name: "Accesorios",
     description: "Cargadores, mouses, teclados y más periféricos",
-    image: "/images/category-accessories.png?q=80&w=2070&auto=format&fit=crop",
+    image: "/images/accessories/keyboards.png",
   }
 ];
 

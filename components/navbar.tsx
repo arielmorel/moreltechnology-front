@@ -14,8 +14,8 @@ import { CartSheet } from "./cart-sheet";
 const navLinks = [
   { name: "Inicio", href: "/", icon: Home },
   { name: "Catálogo", href: "/catalogo/moreltechnology", icon: ShoppingBag },
-  { name: "Recomendador", href: "/recomendador", icon: Sparkles },
   { name: "Ofertas", href: "/ofertas", icon: Tag },
+  { name: "Recomendador", href: "/recomendador", icon: Sparkles },
   { name: "Apps", href: "/apps", icon: Smartphone },
   { name: "Blog", href: "/blog", icon: BookOpen },
   { name: "Financiamiento", href: "/financiamiento", icon: CreditCard },
@@ -80,8 +80,8 @@ export function Navbar() {
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center transition-transform hover:scale-105">
             <Image
-              src="/morel_technology_logo.png"
-              alt="Morel Technology Logo"
+              src="/logo/moreltechnology.png"
+              alt="MorelTechnology Logo"
               width={120}
               height={32}
               className="object-contain h-7 md:h-8 w-auto"

@@ -1,7 +1,9 @@
 import { HeroSection } from "@/components/hero-section";
 import { HowItWorks } from "@/components/how-it-works";
 import { BenefitsSection } from "@/components/benefits-section";
+import { TrustSection } from "@/components/trust-section";
 import { CategoriesSection } from "@/components/categories-section";
+import { HappyClients } from "@/components/happy-clients";
 import { FeaturedProducts } from "@/components/featured-products";
 import { HomeFAQ } from "@/components/home-faq";
 import { BranchesSection } from "@/components/branches-section";
@@ -18,7 +20,7 @@ const organizationSchema = {
   "@type": "Organization",
   name: "Morel Technology",
   url: "https://moreltechnologyrd.com",
-  logo: "https://moreltechnologyrd.com/morel_technology_logo.png",
+  logo: "https://moreltechnologyrd.com/logo/moreltechnology.png",
   description: "Tienda de laptops nuevas y usadas en República Dominicana con garantía certificada",
   address: [
     {
@@ -145,7 +147,13 @@ export default async function Home() {
         <BenefitsSection />
       </LazySection>
       <LazySection>
+        <TrustSection />
+      </LazySection>
+      <LazySection>
         <CategoriesSection />
+      </LazySection>
+      <LazySection>
+        <HappyClients />
       </LazySection>
       <LazySection>
         <HomeFAQ />

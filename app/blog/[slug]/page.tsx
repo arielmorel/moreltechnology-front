@@ -58,7 +58,7 @@ export default async function BlogPostPage({ params }: PageProps) {
       name: "Morel Technology",
       logo: {
         "@type": "ImageObject",
-        url: "https://moreltechnologyrd.com/morel_technology_logo.png",
+        url: "https://moreltechnologyrd.com/logo/moreltechnology.png",
       },
     },
     datePublished: post.date,

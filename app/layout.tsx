@@ -29,6 +29,7 @@ export const metadata: Metadata = {
   creator: "Morel Technology",
   icons: {
     icon: [
+      { url: "/favicon.ico", sizes: "any" },
       { media: "(max-width: 768px)", url: "/favicon-16.png", sizes: "16x16" },
       { url: "/favicon-32.png", sizes: "32x32" },
     ],
@@ -74,7 +75,7 @@ export default function RootLayout({
         <link rel="preload" as="image" href="/laptop.jpeg" fetchPriority="high" />
 
         {/* Preload logo */}
-        <link rel="preload" as="image" href="/morel_technology_logo.png" />
+        <link rel="preload" as="image" href="/logo/moreltechnology.png" />
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-primary/30">
         <ThemeProvider

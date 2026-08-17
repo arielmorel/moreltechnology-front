@@ -13,8 +13,8 @@ export function Footer() {
           <div className="space-y-4">
             <Link href="/" className="inline-block transition-transform hover:scale-105">
               <Image
-                src="/morel_technology_logo.png"
-                alt="Morel Technology Logo"
+                src="/logo/moreltechnology.png"
+                alt="MorelTechnology Logo"
                 width={140}
                 height={36}
                 className="object-contain h-9 w-auto"

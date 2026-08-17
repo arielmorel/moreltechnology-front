@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
         pathname: "/images/**",
       },
       {
-        pathname: "/morel_technology_logo.png",
+        pathname: "/logo/moreltechnology.png",
       },
       {
         pathname: "/laptop.jpeg",
