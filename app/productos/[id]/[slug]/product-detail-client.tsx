@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Product } from "@/lib/data";
@@ -15,6 +15,7 @@ import {
   Truck,
   ShoppingCart,
   ChevronLeft,
+  ChevronRight,
   MessageCircle,
   ArrowLeft,
   Share2
@@ -58,6 +59,27 @@ export default function ProductDetailClient({ id, initialProduct }: ProductDetai
       toast.success("¡Enlace copiado!");
     }
   };
+
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  }, []);
+
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (!product) return;
+    const deltaX = e.changedTouches[0].clientX - touchStartX.current;
+    const deltaY = e.changedTouches[0].clientY - touchStartY.current;
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+      if (deltaX < 0 && activeImage < product.images.length - 1) {
+        setActiveImage(prev => prev + 1);
+      } else if (deltaX > 0 && activeImage > 0) {
+        setActiveImage(prev => prev - 1);
+      }
+    }
+  }, [activeImage, product]);
 
   useEffect(() => {
     async function loadData() {
@@ -150,11 +172,16 @@ export default function ProductDetailClient({ id, initialProduct }: ProductDetai
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
           {/* Left Column: Images */}
           <div className="space-y-6">
-            <div className="relative aspect-square rounded-[2.5rem] overflow-hidden bg-muted border border-border/50">
+            <div
+              className="relative aspect-square rounded-[2.5rem] overflow-hidden bg-muted border border-border/50 touch-pan-y"
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+            >
               <Image
                 src={product.images[activeImage]}
                 alt={product.name}
                 fill
+                sizes="(max-width: 768px) 100vw, 50vw"
                 unoptimized={isMinioImage(product.images[activeImage])}
                 className="object-contain p-8 md:p-12"
                 priority
@@ -180,6 +207,45 @@ export default function ProductDetailClient({ id, initialProduct }: ProductDetai
                   </Badge>
                 )}
               </div>
+
+              {/* Navigation Arrows - Mobile */}
+              {product.images.length > 1 && (
+                <>
+                  {activeImage > 0 && (
+                    <button
+                      onClick={() => setActiveImage(prev => prev - 1)}
+                      className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-background/80 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg md:hidden"
+                      aria-label="Imagen anterior"
+                    >
+                      <ChevronLeft className="w-5 h-5" />
+                    </button>
+                  )}
+                  {activeImage < product.images.length - 1 && (
+                    <button
+                      onClick={() => setActiveImage(prev => prev + 1)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-background/80 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg md:hidden"
+                      aria-label="Imagen siguiente"
+                    >
+                      <ChevronRight className="w-5 h-5" />
+                    </button>
+                  )}
+                </>
+              )}
+
+              {/* Swipe Indicator - Mobile */}
+              {product.images.length > 1 && (
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 md:hidden">
+                  {product.images.map((_, idx) => (
+                    <div
+                      key={idx}
+                      className={cn(
+                        "w-2 h-2 rounded-full transition-all",
+                        activeImage === idx ? "bg-primary w-4" : "bg-primary/30"
+                      )}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
 
             {product.images.length > 1 && (
@@ -193,7 +259,7 @@ export default function ProductDetailClient({ id, initialProduct }: ProductDetai
                       activeImage === idx ? "border-primary shadow-lg scale-95" : "border-border/50 hover:border-primary/50"
                     )}
                   >
-                    <Image src={img} alt={`${product.name} ${idx + 1}`} fill unoptimized={isMinioImage(img)} className="object-cover" />
+                    <Image src={img} alt={`${product.name} ${idx + 1}`} fill unoptimized={isMinioImage(img)} sizes="96px" className="object-cover" />
                   </button>
                 ))}
               </div>
@@ -373,7 +439,46 @@ export default function ProductDetailClient({ id, initialProduct }: ProductDetai
             </div>
           </div>
         )}
-      </div>
-    </div>
+              </div>
+
+              {/* Navigation Arrows - Mobile */}
+              {product.images.length > 1 && (
+                <>
+                  {activeImage > 0 && (
+                    <button
+                      onClick={() => setActiveImage(prev => prev - 1)}
+                      className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-background/80 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg md:hidden"
+                      aria-label="Imagen anterior"
+                    >
+                      <ChevronLeft className="w-5 h-5" />
+                    </button>
+                  )}
+                  {activeImage < product.images.length - 1 && (
+                    <button
+                      onClick={() => setActiveImage(prev => prev + 1)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-background/80 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg md:hidden"
+                      aria-label="Imagen siguiente"
+                    >
+                      <ChevronRight className="w-5 h-5" />
+                    </button>
+                  )}
+                </>
+              )}
+
+              {/* Swipe Indicator - Mobile */}
+              {product.images.length > 1 && (
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 md:hidden">
+                  {product.images.map((_, idx) => (
+                    <div
+                      key={idx}
+                      className={cn(
+                        "w-2 h-2 rounded-full transition-all",
+                        activeImage === idx ? "bg-primary w-4" : "bg-primary/30"
+                      )}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
   );
 }

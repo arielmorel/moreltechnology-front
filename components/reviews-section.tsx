@@ -89,6 +89,7 @@ export function ReviewsSection() {
                       width={18}
                       height={18}
                       className="opacity-20 group-hover:opacity-100 transition-opacity shrink-0"
+                      sizes="18px"
                     />
                   </div>
                 </div>

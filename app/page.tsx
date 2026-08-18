@@ -4,16 +4,11 @@ import { BenefitsSection } from "@/components/benefits-section";
 import { TrustSection } from "@/components/trust-section";
 import { CategoriesSection } from "@/components/categories-section";
 import { HappyClients } from "@/components/happy-clients";
-import { FeaturedProducts } from "@/components/featured-products";
 import { HomeFAQ } from "@/components/home-faq";
 import { BranchesSection } from "@/components/branches-section";
 import { ReviewsSection } from "@/components/reviews-section";
-import { CTASection } from "@/components/cta-section";
 import { LazySection } from "@/components/lazy-section";
 import Script from "next/script";
-import { getProducts } from "@/lib/api";
-
-export const dynamic = "force-dynamic";
 
 const organizationSchema = {
   "@context": "https://schema.org",
@@ -110,11 +105,7 @@ const faqSchema = {
   ],
 };
 
-export default async function Home() {
-  const { products } = await getProducts(0, 4);
-  const featured = products.filter(p => p.featured).slice(0, 4);
-  const featuredProducts = featured.length > 0 ? featured : products.slice(0, 4);
-
+export default function Home() {
   return (
     <>
       <Script
@@ -140,9 +131,6 @@ export default async function Home() {
       <LazySection>
         <HowItWorks />
       </LazySection>
-      {/* <LazySection>
-        <FeaturedProducts products={featuredProducts} />
-      </LazySection> */}
       <LazySection>
         <BenefitsSection />
       </LazySection>
@@ -164,9 +152,6 @@ export default async function Home() {
       <LazySection>
         <ReviewsSection />
       </LazySection>
-      {/* <LazySection>
-        <CTASection />
-      </LazySection> */}
     </>
   );
 }

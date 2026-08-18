@@ -415,7 +415,7 @@ export default function CheckoutPage() {
                       {items.map(item => (
                         <div key={item.id} className="flex gap-3 text-sm">
                           <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-muted flex-shrink-0">
-                            <Image src={item.images[0]} alt={item.name} fill unoptimized={isMinioImage(item.images[0])} className="object-cover" />
+                            <Image src={item.images[0]} alt={item.name} fill unoptimized={isMinioImage(item.images[0])} sizes="48px" className="object-cover" />
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="font-bold truncate">{item.name}</p>

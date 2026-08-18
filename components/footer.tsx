@@ -18,6 +18,7 @@ export function Footer() {
                 width={140}
                 height={36}
                 className="object-contain h-9 w-auto"
+                sizes="140px"
               />
             </Link>
             <p className="text-muted-foreground text-sm max-w-xs">

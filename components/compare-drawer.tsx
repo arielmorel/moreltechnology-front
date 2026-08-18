@@ -92,7 +92,7 @@ export function CompareDrawer() {
                             <th key={item.id} className="p-4 min-w-[200px]">
                               <div className="flex flex-col items-center gap-4 text-center">
                                 <div className="relative w-32 h-32 rounded-2xl overflow-hidden bg-muted border border-border/50">
-                                  <Image src={item.images[0]} alt={item.name} fill unoptimized={isMinioImage(item.images[0])} className="object-cover" />
+                      <Image src={item.images[0]} alt={item.name} fill unoptimized={isMinioImage(item.images[0])} sizes="128px" className="object-cover" />
                                 </div>
                                 <div className="space-y-1">
                                   <Badge variant="outline" className="text-[10px] uppercase tracking-widest">{item.brand}</Badge>

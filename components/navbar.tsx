@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Menu, X, Moon, Sun, Home, ShoppingBag, Sparkles, Tag, CreditCard, Users, Phone, MapPin, BookOpen, Smartphone, ChevronDown } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useState, useEffect, useRef } from "react";
-import { WhatsAppDropdown } from "./whatsapp-dropdown";
 import { CartSheet } from "./cart-sheet";
 
 const navLinks = [
@@ -85,6 +84,7 @@ export function Navbar() {
               width={120}
               height={32}
               className="object-contain h-7 md:h-8 w-auto"
+              sizes="120px"
               priority
             />
           </Link>
@@ -183,9 +183,7 @@ export function Navbar() {
               {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </Button>
           )}
-          {mounted && (
-            <WhatsAppDropdown className="rounded-full font-medium shadow-lg hover:shadow-primary/25 transition-all" />
-          )}
+
         </div>
 
         {/* Mobile Menu Toggle */}
@@ -217,7 +215,7 @@ export function Navbar() {
       {/* Mobile Navigation - CSS transitions, no forced reflow */}
       <div
         className={cn(
-          "md:hidden border-b bg-background/95 backdrop-blur-md overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out",
+          "md:hidden border-b bg-background/95 backdrop-blur-md overflow-y-auto transition-[max-height,opacity] duration-300 ease-in-out",
           mobileMenuOpen ? "max-h-[80vh] opacity-100" : "max-h-0 opacity-0"
         )}
       >
@@ -259,11 +257,7 @@ export function Navbar() {
               </Link>
             ))}
           </div>
-          <div className="px-4 pt-2 pb-1">
-            {mounted && (
-              <WhatsAppDropdown className="w-full rounded-full font-medium shadow-md" />
-            )}
-          </div>
+
         </nav>
       </div>
     </header>

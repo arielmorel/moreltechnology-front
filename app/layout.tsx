@@ -70,12 +70,6 @@ export default function RootLayout({
         {/* Preconnect to external origins */}
         <link rel="preconnect" href="https://minio.sm.novuswise.com" />
         <link rel="preconnect" href="https://images.unsplash.com" />
-
-        {/* Preload hero image for LCP */}
-        <link rel="preload" as="image" href="/laptop.jpeg" fetchPriority="high" />
-
-        {/* Preload logo */}
-        <link rel="preload" as="image" href="/logo/moreltechnology.png" />
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-primary/30">
         <ThemeProvider

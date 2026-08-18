@@ -71,6 +71,7 @@ export function CartSheet() {
                     src={item.images[0]}
                     alt={item.name}
                     fill
+                    sizes="80px"
                     className="object-cover"
                   />
                 </div>
