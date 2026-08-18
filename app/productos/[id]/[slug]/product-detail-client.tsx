@@ -439,46 +439,7 @@ export default function ProductDetailClient({ id, initialProduct }: ProductDetai
             </div>
           </div>
         )}
-              </div>
-
-              {/* Navigation Arrows - Mobile */}
-              {product.images.length > 1 && (
-                <>
-                  {activeImage > 0 && (
-                    <button
-                      onClick={() => setActiveImage(prev => prev - 1)}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-background/80 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg md:hidden"
-                      aria-label="Imagen anterior"
-                    >
-                      <ChevronLeft className="w-5 h-5" />
-                    </button>
-                  )}
-                  {activeImage < product.images.length - 1 && (
-                    <button
-                      onClick={() => setActiveImage(prev => prev + 1)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-background/80 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg md:hidden"
-                      aria-label="Imagen siguiente"
-                    >
-                      <ChevronRight className="w-5 h-5" />
-                    </button>
-                  )}
-                </>
-              )}
-
-              {/* Swipe Indicator - Mobile */}
-              {product.images.length > 1 && (
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 md:hidden">
-                  {product.images.map((_, idx) => (
-                    <div
-                      key={idx}
-                      className={cn(
-                        "w-2 h-2 rounded-full transition-all",
-                        activeImage === idx ? "bg-primary w-4" : "bg-primary/30"
-                      )}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
+      </div>
+    </div>
   );
 }
