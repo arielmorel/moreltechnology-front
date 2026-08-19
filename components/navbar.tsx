@@ -8,7 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Menu, X, Moon, Sun, Home, ShoppingBag, Sparkles, Tag, CreditCard, Users, Phone, MapPin, BookOpen, Smartphone, ChevronDown } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useState, useEffect, useRef } from "react";
-import { CartSheet } from "./cart-sheet";
+import dynamic from "next/dynamic";
+
+const CartSheet = dynamic(() => import("./cart-sheet").then(m => m.CartSheet), { ssr: false });
 
 const navLinks = [
   { name: "Inicio", href: "/", icon: Home },
