@@ -146,6 +146,22 @@
   animation: slide-up 0.5s ease-out 0.4s both;
 }
 
+.animate-slide-up-delay-5 {
+  animation: slide-up 0.5s ease-out 0.5s both;
+}
+
+.animate-slide-up-delay-6 {
+  animation: slide-up 0.5s ease-out 0.6s both;
+}
+
+.animate-slide-up-delay-8 {
+  animation: slide-up 0.5s ease-out 0.8s both;
+}
+
+.animate-slide-up-delay-10 {
+  animation: slide-up 0.5s ease-out 1s both;
+}
+
 .animate-slide-left {
   animation: slide-left 0.5s ease-out both;
 }
@@ -162,6 +178,10 @@
   animation: slide-left 0.5s ease-out 0.3s both;
 }
 
+.animate-slide-left-delay-8 {
+  animation: slide-left 0.5s ease-out 0.8s both;
+}
+
 .animate-slide-right {
   animation: slide-right 0.5s ease-out both;
 }
@@ -172,6 +192,10 @@
 
 .animate-slide-right-delay-2 {
   animation: slide-right 0.5s ease-out 0.2s both;
+}
+
+.animate-slide-right-delay-10 {
+  animation: slide-right 0.5s ease-out 1s both;
 }
 
 .animate-scale-in {
@@ -188,6 +212,14 @@
 
 .animate-scale-in-delay-3 {
   animation: scale-in 0.4s ease-out 0.3s both;
+}
+
+.animate-scale-in-delay-7 {
+  animation: scale-in 0.7s ease-out 0.2s both;
+}
+
+.animate-slide-up-delay-7 {
+  animation: slide-up 0.5s ease-out 0.7s both;
 }
 
 @layer base {

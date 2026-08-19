@@ -1,14 +1,15 @@
 import { HeroSection } from "@/components/hero-section";
-import { HowItWorks } from "@/components/how-it-works";
-import { BenefitsSection } from "@/components/benefits-section";
-import { TrustSection } from "@/components/trust-section";
-import { CategoriesSection } from "@/components/categories-section";
-import { HappyClients } from "@/components/happy-clients";
-import { HomeFAQ } from "@/components/home-faq";
-import { BranchesSection } from "@/components/branches-section";
-import { ReviewsSection } from "@/components/reviews-section";
-import { LazySection } from "@/components/lazy-section";
+import dynamic from "next/dynamic";
 import Script from "next/script";
+
+const HowItWorks = dynamic(() => import("@/components/how-it-works").then(m => m.HowItWorks));
+const BenefitsSection = dynamic(() => import("@/components/benefits-section").then(m => m.BenefitsSection));
+const TrustSection = dynamic(() => import("@/components/trust-section").then(m => m.TrustSection));
+const CategoriesSection = dynamic(() => import("@/components/categories-section").then(m => m.CategoriesSection));
+const HappyClients = dynamic(() => import("@/components/happy-clients").then(m => m.HappyClients));
+const HomeFAQ = dynamic(() => import("@/components/home-faq").then(m => m.HomeFAQ));
+const BranchesSection = dynamic(() => import("@/components/branches-section").then(m => m.BranchesSection));
+const ReviewsSection = dynamic(() => import("@/components/reviews-section").then(m => m.ReviewsSection));
 
 const organizationSchema = {
   "@context": "https://schema.org",
@@ -128,30 +129,14 @@ export default function Home() {
       />
 
       <HeroSection />
-      <LazySection>
-        <HowItWorks />
-      </LazySection>
-      <LazySection>
-        <BenefitsSection />
-      </LazySection>
-      <LazySection>
-        <TrustSection />
-      </LazySection>
-      <LazySection>
-        <CategoriesSection />
-      </LazySection>
-      <LazySection>
-        <HappyClients />
-      </LazySection>
-      <LazySection>
-        <HomeFAQ />
-      </LazySection>
-      <LazySection>
-        <BranchesSection />
-      </LazySection>
-      <LazySection>
-        <ReviewsSection />
-      </LazySection>
+      <HowItWorks />
+      <BenefitsSection />
+      <TrustSection />
+      <CategoriesSection />
+      <HappyClients />
+      <HomeFAQ />
+      <BranchesSection />
+      <ReviewsSection />
     </>
   );
 }

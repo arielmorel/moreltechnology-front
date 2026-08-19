@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import Image from "next/image";
 import { Heart } from "lucide-react";
 
-const clientImages = Array.from({ length: 40 }, (_, i) => ({
+const clientImages = Array.from({ length: 15 }, (_, i) => ({
   src: `/images/happy-clients/client-${i + 1}.jpg`,
   alt: "Cliente Morel Technology",
 }));
@@ -48,7 +48,7 @@ export function HappyClients() {
             <div
               className="flex gap-4 shrink-0"
               style={{
-                animation: "scroll 80s linear infinite",
+                animation: "scroll 40s linear infinite",
                 animationPlayState: isPaused ? "paused" : "running",
               }}
             >

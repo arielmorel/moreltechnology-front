@@ -1,8 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, MessageCircle, ShieldCheck, Users, Laptop, Banknote, Building2, CreditCard } from "lucide-react";
+import { ArrowRight, ShieldCheck, Users, Laptop, CreditCard, Banknote, Building2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { WhatsAppDropdown } from "./whatsapp-dropdown";
@@ -22,25 +21,15 @@ export function HeroSection() {
 
       <div className="container mx-auto px-4 md:px-6 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="flex flex-col gap-6"
-          >
+          <div className="flex flex-col gap-6 animate-slide-up">
             {/* Badge */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary w-fit text-sm font-bold backdrop-blur-sm border border-primary/20"
-            >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary w-fit text-sm font-bold backdrop-blur-sm border border-primary/20 animate-slide-left-delay-2">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
               </span>
               Equipos nuevos y usados garantizados
-            </motion.div>
+            </div>
 
             {/* Title */}
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-foreground">
@@ -81,55 +70,35 @@ export function HeroSection() {
 
             {/* Stats */}
             <div className="flex items-center gap-6 sm:gap-8 mt-8 pt-8 border-t border-border/50">
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="flex flex-col"
-              >
+              <div className="flex flex-col animate-slide-up-delay-5">
                 <div className="flex items-center gap-2 font-black text-2xl sm:text-3xl">
                   <Users className="w-5 h-5 text-primary" />
                   <span>500+</span>
                 </div>
                 <span className="text-xs sm:text-sm text-muted-foreground font-medium">Clientes felices</span>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="flex flex-col"
-              >
+              </div>
+              <div className="flex flex-col animate-slide-up-delay-6">
                 <div className="flex items-center gap-2 font-black text-2xl sm:text-3xl">
                   <ShieldCheck className="w-5 h-5 text-green-500" />
                   <span>100%</span>
                 </div>
                 <span className="text-xs sm:text-sm text-muted-foreground font-medium">Garantía Real</span>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-                className="flex flex-col"
-              >
+              </div>
+              <div className="flex flex-col animate-slide-up-delay-7">
                 <div className="flex items-center gap-2 font-black text-2xl sm:text-3xl">
                   <Laptop className="w-5 h-5 text-blue-500" />
                   <span>100+</span>
                 </div>
                 <span className="text-xs sm:text-sm text-muted-foreground font-medium">Equipos en Stock</span>
-              </motion.div>
+              </div>
             </div>
-          </motion.div>
+          </div>
 
           {/* Right side - Image */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="relative lg:ml-auto w-full max-w-[400px] sm:max-w-[500px] lg:max-w-[600px] aspect-square lg:aspect-auto lg:h-[600px] overflow-hidden"
-          >
+          <div className="relative lg:ml-auto w-full max-w-[400px] sm:max-w-[500px] lg:max-w-[600px] aspect-square lg:aspect-auto lg:h-[600px] overflow-hidden animate-scale-in-delay-7">
             {/* Glow effect */}
             <div className="absolute inset-0 bg-gradient-to-tr from-primary/30 via-blue-500/20 to-transparent rounded-full blur-[80px] mix-blend-multiply dark:mix-blend-overlay" />
-            
+
             {/* Image container with glassmorphism */}
             <div className="relative w-full h-full">
               <div className="absolute inset-8 rounded-[3rem] bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl border border-white/20 shadow-2xl" />
@@ -144,12 +113,7 @@ export function HeroSection() {
             </div>
 
             {/* Floating badges */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.8 }}
-              className="absolute top-8 sm:top-12 left-0 bg-card/90 backdrop-blur-xl border border-border/50 rounded-2xl px-3 sm:px-4 py-2 sm:py-3 shadow-xl"
-            >
+            <div className="absolute top-8 sm:top-12 left-0 bg-card/90 backdrop-blur-xl border border-border/50 rounded-2xl px-3 sm:px-4 py-2 sm:py-3 shadow-xl animate-slide-left-delay-8">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center">
                   <ShieldCheck className="w-5 h-5 text-green-500" />
@@ -159,14 +123,9 @@ export function HeroSection() {
                   <div className="text-xs text-muted-foreground">6 meses mínimo</div>
                 </div>
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 1 }}
-              className="absolute bottom-8 sm:bottom-12 right-0 bg-card/90 backdrop-blur-xl border border-border/50 rounded-2xl px-3 sm:px-4 py-2 sm:py-3 shadow-xl"
-            >
+            <div className="absolute bottom-8 sm:bottom-12 right-0 bg-card/90 backdrop-blur-xl border border-border/50 rounded-2xl px-3 sm:px-4 py-2 sm:py-3 shadow-xl animate-slide-right-delay-10">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
                   <CreditCard className="w-5 h-5 text-blue-500" />
@@ -176,17 +135,12 @@ export function HeroSection() {
                   <div className="text-xs text-muted-foreground">Cuotas cómodas</div>
                 </div>
               </div>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
 
         {/* Brand Trust Bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="mt-20 pt-10 border-t border-border/50"
-        >
+        <div className="mt-20 pt-10 border-t border-border/50 animate-slide-up-delay-5">
           <p className="text-center text-sm font-bold uppercase tracking-[0.2em] text-muted-foreground mb-8">
             Distribuidor Autorizado & Marcas Aliadas
           </p>
@@ -216,7 +170,7 @@ export function HeroSection() {
               <span className="text-sm font-medium">Tarjetas de Crédito/Débito</span>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
