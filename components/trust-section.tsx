@@ -72,7 +72,7 @@ const galleryImages = [
 
 export function TrustSection() {
   return (
-    <section className="py-24 bg-background relative overflow-hidden">
+    <section className="py-16 md:py-24 bg-background relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 blur-[120px] rounded-full" />
@@ -85,7 +85,7 @@ export function TrustSection() {
             <Shield className="w-4 h-4" />
             Por qué confiar en MorelTechnology
           </div>
-          <h2 className="animate-slide-up-delay-1 text-4xl md:text-5xl lg:text-6xl font-black tracking-tight mb-4">
+          <h2 className="animate-slide-up-delay-1 text-3xl md:text-5xl lg:text-6xl font-black tracking-tight mb-4">
             Compra con <span className="text-primary">total confianza</span>
           </h2>
           <p className="animate-slide-up-delay-2 text-muted-foreground text-lg max-w-3xl mx-auto leading-relaxed">
@@ -95,7 +95,7 @@ export function TrustSection() {
         </div>
 
         {/* Trust Signals Grid */}
-        <div className="animate-slide-up grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-4 mb-20">
+        <div className="animate-slide-up grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-3 sm:gap-4 mb-16 md:mb-20">
           {trustSignals.map((signal, index) => (
             <div
               key={signal.label}
@@ -117,7 +117,7 @@ export function TrustSection() {
 
         {/* Photo Gallery */}
         <div className="animate-slide-up-delay-3">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
             <div>
               <h3 className="text-2xl md:text-3xl font-bold">Fotos reales de nuestro día a día</h3>
               <p className="text-muted-foreground mt-1">Transparencia total: conoce nuestra tienda, equipo y procesos</p>
@@ -142,7 +142,7 @@ export function TrustSection() {
           >
             <CarouselContent className="-ml-3">
               {galleryImages.map((image, index) => (
-                <CarouselItem key={index} className="pl-3 md:basis-[350px] lg:basis-[400px]">
+                <CarouselItem key={index} className="pl-3 basis-[85vw] sm:basis-[350px] lg:basis-[400px]">
                   <div className="h-full group relative">
                     <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-muted/30 border border-border/50 shadow-lg">
                       <Image
@@ -181,7 +181,7 @@ export function TrustSection() {
                   <stat.icon className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="text-2xl font-black">{stat.value}</p>
+                  <p className="text-xl sm:text-2xl font-black">{stat.value}</p>
                   <p className="text-xs text-muted-foreground uppercase tracking-wider">{stat.label}</p>
                 </div>
               </div>

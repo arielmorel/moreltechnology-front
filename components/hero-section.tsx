@@ -8,12 +8,12 @@ import { WhatsAppDropdown } from "./whatsapp-dropdown";
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-background pt-16 md:pt-24 pb-32">
+    <section className="relative overflow-hidden bg-background pt-16 md:pt-24 pb-16 md:pb-32">
       {/* Background Gradients */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-primary/20 blur-[120px] rounded-full opacity-60" />
-        <div className="absolute top-40 -left-40 w-[500px] h-[500px] bg-blue-500/15 blur-[120px] rounded-full opacity-60" />
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary/5 blur-[100px] rounded-full" />
+        <div className="absolute -top-40 -right-40 w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-primary/20 blur-[120px] rounded-full opacity-60" />
+        <div className="absolute top-40 -left-40 w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-blue-500/15 blur-[120px] rounded-full opacity-60" />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[250px] md:w-[800px] md:h-[400px] bg-primary/5 blur-[100px] rounded-full" />
       </div>
 
       {/* Grid pattern overlay */}
@@ -49,7 +49,7 @@ export function HeroSection() {
             <div className="flex flex-col sm:flex-row gap-4 mt-4">
               <Button
                 size="lg"
-                className="rounded-2xl font-bold h-14 px-8 shadow-xl shadow-primary/20 hover:shadow-primary/30 transition-all text-base group bg-primary text-primary-foreground hover:bg-primary/90"
+                className="rounded-2xl font-bold h-14 px-6 sm:px-8 shadow-xl shadow-primary/20 hover:shadow-primary/30 transition-all text-base group bg-primary text-primary-foreground hover:bg-primary/90"
                 nativeButton={false}
                 render={
                   <Link href="/catalogo/moreltechnology" className="flex items-center justify-center whitespace-nowrap" />
@@ -61,7 +61,7 @@ export function HeroSection() {
               </Button>
               <WhatsAppDropdown
                 variant="outline"
-                className="rounded-2xl font-bold h-14 px-8 border-2 border-primary/20 hover:bg-primary/5 text-base"
+                className="rounded-2xl font-bold h-14 px-6 sm:px-8 border-2 border-primary/20 hover:bg-primary/5 text-base"
                 showIcon={true}
               >
                 Hablar por WhatsApp
@@ -72,21 +72,21 @@ export function HeroSection() {
             <div className="flex items-center gap-6 sm:gap-8 mt-8 pt-8 border-t border-border/50">
               <div className="flex flex-col animate-slide-up-delay-5">
                 <div className="flex items-center gap-2 font-black text-2xl sm:text-3xl">
-                  <Users className="w-5 h-5 text-primary" />
+                  <Users className="w-6 h-6 text-primary" />
                   <span>500+</span>
                 </div>
                 <span className="text-xs sm:text-sm text-muted-foreground font-medium">Clientes felices</span>
               </div>
               <div className="flex flex-col animate-slide-up-delay-6">
                 <div className="flex items-center gap-2 font-black text-2xl sm:text-3xl">
-                  <ShieldCheck className="w-5 h-5 text-green-500" />
+                  <ShieldCheck className="w-6 h-6 text-green-500" />
                   <span>100%</span>
                 </div>
                 <span className="text-xs sm:text-sm text-muted-foreground font-medium">Garantía Real</span>
               </div>
               <div className="flex flex-col animate-slide-up-delay-7">
                 <div className="flex items-center gap-2 font-black text-2xl sm:text-3xl">
-                  <Laptop className="w-5 h-5 text-blue-500" />
+                  <Laptop className="w-6 h-6 text-blue-500" />
                   <span>100+</span>
                 </div>
                 <span className="text-xs sm:text-sm text-muted-foreground font-medium">Equipos en Stock</span>
@@ -107,7 +107,7 @@ export function HeroSection() {
                 alt="Laptops Modernas"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-contain drop-shadow-2xl z-0 hover:scale-105 transition-transform duration-700 p-12 sm:p-16"
+                className="object-contain drop-shadow-2xl z-0 hover:scale-105 transition-transform duration-700 p-6 sm:p-12 md:p-16"
                 priority
               />
             </div>
@@ -144,30 +144,30 @@ export function HeroSection() {
           <p className="text-center text-sm font-bold uppercase tracking-[0.2em] text-muted-foreground mb-8">
             Distribuidor Autorizado & Marcas Aliadas
           </p>
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+          <div className="grid grid-cols-3 justify-items-center gap-4 md:gap-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
             <Link href="/laptops/lenovo" className="flex flex-col items-center gap-2 hover:opacity-100 transition-opacity group">
-              <span className="text-xl md:text-2xl font-black tracking-tighter text-foreground group-hover:text-primary transition-colors">LENOVO</span>
+              <span className="text-lg md:text-2xl font-black tracking-tighter text-foreground group-hover:text-primary transition-colors">LENOVO</span>
             </Link>
-            <Link href="/laptops/dell" className="text-xl md:text-2xl font-black tracking-tighter text-foreground hover:text-primary transition-colors">DELL</Link>
-            <Link href="/laptops/hp" className="text-xl md:text-2xl font-black tracking-tighter text-foreground hover:text-primary transition-colors">HP</Link>
-            <Link href="/laptops/apple" className="text-xl md:text-2xl font-black tracking-tighter text-foreground hover:text-primary transition-colors">APPLE</Link>
-            <Link href="/laptops/asus" className="text-xl md:text-2xl font-black tracking-tighter text-foreground hover:text-primary transition-colors">ASUS</Link>
-            <Link href="/laptops/razer" className="text-xl md:text-2xl font-black tracking-tighter text-foreground hover:text-primary transition-colors">RAZER</Link>
+            <Link href="/laptops/dell" className="text-lg md:text-2xl font-black tracking-tighter text-foreground hover:text-primary transition-colors">DELL</Link>
+            <Link href="/laptops/hp" className="text-lg md:text-2xl font-black tracking-tighter text-foreground hover:text-primary transition-colors">HP</Link>
+            <Link href="/laptops/apple" className="text-lg md:text-2xl font-black tracking-tighter text-foreground hover:text-primary transition-colors">APPLE</Link>
+            <Link href="/laptops/asus" className="text-lg md:text-2xl font-black tracking-tighter text-foreground hover:text-primary transition-colors">ASUS</Link>
+            <Link href="/laptops/razer" className="text-lg md:text-2xl font-black tracking-tighter text-foreground hover:text-primary transition-colors">RAZER</Link>
           </div>
 
           {/* Payment Methods */}
-          <div className="flex flex-wrap justify-center items-center gap-6 md:gap-10 mt-8 pt-8 border-t border-border/30">
+          <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-6 md:gap-10 mt-8 pt-8 border-t border-border/30">
             <div className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
               <Banknote className="w-5 h-5 text-green-600" />
               <span className="text-sm font-medium">Efectivo</span>
             </div>
             <div className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
               <Building2 className="w-5 h-5 text-blue-600" />
-              <span className="text-sm font-medium">Transferencia Bancaria</span>
+              <span className="text-sm font-medium">Transferencia</span>
             </div>
             <div className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
               <CreditCard className="w-5 h-5 text-primary" />
-              <span className="text-sm font-medium">Tarjetas de Crédito/Débito</span>
+              <span className="text-sm font-medium">Tarjetas</span>
             </div>
           </div>
         </div>

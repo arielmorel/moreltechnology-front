@@ -16,7 +16,7 @@ export function HappyClients() {
   if (clientImages.length === 0) return null;
 
   return (
-    <section className="py-24 overflow-hidden">
+    <section className="py-16 md:py-24 overflow-hidden">
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
           <div>
@@ -38,8 +38,8 @@ export function HappyClients() {
           onMouseLeave={() => setIsPaused(false)}
         >
           {/* Gradient masks */}
-          <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+          <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
 
           <div
             ref={scrollRef}
@@ -72,14 +72,14 @@ export function HappyClients() {
               {clientImages.map((img, index) => (
                 <div
                   key={`second-${index}`}
-                  className="relative w-64 h-64 md:w-80 md:h-80 rounded-2xl overflow-hidden shrink-0 group"
+                  className="relative w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 rounded-2xl overflow-hidden shrink-0 group"
                 >
                   <Image
                     src={img.src}
                     alt={img.alt}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
-                    sizes="(max-width: 768px) 256px, 320px"
+                    sizes="(max-width: 640px) 192px, (max-width: 768px) 256px, 320px"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>

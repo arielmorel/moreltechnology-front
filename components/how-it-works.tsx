@@ -42,7 +42,7 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section className="py-24 relative overflow-hidden">
+    <section className="py-16 md:py-24 relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 blur-[120px] rounded-full" />
@@ -79,7 +79,7 @@ export function HowItWorks() {
                 </div>
 
                 {/* Icon */}
-                <div className={`w-16 h-16 mx-auto mb-6 rounded-2xl ${step.bgColor} flex items-center justify-center transition-transform group-hover:scale-110 group-hover:rotate-3`}>
+                <div className={`w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-6 rounded-2xl ${step.bgColor} flex items-center justify-center transition-transform group-hover:scale-110 group-hover:rotate-3`}>
                   <step.icon className={`w-8 h-8 ${step.textColor}`} />
                 </div>
 
@@ -113,7 +113,7 @@ export function HowItWorks() {
         </div>
 
         {/* Bottom trust indicators */}
-        <div className="animate-slide-up-delay-4 flex flex-wrap justify-center gap-8 mt-16 pt-8 border-t border-border/50">
+        <div className="animate-slide-up-delay-4 flex flex-col sm:flex-row flex-wrap justify-center gap-4 sm:gap-8 mt-16 pt-8 border-t border-border/50">
           <div className="flex items-center gap-3 text-sm text-muted-foreground">
             <CreditCard className="w-5 h-5 text-primary" />
             <span><strong className="text-foreground">Aceptamos</strong> todas las tarjetas</span>

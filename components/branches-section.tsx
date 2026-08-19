@@ -13,7 +13,7 @@ const branchLinks: Record<string, string> = {
 
 export function BranchesSection() {
   return (
-    <section className="py-24 bg-background">
+    <section className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center mb-16">
           <h2 className="animate-slide-up text-3xl md:text-4xl font-bold tracking-tight mb-4">Visita Nuestras Sucursales</h2>
@@ -31,10 +31,10 @@ export function BranchesSection() {
             >
               <div className="h-full rounded-3xl overflow-hidden border border-border/50 bg-card hover:shadow-xl hover:shadow-red-500/5 transition-all group">
                 {/* Red top accent */}
-                <div className="h-2 bg-gradient-to-r from-red-600 via-red-500 to-red-600" />
+                <div className="h-1 md:h-2 bg-gradient-to-r from-red-600 via-red-500 to-red-600" />
 
-                <div className="p-8 flex flex-col h-full relative">
-                  <h3 className="text-2xl font-black tracking-tight mb-6">{branch.name}</h3>
+                <div className="p-6 md:p-8 flex flex-col h-full relative">
+                  <h3 className="text-xl md:text-2xl font-black tracking-tight mb-6">{branch.name}</h3>
 
                   <div className="space-y-4 mb-8 flex-1">
                     <a
@@ -58,7 +58,7 @@ export function BranchesSection() {
                     </a>
                   </div>
 
-                  <div className="pt-6 border-t border-border/50 flex items-center justify-between">
+                  <div className="pt-6 border-t border-border/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <Link
                       href={branchLinks[branch.id] || "/contacto"}
                       className="inline-flex items-center gap-2 text-red-600 font-bold hover:gap-3 transition-all"
@@ -71,7 +71,7 @@ export function BranchesSection() {
                         href={branch.socials.instagram}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-2 bg-muted rounded-full hover:bg-pink-500/10 hover:text-pink-500 transition-all"
+                        className="p-2.5 sm:p-2 bg-muted rounded-full hover:bg-pink-500/10 hover:text-pink-500 transition-all"
                         aria-label="Instagram"
                       >
                         <Instagram size={18} />
@@ -80,7 +80,7 @@ export function BranchesSection() {
                         href={branch.socials.facebook}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-2 bg-muted rounded-full hover:bg-blue-500/10 hover:text-blue-600 transition-all"
+                        className="p-2.5 sm:p-2 bg-muted rounded-full hover:bg-blue-500/10 hover:text-blue-600 transition-all"
                         aria-label="Facebook"
                       >
                         <Facebook size={18} />
@@ -89,7 +89,7 @@ export function BranchesSection() {
                         href={branch.socials.tiktok}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-2 bg-muted rounded-full hover:bg-foreground/10 hover:text-foreground transition-all"
+                        className="p-2.5 sm:p-2 bg-muted rounded-full hover:bg-foreground/10 hover:text-foreground transition-all"
                         aria-label="TikTok"
                       >
                         <TikTok size={18} />

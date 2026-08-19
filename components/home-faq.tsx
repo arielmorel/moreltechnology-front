@@ -38,10 +38,10 @@ const faqs = [
 
 export function HomeFAQ() {
   return (
-    <section className="py-24 bg-muted/30 relative overflow-hidden">
+    <section className="py-16 md:py-24 bg-muted/30 relative overflow-hidden">
       {/* Background decoration */}
-      <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary/5 blur-[120px] rounded-full" />
-      <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-blue-500/5 blur-[120px] rounded-full" />
+      <div className="hidden md:block absolute -top-40 -right-40 w-96 h-96 bg-primary/5 blur-[120px] rounded-full" />
+      <div className="hidden md:block absolute -bottom-40 -left-40 w-96 h-96 bg-blue-500/5 blur-[120px] rounded-full" />
 
       <div className="container mx-auto px-4 md:px-6 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 max-w-6xl mx-auto">
@@ -51,7 +51,7 @@ export function HomeFAQ() {
               <HelpCircle className="w-4 h-4" />
               Preguntas Frecuentes
             </div>
-            <h2 className="animate-slide-right-delay-1 text-4xl md:text-5xl font-black tracking-tight mb-6">
+            <h2 className="animate-slide-right-delay-1 text-3xl md:text-5xl font-black tracking-tight mb-6">
               ¿Tienes dudas?
             </h2>
             <p className="animate-slide-right-delay-2 text-muted-foreground text-lg leading-relaxed mb-8">
@@ -79,9 +79,9 @@ export function HomeFAQ() {
                 <AccordionItem
                   key={index}
                   value={`item-${index}`}
-                  className="bg-card border border-border/50 rounded-2xl px-6 overflow-hidden"
+                  className="bg-card border border-border/50 rounded-2xl px-4 sm:px-6 overflow-hidden"
                 >
-                  <AccordionTrigger className="py-5 text-base font-semibold hover:no-underline hover:text-primary transition-colors">
+                  <AccordionTrigger className="py-4 sm:py-5 text-base font-semibold hover:no-underline hover:text-primary transition-colors">
                     {faq.question}
                   </AccordionTrigger>
                   <AccordionContent className="pb-5 text-muted-foreground leading-relaxed">

@@ -53,7 +53,7 @@ const benefits = [
 
 export function BenefitsSection() {
   return (
-    <section className="py-24 bg-muted/30 relative overflow-hidden">
+    <section className="py-16 md:py-24 bg-muted/30 relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute -top-40 -left-40 w-96 h-96 bg-primary/5 blur-[120px] rounded-full" />
       <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-blue-500/5 blur-[120px] rounded-full" />
@@ -72,11 +72,11 @@ export function BenefitsSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-6">
           {benefits.map((benefit, index) => {
             const CardContent = (
               <div
-                className={`animate-slide-up flex flex-col items-center text-center p-6 h-full bg-card rounded-3xl border border-border/50 transition-all duration-300 group ${
+                className={`animate-slide-up flex flex-col items-center text-center p-4 sm:p-6 h-full bg-card rounded-3xl border border-border/50 transition-all duration-300 group ${
                   benefit.href ? "hover:shadow-xl hover:shadow-primary/5 hover:border-primary/20 hover:-translate-y-1 cursor-pointer" : ""
                 }`}
                 style={{ animationDelay: `${index * 0.1}s` }}
@@ -94,7 +94,7 @@ export function BenefitsSection() {
 
                 {/* Link */}
                 {benefit.href && (
-                  <div className="mt-auto pt-4 text-primary font-bold text-[10px] uppercase tracking-[0.2em] flex items-center gap-2 group-hover:gap-3 transition-all">
+                  <div className="mt-auto pt-4 text-primary font-bold text-xs uppercase tracking-[0.2em] flex items-center gap-2 group-hover:gap-3 transition-all">
                     Saber más
                     <ArrowRight className="w-4 h-4" />
                   </div>
@@ -110,7 +110,7 @@ export function BenefitsSection() {
               );
             }
 
-            return <div key={index}>{CardContent}</div>;
+              <div key={index} className={index === 4 ? "col-span-2" : ""}>{CardContent}</div>
           })}
         </div>
       </div>

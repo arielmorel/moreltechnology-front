@@ -7,7 +7,7 @@ import { ArrowRight } from "lucide-react";
 
 export function CategoriesSection() {
   return (
-    <section className="py-24">
+    <section className="py-16 md:py-24">
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
           <div>
@@ -38,8 +38,8 @@ export function CategoriesSection() {
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
-                <div className="absolute bottom-0 left-0 p-8 z-20 w-full bg-gradient-to-t from-black/80 via-black/40 to-transparent">
-                  <h3 className="text-2xl font-bold text-white mb-2">{category.name}</h3>
+                <div className="absolute bottom-0 left-0 p-5 sm:p-8 z-20 w-full bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{category.name}</h3>
                   <p className="text-white/80 line-clamp-2">{category.description}</p>
                 </div>
               </div>
