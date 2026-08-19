@@ -46,10 +46,10 @@ export function HeroSection() {
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 mt-4">
+            <div className="flex flex-col sm:flex-row gap-3 mt-4">
               <Button
                 size="lg"
-                className="rounded-2xl font-bold h-14 px-6 sm:px-8 shadow-xl shadow-primary/20 hover:shadow-primary/30 transition-all text-base group bg-primary text-primary-foreground hover:bg-primary/90"
+                className="rounded-2xl font-bold h-12 sm:h-14 px-6 sm:px-8 shadow-xl shadow-primary/20 hover:shadow-primary/30 transition-all text-sm sm:text-base group bg-primary text-primary-foreground hover:bg-primary/90 flex-1 sm:flex-none"
                 nativeButton={false}
                 render={
                   <Link href="/catalogo/moreltechnology" className="flex items-center justify-center whitespace-nowrap" />
@@ -57,11 +57,11 @@ export function HeroSection() {
                 aria-label="Ver catálogo de laptops"
               >
                 Ver catálogo
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
               <WhatsAppDropdown
                 variant="outline"
-                className="rounded-2xl font-bold h-14 px-6 sm:px-8 border-2 border-primary/20 hover:bg-primary/5 text-base"
+                className="rounded-2xl font-bold h-12 sm:h-14 px-6 sm:px-8 border-2 border-green-700/30 hover:bg-green-50 dark:hover:bg-green-950/30 text-green-700 text-sm sm:text-base flex-1 sm:flex-none"
                 showIcon={true}
               >
                 Hablar por WhatsApp
