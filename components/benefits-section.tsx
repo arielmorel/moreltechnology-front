@@ -12,7 +12,7 @@ const benefits = [
     href: "/garantia",
     color: "from-green-500 to-emerald-500",
     bgColor: "bg-green-500/10",
-    textColor: "text-green-600",
+    textColor: "text-green-700",
   },
   {
     icon: <Truck className="w-7 h-7" />,
@@ -21,7 +21,7 @@ const benefits = [
     href: "/envios",
     color: "from-blue-500 to-cyan-500",
     bgColor: "bg-blue-500/10",
-    textColor: "text-blue-600",
+    textColor: "text-blue-700",
   },
   {
     icon: <CheckCircle2 className="w-7 h-7" />,
@@ -38,7 +38,7 @@ const benefits = [
     href: "/soporte",
     color: "from-purple-500 to-pink-500",
     bgColor: "bg-purple-500/10",
-    textColor: "text-purple-600",
+    textColor: "text-purple-700",
   },
   {
     icon: <CreditCard className="w-7 h-7" />,
@@ -47,7 +47,7 @@ const benefits = [
     href: "/financiamiento",
     color: "from-orange-500 to-red-500",
     bgColor: "bg-orange-500/10",
-    textColor: "text-orange-600",
+    textColor: "text-orange-700",
   },
 ];
 

@@ -123,10 +123,10 @@ export function TrustSection() {
               <p className="text-muted-foreground mt-1">Transparencia total: conoce nuestra tienda, equipo y procesos</p>
             </div>
             <div className="flex gap-2">
-              <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full">
+              <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full" aria-label="Imagen anterior">
                 <ChevronLeftIcon className="w-5 h-5" />
               </Button>
-              <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full">
+              <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full" aria-label="Imagen siguiente">
                 <ChevronRightIcon className="w-5 h-5" />
               </Button>
             </div>
