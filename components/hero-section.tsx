@@ -120,64 +120,8 @@ export function HeroSection() {
             </div>
           </motion.div>
 
-          {/* Right side - Image */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="relative lg:ml-auto w-full max-w-[400px] sm:max-w-[500px] lg:max-w-[600px] aspect-square lg:aspect-auto lg:h-[600px] overflow-hidden"
-          >
-            {/* Glow effect */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-primary/30 via-blue-500/20 to-transparent rounded-full blur-[80px] mix-blend-multiply dark:mix-blend-overlay" />
-            
-            {/* Image container with glassmorphism */}
-            <div className="relative w-full h-full">
-              <div className="absolute inset-8 rounded-[3rem] bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl border border-white/20 shadow-2xl" />
-              <Image
-                src="/laptop.jpeg"
-                alt="Laptops Modernas"
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-contain drop-shadow-2xl z-0 hover:scale-105 transition-transform duration-700 p-12 sm:p-16"
-                priority
-              />
-            </div>
 
-            {/* Floating badges */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.8 }}
-              className="absolute top-8 sm:top-12 left-0 bg-card/90 backdrop-blur-xl border border-border/50 rounded-2xl px-3 sm:px-4 py-2 sm:py-3 shadow-xl"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center">
-                  <ShieldCheck className="w-5 h-5 text-green-500" />
-                </div>
-                <div>
-                  <div className="text-sm font-bold">Garantía</div>
-                  <div className="text-xs text-muted-foreground">6 meses mínimo</div>
-                </div>
-              </div>
-            </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 1 }}
-              className="absolute bottom-8 sm:bottom-12 right-0 bg-card/90 backdrop-blur-xl border border-border/50 rounded-2xl px-3 sm:px-4 py-2 sm:py-3 shadow-xl"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
-                  <CreditCard className="w-5 h-5 text-blue-500" />
-                </div>
-                <div>
-                  <div className="text-sm font-bold">Financiamiento</div>
-                  <div className="text-xs text-muted-foreground">Cuotas cómodas</div>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
         </div>
 
         {/* Brand Trust Bar */}
