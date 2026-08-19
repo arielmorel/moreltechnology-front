@@ -78,7 +78,7 @@ export function ReviewsSection() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
-                        <h4 className="font-bold text-sm truncate">{review.author}</h4>
+                        <p className="font-bold text-sm truncate">{review.author}</p>
                         <CheckCircle2 className="w-3 h-3 text-blue-500 shrink-0" />
                       </div>
                       <p className="text-[11px] text-muted-foreground">{review.date}</p>

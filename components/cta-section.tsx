@@ -27,7 +27,7 @@ export function CTASection() {
               href="https://wa.me/18096175517"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-green-500 text-white font-bold text-lg hover:bg-green-600 transition-all hover:scale-105 shadow-xl shadow-green-500/25"
+              className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-green-700 text-white font-bold text-lg hover:bg-green-800 transition-all hover:scale-105 shadow-xl shadow-green-700/25"
             >
               <MessageCircle className="w-6 h-6" />
               WhatsApp Santo Domingo

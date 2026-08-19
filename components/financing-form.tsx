@@ -168,7 +168,7 @@ export function FinancingForm() {
               href={`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 h-10 px-5 text-sm font-medium rounded-lg bg-green-600 text-white hover:bg-green-700 transition-colors"
+              className="inline-flex items-center gap-2 h-10 px-5 text-sm font-medium rounded-lg bg-green-700 text-white hover:bg-green-800 transition-colors"
             >
               <MessageCircle className="w-4 h-4" />
               Compartir por WhatsApp

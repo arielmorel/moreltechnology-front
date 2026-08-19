@@ -48,7 +48,7 @@ export function WhatsAppDropdown({
         className={cn(
           buttonVariants({ variant, className }),
           "gap-2 transition-all",
-          variant === "default" && "bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-600/20",
+          variant === "default" && "bg-green-700 hover:bg-green-800 text-white shadow-lg shadow-green-700/20",
           variant === "outline" && "border-green-700 text-green-700 hover:bg-green-50 dark:hover:bg-green-950/30"
         )}
       >
