@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ShieldCheck, Users, Laptop, CreditCard, Banknote, Building2 } from "lucide-react";
+import { ArrowRight, ShieldCheck, CreditCard, Banknote, Building2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { WhatsAppDropdown } from "./whatsapp-dropdown";
@@ -68,30 +68,6 @@ export function HeroSection() {
               </WhatsAppDropdown>
             </div>
 
-            {/* Stats */}
-            <div className="flex items-center gap-6 sm:gap-8 mt-8 pt-8 border-t border-border/50">
-              <div className="flex flex-col animate-slide-up-delay-5">
-                <div className="flex items-center gap-2 font-black text-2xl sm:text-3xl">
-                  <Users className="w-6 h-6 text-primary" />
-                  <span>500+</span>
-                </div>
-                <span className="text-xs sm:text-sm text-muted-foreground font-medium">Clientes felices</span>
-              </div>
-              <div className="flex flex-col animate-slide-up-delay-6">
-                <div className="flex items-center gap-2 font-black text-2xl sm:text-3xl">
-                  <ShieldCheck className="w-6 h-6 text-green-500" />
-                  <span>100%</span>
-                </div>
-                <span className="text-xs sm:text-sm text-muted-foreground font-medium">Garantía Real</span>
-              </div>
-              <div className="flex flex-col animate-slide-up-delay-7">
-                <div className="flex items-center gap-2 font-black text-2xl sm:text-3xl">
-                  <Laptop className="w-6 h-6 text-blue-500" />
-                  <span>100+</span>
-                </div>
-                <span className="text-xs sm:text-sm text-muted-foreground font-medium">Equipos en Stock</span>
-              </div>
-            </div>
           </div>
 
           {/* Right side - Image */}

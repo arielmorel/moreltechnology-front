@@ -16,7 +16,7 @@ const navLinks = [
   { name: "Inicio", href: "/", icon: Home },
   { name: "Catálogo", href: "/catalogo/moreltechnology", icon: ShoppingBag },
   { name: "Ofertas", href: "/ofertas", icon: Tag },
-  { name: "Recomendador", href: "/recomendador", icon: Sparkles },
+  { name: "Asistente IA", href: "/recomendador", icon: Sparkles },
   { name: "Apps", href: "/apps", icon: Smartphone },
   { name: "Blog", href: "/blog", icon: BookOpen },
   { name: "Financiamiento", href: "/financiamiento", icon: CreditCard },

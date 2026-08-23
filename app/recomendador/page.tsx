@@ -114,15 +114,15 @@ export default function RecomendadorPage() {
       <div className="container mx-auto px-4 md:px-6 max-w-4xl">
         
         {/* Progress Header */}
-        <div className="mb-12 text-center space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest">
+        <div className="mb-6 md:mb-12 text-center space-y-3 md:space-y-4">
+          <div className="inline-flex items-center gap-1.5 md:gap-2 px-2.5 md:px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] md:text-xs font-bold uppercase tracking-widest">
             <Sparkles className="w-3 h-3" />
             Asistente Inteligente
           </div>
-          <h1 className="text-4xl md:text-5xl font-black tracking-tight">
+          <h1 className="text-2xl md:text-5xl font-black tracking-tight">
             {step === "results" ? "Tus Recomendaciones" : "Encuentra tu Laptop Ideal"}
           </h1>
-          <p className="text-muted-foreground text-lg">
+          <p className="text-muted-foreground text-sm md:text-lg">
             {step === "results" 
               ? "Basado en tus necesidades, estos son los mejores equipos para ti." 
               : "Responde 3 preguntas rápidas y nuestro algoritmo hará el resto."}
@@ -130,7 +130,7 @@ export default function RecomendadorPage() {
         </div>
 
         {/* Wizard Card */}
-        <div className="bg-card border border-border/50 rounded-[2.5rem] shadow-2xl overflow-hidden min-h-[500px] flex flex-col">
+        <div className="bg-card border border-border/50 rounded-3xl md:rounded-[2.5rem] shadow-2xl overflow-hidden min-h-[400px] md:min-h-[500px] flex flex-col">
           
           <AnimatePresence mode="wait">
             {step === "usage" && (
@@ -139,35 +139,35 @@ export default function RecomendadorPage() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="p-8 md:p-12 space-y-8 flex-1"
+                className="p-5 md:p-12 space-y-5 md:space-y-8 flex-1"
               >
-                <div className="space-y-2">
-                  <h2 className="text-2xl font-bold">1. ¿Para qué necesitas la laptop?</h2>
-                  <p className="text-muted-foreground">Selecciona el uso principal que le darás.</p>
+                <div className="space-y-1.5 md:space-y-2">
+                  <h2 className="text-lg md:text-2xl font-bold">1. ¿Para qué necesitas la laptop?</h2>
+                  <p className="text-muted-foreground text-sm md:text-base">Selecciona el uso principal que le darás.</p>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                   {usageOptions.map((opt) => (
                     <button
                       key={opt.id}
                       onClick={() => setSelections({ ...selections, usage: opt.id })}
                       className={cn(
-                        "flex items-center gap-4 p-6 rounded-3xl border-2 transition-all text-left group",
+                        "flex items-center gap-3 md:gap-4 p-4 md:p-6 rounded-2xl md:rounded-3xl border-2 transition-all text-left group",
                         selections.usage === opt.id 
                           ? "border-primary bg-primary/5 shadow-lg shadow-primary/10" 
                           : "border-border/50 hover:border-primary/30 hover:bg-muted/50"
                       )}
                     >
                       <div className={cn(
-                        "p-3 rounded-2xl transition-colors",
+                        "p-2 md:p-3 rounded-xl md:rounded-2xl transition-colors shrink-0",
                         selections.usage === opt.id ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"
                       )}>
-                        <opt.icon className="w-6 h-6" />
+                        <opt.icon className="w-5 h-5 md:w-6 md:h-6" />
                       </div>
-                      <div>
-                        <h3 className="font-bold">{opt.label}</h3>
-                        <p className="text-xs text-muted-foreground">{opt.desc}</p>
+                      <div className="min-w-0">
+                        <h3 className="font-bold text-sm md:text-base">{opt.label}</h3>
+                        <p className="text-[11px] md:text-xs text-muted-foreground">{opt.desc}</p>
                       </div>
-                      {selections.usage === opt.id && <CheckCircle2 className="w-5 h-5 text-primary ml-auto" />}
+                      {selections.usage === opt.id && <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-primary ml-auto shrink-0" />}
                     </button>
                   ))}
                 </div>
@@ -180,35 +180,35 @@ export default function RecomendadorPage() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="p-8 md:p-12 space-y-8 flex-1"
+                className="p-5 md:p-12 space-y-5 md:space-y-8 flex-1"
               >
-                <div className="space-y-2">
-                  <h2 className="text-2xl font-bold">2. ¿Cuál es tu presupuesto?</h2>
-                  <p className="text-muted-foreground">Dinos cuánto planeas invertir aproximadamente.</p>
+                <div className="space-y-1.5 md:space-y-2">
+                  <h2 className="text-lg md:text-2xl font-bold">2. ¿Cuál es tu presupuesto?</h2>
+                  <p className="text-muted-foreground text-sm md:text-base">Dinos cuánto planeas invertir aproximadamente.</p>
                 </div>
-                <div className="grid grid-cols-1 gap-4">
+                <div className="grid grid-cols-1 gap-3 md:gap-4">
                   {budgetOptions.map((opt) => (
                     <button
                       key={opt.id}
                       onClick={() => setSelections({ ...selections, budget: opt.id })}
                       className={cn(
-                        "flex items-center gap-6 p-8 rounded-3xl border-2 transition-all text-left group",
+                        "flex items-center gap-4 md:gap-6 p-4 md:p-8 rounded-2xl md:rounded-3xl border-2 transition-all text-left group",
                         selections.budget === opt.id 
                           ? "border-primary bg-primary/5 shadow-lg shadow-primary/10" 
                           : "border-border/50 hover:border-primary/30 hover:bg-muted/50"
                       )}
                     >
                       <div className={cn(
-                        "w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors",
+                        "w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors shrink-0",
                         selections.budget === opt.id ? "border-primary" : "border-muted-foreground"
                       )}>
                         {selections.budget === opt.id && <div className="w-2 h-2 rounded-full bg-primary" />}
                       </div>
-                      <div>
-                        <h3 className="text-xl font-bold">{opt.label}</h3>
-                        <p className="text-sm text-muted-foreground">{opt.desc}</p>
+                      <div className="min-w-0">
+                        <h3 className="text-base md:text-xl font-bold">{opt.label}</h3>
+                        <p className="text-xs md:text-sm text-muted-foreground">{opt.desc}</p>
                       </div>
-                      <div className="ml-auto text-primary font-black text-xs opacity-50 uppercase tracking-widest">
+                      <div className="ml-auto text-primary font-black text-[10px] md:text-xs opacity-50 uppercase tracking-widest hidden sm:block">
                         ~ US$ {Math.round(opt.range[0])} - {Math.round(opt.range[1])}
                       </div>
                     </button>
@@ -223,17 +223,17 @@ export default function RecomendadorPage() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="p-8 md:p-12 space-y-8 flex-1"
+                className="p-5 md:p-12 space-y-5 md:space-y-8 flex-1"
               >
-                <div className="space-y-2">
-                  <h2 className="text-2xl font-bold">3. ¿Alguna marca de preferencia?</h2>
-                  <p className="text-muted-foreground">Si no tienes preferencia, selecciona "Cualquiera".</p>
+                <div className="space-y-1.5 md:space-y-2">
+                  <h2 className="text-lg md:text-2xl font-bold">3. ¿Alguna marca de preferencia?</h2>
+                  <p className="text-muted-foreground text-sm md:text-base">Si no tienes preferencia, selecciona &ldquo;Cualquiera&rdquo;.</p>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                <div className="grid grid-cols-3 sm:grid-cols-3 gap-2 md:gap-4">
                   <button
                     onClick={() => setSelections({ ...selections, brand: "todas" })}
                     className={cn(
-                      "p-6 rounded-3xl border-2 transition-all text-center font-bold",
+                      "p-3 md:p-6 rounded-2xl md:rounded-3xl border-2 transition-all text-center font-bold text-sm md:text-base",
                       selections.brand === "todas" 
                         ? "border-primary bg-primary/5 text-primary shadow-lg" 
                         : "border-border/50 hover:border-primary/30"
@@ -246,7 +246,7 @@ export default function RecomendadorPage() {
                       key={brand}
                       onClick={() => setSelections({ ...selections, brand: brand })}
                       className={cn(
-                        "p-6 rounded-3xl border-2 transition-all text-center font-bold uppercase tracking-wider",
+                        "p-3 md:p-6 rounded-2xl md:rounded-3xl border-2 transition-all text-center font-bold uppercase tracking-wider text-sm md:text-base",
                         selections.brand === brand 
                           ? "border-primary bg-primary/5 text-primary shadow-lg" 
                           : "border-border/50 hover:border-primary/30"
@@ -264,35 +264,35 @@ export default function RecomendadorPage() {
                 key="results"
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="p-8 md:p-12 space-y-12 flex-1"
+                className="p-5 md:p-12 space-y-6 md:space-y-12 flex-1"
               >
-                <div className="flex flex-col md:flex-row justify-between items-center gap-6 pb-8 border-b">
+                <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 pb-6 md:pb-8 border-b">
                   <div className="text-center md:text-left space-y-1">
-                    <h2 className="text-3xl font-black">¡Encontramos {recommendations.length} equipos!</h2>
-                    <p className="text-muted-foreground italic">Seleccionados especialmente para tu perfil.</p>
+                    <h2 className="text-xl md:text-3xl font-black">¡Encontramos {recommendations.length} equipos!</h2>
+                    <p className="text-muted-foreground text-sm md:text-base italic">Seleccionados especialmente para tu perfil.</p>
                   </div>
-                  <Button onClick={reset} variant="outline" className="rounded-2xl gap-2 h-12 px-6">
+                  <Button onClick={reset} variant="outline" className="rounded-2xl gap-2 h-10 md:h-12 px-4 md:px-6 text-sm">
                     <RotateCcw className="w-4 h-4" />
                     Nueva búsqueda
                   </Button>
                 </div>
 
                 {recommendations.length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-8">
                     {recommendations.map(product => (
                       <ProductCard key={product.id} product={product} />
                     ))}
                   </div>
                 ) : (
-                  <div className="py-20 text-center space-y-6">
-                    <Search className="w-16 h-16 text-muted-foreground mx-auto opacity-20" />
+                  <div className="py-12 md:py-20 text-center space-y-4 md:space-y-6">
+                    <Search className="w-12 h-12 md:w-16 md:h-16 text-muted-foreground mx-auto opacity-20" />
                     <div className="space-y-2">
-                      <h3 className="text-xl font-bold">No encontramos coincidencias exactas</h3>
-                      <p className="text-muted-foreground max-w-xs mx-auto">
-                        Intenta ajustar tu presupuesto o seleccionar "Cualquier marca".
+                      <h3 className="text-lg md:text-xl font-bold">No encontramos coincidencias exactas</h3>
+                      <p className="text-muted-foreground text-sm md:text-base max-w-xs mx-auto">
+                        Intenta ajustar tu presupuesto o seleccionar &ldquo;Cualquier marca&rdquo;.
                       </p>
                     </div>
-                    <Button onClick={() => setStep("budget")} className="rounded-2xl h-12 px-8">Ajustar filtros</Button>
+                    <Button onClick={() => setStep("budget")} className="rounded-2xl h-10 md:h-12 px-6 md:px-8 text-sm md:text-base">Ajustar filtros</Button>
                   </div>
                 )}
               </motion.div>
@@ -301,12 +301,12 @@ export default function RecomendadorPage() {
 
           {/* Footer Controls */}
           {step !== "results" && (
-            <div className="p-6 md:p-8 bg-muted/30 border-t border-border/50 flex items-center justify-between">
+            <div className="p-4 md:p-8 bg-muted/30 border-t border-border/50 flex items-center justify-between">
               <Button 
                 variant="ghost" 
                 onClick={handleBack}
                 disabled={step === "usage"}
-                className="rounded-2xl gap-2 h-12 px-6"
+                className="rounded-2xl gap-1.5 md:gap-2 h-10 md:h-12 px-4 md:px-6 text-sm"
               >
                 <ChevronLeft className="w-4 h-4" />
                 Atrás
@@ -314,27 +314,27 @@ export default function RecomendadorPage() {
               <Button 
                 onClick={handleNext}
                 disabled={(step === "usage" && !selections.usage) || (step === "budget" && !selections.budget)}
-                className="rounded-2xl gap-3 h-14 px-10 text-lg font-bold shadow-xl shadow-primary/20"
+                className="rounded-2xl gap-2 md:gap-3 h-11 md:h-14 px-6 md:px-10 text-sm md:text-lg font-bold shadow-xl shadow-primary/20"
               >
                 {step === "brand" ? "Ver Recomendaciones" : "Siguiente"}
-                <ChevronRight className="w-5 h-5" />
+                <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
               </Button>
             </div>
           )}
         </div>
 
         {/* Info badges */}
-        <div className="mt-12 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground font-medium uppercase tracking-wider">
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-green-500" />
+        <div className="mt-8 md:mt-12 flex flex-wrap justify-center gap-4 md:gap-6 text-[11px] md:text-sm text-muted-foreground font-medium uppercase tracking-wider">
+          <div className="flex items-center gap-1.5">
+            <CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 text-green-500" />
             Garantía Local RD
           </div>
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-green-500" />
+          <div className="flex items-center gap-1.5">
+            <CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 text-green-500" />
             Equipos Certificados
           </div>
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-green-500" />
+          <div className="flex items-center gap-1.5">
+            <CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 text-green-500" />
             Soporte por WhatsApp
           </div>
         </div>
