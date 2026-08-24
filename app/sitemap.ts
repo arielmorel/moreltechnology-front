@@ -3,10 +3,12 @@ import { getProducts } from "@/lib/api";
 import { slugify } from "@/lib/utils";
 import { getAllPosts } from "@/lib/blog";
 
+const baseUrl = "https://moreltechnologyrd.com";
+
 const brands = ["lenovo", "dell", "hp", "apple", "asus", "acer", "razer"];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://moreltechnologyrd.com/";
+
 
   // Base pages
   const staticPages = [
@@ -22,7 +24,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/tienda/mts",
   ].map((route) => ({
     url: `${baseUrl}${route}`,
-    lastModified: new Date().toISOString(),
+    lastModified: "2026-08-24",
     changeFrequency: "daily" as const,
     priority: route === "" ? 1 : 0.8,
   }));
@@ -30,7 +32,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Brand pages
   const brandPages = brands.map((brand) => ({
     url: `${baseUrl}/laptops/${brand}`,
-    lastModified: new Date().toISOString(),
+    lastModified: "2026-08-24",
     changeFrequency: "weekly" as const,
     priority: 0.8,
   }));
