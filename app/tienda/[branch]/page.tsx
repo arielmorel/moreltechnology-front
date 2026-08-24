@@ -20,6 +20,7 @@ const branchData: Record<string, {
   schema: {
     telephone: string;
     streetAddress: string;
+    postalCode: string;
     latitude: number;
     longitude: number;
   };
@@ -48,6 +49,7 @@ const branchData: Record<string, {
     schema: {
       telephone: "+1-809-617-5517",
       streetAddress: "El Edén de Villa Mella, Calle Ceuta frente a la Calle 7",
+      postalCode: "11207",
       latitude: 18.5354915,
       longitude: -69.8955395,
     },
@@ -79,6 +81,7 @@ const branchData: Record<string, {
     schema: {
       telephone: "+1-809-421-5517",
       streetAddress: "Plaza Pamela 3, Carr. Buena Vista",
+      postalCode: "91000",
       latitude: 19.4804643,
       longitude: -70.6834893,
     },
@@ -138,6 +141,7 @@ export default async function TiendaBranchPage({ params }: PageProps) {
       "@type": "PostalAddress",
       streetAddress: data.schema.streetAddress,
       addressLocality: branchInfo?.name.replace("Sucursal ", "") || branch,
+      postalCode: data.schema.postalCode,
       addressCountry: "DO",
     },
     geo: {

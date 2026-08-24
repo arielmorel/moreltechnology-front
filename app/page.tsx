@@ -14,7 +14,7 @@ const ReviewsSection = dynamic(() => import("@/components/reviews-section").then
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "Morel Technology",
+  name: "MorelTechnology",
   url: "https://moreltechnologyrd.com",
   logo: "https://moreltechnologyrd.com/logo/moreltechnology.png",
   description: "Tienda de laptops nuevas y usadas en República Dominicana con garantía certificada",
@@ -23,12 +23,14 @@ const organizationSchema = {
       "@type": "PostalAddress",
       streetAddress: "El Edén de Villa Mella, Calle Ceuta frente a la Calle 7",
       addressLocality: "Santo Domingo",
+      postalCode: "11207",
       addressCountry: "DO",
     },
     {
       "@type": "PostalAddress",
       streetAddress: "Plaza Pamela 3, Carr. Buena Vista",
       addressLocality: "Santiago",
+      postalCode: "91000",
       addressCountry: "DO",
     },
   ],
