@@ -1,6 +1,6 @@
 import { MetadataRoute } from "next";
 import { getProducts } from "@/lib/api";
-import { slugify } from "@/lib/utils";
+import { productUrl } from "@/lib/utils";
 import { getAllPosts } from "@/lib/blog";
 
 const baseUrl = "https://moreltechnologyrd.com";
@@ -49,7 +49,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const products = await getProducts();
     const productPages = (products as any).products.map((product: any) => ({
-      url: `${baseUrl}/productos/${product.id}/${slugify(product.name)}`,
+      url: `${baseUrl}${productUrl(product.slug)}`,
       lastModified: new Date().toISOString(),
       changeFrequency: "weekly" as const,
       priority: 0.6,

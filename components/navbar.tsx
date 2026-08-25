@@ -5,12 +5,13 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Moon, Sun, Home, ShoppingBag, Sparkles, Tag, CreditCard, Users, Phone, MapPin, BookOpen, Smartphone, ChevronDown } from "lucide-react";
+import { Menu, X, Moon, Sun, Home, ShoppingBag, Sparkles, Tag, CreditCard, Users, Phone, MapPin, BookOpen, Smartphone, ChevronDown, Search } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 
 const CartSheet = dynamic(() => import("./cart-sheet").then(m => m.CartSheet), { ssr: false });
+const SearchDialog = dynamic(() => import("./search-dialog").then(m => m.SearchDialog), { ssr: false });
 
 const navLinks = [
   { name: "Inicio", href: "/", icon: Home },
@@ -36,6 +37,7 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [sucursalOpen, setSucursalOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const sucursalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -68,7 +70,20 @@ export function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    }
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   return (
+    <>
+    <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
     <header
       className={cn(
         "fixed top-0 w-full z-50 transition-all duration-300 border-b border-transparent",
@@ -173,6 +188,15 @@ export function Navbar() {
         </nav>
 
         <div className="hidden md:flex items-center gap-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setSearchOpen(true)}
+            className="rounded-full"
+            aria-label="Buscar laptops"
+          >
+            <Search className="h-4 w-4" />
+          </Button>
           <CartSheet />
           {mounted && (
             <Button
@@ -190,6 +214,15 @@ export function Navbar() {
 
         {/* Mobile Menu Toggle */}
         <div className="flex md:hidden items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setSearchOpen(true)}
+            className="rounded-full"
+            aria-label="Buscar laptops"
+          >
+            <Search className="h-4 w-4" />
+          </Button>
           <CartSheet />
           {mounted && (
             <Button
@@ -287,5 +320,6 @@ export function Navbar() {
         </div>
       )}
     </header>
+    </>
   );
 }

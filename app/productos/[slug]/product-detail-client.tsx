@@ -5,7 +5,7 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Product } from "@/lib/data";
-import { getProductById, getProducts } from "@/lib/api";
+import { getProductBySlug, getProducts } from "@/lib/api";
 import { Badge } from "@/components/ui/badge";
 import {
   Cpu,
@@ -29,11 +29,11 @@ import { ProductCard } from "@/components/product-card";
 import { ConditionGuide } from "@/components/condition-guide";
 
 interface ProductDetailClientProps {
-  id: string;
+  slug: string;
   initialProduct: Product | null;
 }
 
-export default function ProductDetailClient({ id, initialProduct }: ProductDetailClientProps) {
+export default function ProductDetailClient({ slug, initialProduct }: ProductDetailClientProps) {
   const [product, setProduct] = useState<Product | null>(initialProduct);
   const [isLoading, setIsLoading] = useState(!initialProduct);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
@@ -85,13 +85,13 @@ export default function ProductDetailClient({ id, initialProduct }: ProductDetai
     async function loadData() {
       try {
         if (!initialProduct) {
-          const fetchedProduct = await getProductById(id);
+          const fetchedProduct = await getProductBySlug(slug);
           setProduct(fetchedProduct);
         }
 
         const { products: allProducts } = await getProducts();
         const related = allProducts.filter(p =>
-          p.id !== id && (p.category === product?.category || p.brand === product?.brand)
+          p.slug !== slug && (p.category === product?.category || p.brand === product?.brand)
         ).slice(0, 4);
         setRelatedProducts(related);
       } catch (error) {
@@ -102,7 +102,7 @@ export default function ProductDetailClient({ id, initialProduct }: ProductDetai
     }
 
     loadData();
-  }, [id, initialProduct, product?.brand, product?.category]);
+  }, [slug, initialProduct, product?.brand, product?.category]);
 
   const handleAddToCart = () => {
     if (product) {

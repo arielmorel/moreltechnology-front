@@ -16,8 +16,8 @@ export function slugify(text: string): string {
     .replace(/^-|-$/g, "")
 }
 
-export function productUrl(id: string, name: string): string {
-  return `/productos/${id}/${slugify(name)}`
+export function productUrl(slug: string): string {
+  return `/productos/${slug}`
 }
 
 export function isMinioImage(src: string): boolean {

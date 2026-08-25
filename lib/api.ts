@@ -21,6 +21,7 @@ function getFinancingUrl(): string {
 export interface ApiProduct {
   id: number;
   sku: string;
+  slug: string;
   imageUrl: string | null;
   imageUrls: string[] | null;
   name: string;
@@ -92,6 +93,7 @@ export const mapApiProductToProduct = (apiProduct: ApiProduct): Product => {
 
   return {
     id: apiProduct.id.toString(),
+    slug: apiProduct.slug,
     name: apiProduct.name,
     brand: brand,
     category: apiProduct.categoryName.toLowerCase() === "electronica" ? "accesorios" : apiProduct.categoryName.toLowerCase(),
@@ -140,6 +142,17 @@ export const getProductById = async (id: string, branchId?: string): Promise<Pro
     return mapApiProductToProduct(response.data);
   } catch (error) {
     console.error(`Error fetching product ${id}:`, error);
+    return null;
+  }
+};
+
+export const getProductBySlug = async (slug: string, branchId?: string): Promise<Product | null> => {
+  try {
+    const catalogUrl = getCatalogUrl(branchId);
+    const response = await axios.get<ApiProduct>(`${catalogUrl}/slug/${slug}`);
+    return mapApiProductToProduct(response.data);
+  } catch (error) {
+    console.error(`Error fetching product by slug ${slug}:`, error);
     return null;
   }
 };

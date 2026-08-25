@@ -1,16 +1,16 @@
 import { Metadata } from "next";
 import Script from "next/script";
-import { getProductById } from "@/lib/api";
+import { getProductBySlug } from "@/lib/api";
 import { productUrl } from "@/lib/utils";
 import ProductDetailClient from "./product-detail-client";
 
 interface PageProps {
-  params: Promise<{ id: string; slug: string }>;
+  params: Promise<{ slug: string }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { id } = await params;
-  const product = await getProductById(id);
+  const { slug } = await params;
+  const product = await getProductBySlug(slug);
 
   if (!product) {
     return {
@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: `${product.name} | Morel Technology`,
     description: metaDescription.substring(0, 160),
     alternates: {
-      canonical: productUrl(product.id, product.name),
+      canonical: productUrl(product.slug),
     },
     openGraph: {
       title: `${product.name} | Morel Technology RD`,
@@ -53,8 +53,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function ProductDetailPage({ params }: PageProps) {
-  const { id } = await params;
-  const product = await getProductById(id);
+  const { slug } = await params;
+  const product = await getProductBySlug(slug);
 
   const productSchema = product ? {
     "@context": "https://schema.org",
@@ -96,7 +96,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
         "@type": "ListItem",
         position: 3,
         name: product.name,
-        item: `https://moreltechnologyrd.com${productUrl(product.id, product.name)}`,
+        item: `https://moreltechnologyrd.com${productUrl(product.slug)}`,
       }] : []),
     ],
   };
@@ -117,7 +117,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
         strategy="beforeInteractive"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <ProductDetailClient id={id} initialProduct={product} />
+      <ProductDetailClient slug={slug} initialProduct={product} />
     </>
   );
 }

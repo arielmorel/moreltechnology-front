@@ -29,7 +29,7 @@ export function ProductCard({ product }: ProductCardProps) {
       className="h-full"
     >
       <Card className="h-full flex flex-col overflow-hidden border border-border/50 bg-card/50 backdrop-blur-sm hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 group">
-        <Link href={productUrl(product.id, product.name)} className="flex-1 flex flex-col">
+        <Link href={productUrl(product.slug)} className="flex-1 flex flex-col">
           <CardHeader className="p-0 relative">
             <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
               <Image
