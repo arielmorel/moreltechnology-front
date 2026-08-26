@@ -33,6 +33,7 @@ export interface ApiProduct {
   quantity: number;
   tags: string[];
   pinned: boolean;
+  createdAt?: string;
   prices: {
     id: string;
     currency: string;
@@ -109,8 +110,10 @@ export const mapApiProductToProduct = (apiProduct: ApiProduct): Product => {
       : [apiProduct.imageUrl || "/images/placeholder-laptop.png"],
     description: apiProduct.description || apiProduct.name,
     featured: apiProduct.pinned || false,
+    pinned: apiProduct.pinned || false,
     tags: apiProduct.tags || [],
     quantity: apiProduct.quantity || 0,
+    createdAt: apiProduct.createdAt,
   };
 };
 
@@ -191,6 +194,40 @@ export const searchProducts = async (query: string, page = 0, size = PAGE_SIZE_D
   } catch (error) {
     console.error("Error searching products:", error);
     return { products: [], total: 0 };
+  }
+};
+
+export interface HomeProducts {
+  offers: Product[];
+  newArrivals: Product[];
+  featured: Product[];
+}
+
+export const getHomeProducts = async (branchId?: string): Promise<HomeProducts> => {
+  try {
+    const { products } = await getProducts(0, PAGE_SIZE_ALL, undefined, branchId);
+
+    const offers = products
+      .filter(p => p.originalPrice && p.originalPrice > p.price)
+      .slice(0, 8);
+
+    const featured = products
+      .filter(p => p.pinned || p.featured)
+      .slice(0, 8);
+
+    const newArrivals = [...products]
+      .sort((a, b) => {
+        if (a.createdAt && b.createdAt) {
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        }
+        return 0;
+      })
+      .slice(0, 8);
+
+    return { offers, newArrivals, featured };
+  } catch (error) {
+    console.error("Error fetching home products:", error);
+    return { offers: [], newArrivals: [], featured: [] };
   }
 };
 

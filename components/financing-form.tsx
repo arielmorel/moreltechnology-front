@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -40,10 +40,11 @@ const formSchema = z.object({
   branch: z.string().min(1, { message: "Selecciona una sucursal." }),
 });
 
-export function FinancingForm() {
+export function FinancingForm({ initialBranch }: { initialBranch?: string }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [requestNumber, setRequestNumber] = useState("");
+  const [branchValue, setBranchValue] = useState<string>("");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema as any),
@@ -64,6 +65,13 @@ export function FinancingForm() {
       branch: "",
     },
   });
+
+  useEffect(() => {
+    if (initialBranch) {
+      setBranchValue(initialBranch);
+      form.setValue("branch", initialBranch);
+    }
+  }, [initialBranch]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
@@ -306,16 +314,21 @@ export function FinancingForm() {
                   control={form.control}
                   name="branch"
                   render={({ field }) => {
-                    const selectedBranch = branches.find((b) => b.id === field.value);
+                    const isDisabled = !!initialBranch;
                     return (
                     <FormItem>
                       <FormLabel>Sucursal</FormLabel>
-                      <Select value={field.value} onValueChange={(val) => field.onChange(val || "")}>
+                      <Select
+                        value={branchValue || undefined}
+                        onValueChange={(val) => {
+                          setBranchValue(val || "");
+                          field.onChange(val || "");
+                        }}
+                        disabled={isDisabled}
+                      >
                         <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Elige la sucursal">
-                              {selectedBranch ? selectedBranch.name.replace('Sucursal ', '') : "Elige la sucursal"}
-                            </SelectValue>
+                          <SelectTrigger className={isDisabled ? "opacity-80" : ""}>
+                            <SelectValue placeholder="Elige la sucursal" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -326,6 +339,11 @@ export function FinancingForm() {
                           ))}
                         </SelectContent>
                       </Select>
+                      {isDisabled && (
+                        <FormDescription>
+                          {branches.find((b) => b.id === initialBranch)?.name || "Sucursal"} preseleccionada desde el enlace.
+                        </FormDescription>
+                      )}
                       <FormMessage />
                     </FormItem>
                     );

@@ -121,14 +121,23 @@ export function HeroSection() {
             Distribuidor Autorizado & Marcas Aliadas
           </p>
           <div className="grid grid-cols-3 justify-items-center gap-4 md:gap-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-            <Link href="/laptops/lenovo" className="flex flex-col items-center gap-2 hover:opacity-100 transition-opacity group">
-              <span className="text-lg md:text-2xl font-black tracking-tighter text-foreground group-hover:text-primary transition-colors">LENOVO</span>
-            </Link>
-            <Link href="/laptops/dell" className="text-lg md:text-2xl font-black tracking-tighter text-foreground hover:text-primary transition-colors">DELL</Link>
-            <Link href="/laptops/hp" className="text-lg md:text-2xl font-black tracking-tighter text-foreground hover:text-primary transition-colors">HP</Link>
-            <Link href="/laptops/apple" className="text-lg md:text-2xl font-black tracking-tighter text-foreground hover:text-primary transition-colors">APPLE</Link>
-            <Link href="/laptops/asus" className="text-lg md:text-2xl font-black tracking-tighter text-foreground hover:text-primary transition-colors">ASUS</Link>
-            <Link href="/laptops/razer" className="text-lg md:text-2xl font-black tracking-tighter text-foreground hover:text-primary transition-colors">RAZER</Link>
+            {[
+              { name: "LENOVO", href: "/laptops/lenovo", color: "#E2231A" },
+              { name: "DELL", href: "/laptops/dell", color: "#007DB8" },
+              { name: "HP", href: "/laptops/hp", color: "#0096D6" },
+              { name: "APPLE", href: "/laptops/apple", color: "#555555" },
+              { name: "ASUS", href: "/laptops/asus", color: "#00539B" },
+              { name: "RAZER", href: "/laptops/razer", color: "#44D62C" },
+            ].map((brand) => (
+              <Link
+                key={brand.name}
+                href={brand.href}
+                className="text-lg md:text-2xl font-black tracking-tighter transition-colors hover:opacity-100"
+                style={{ color: brand.color }}
+              >
+                {brand.name}
+              </Link>
+            ))}
           </div>
 
           {/* Payment Methods */}

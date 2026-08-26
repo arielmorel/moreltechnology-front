@@ -1,6 +1,7 @@
 import { FinancingForm } from "@/components/financing-form";
 import { Metadata } from "next";
 import { ShieldCheck, Clock, CheckCircle2 } from "lucide-react";
+import { branches } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Solicitar Financiamiento - Morel Technology",
@@ -10,7 +11,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function FinanciamientoPage() {
+export default async function FinanciamientoPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ sucursal?: string }>;
+}) {
+  const params = await searchParams;
+  const sucursalParam = params.sucursal;
+  const initialBranch = branches.find((b) => b.id === sucursalParam)?.id || undefined;
   return (
     <div className="min-h-screen bg-muted/20 pt-20 sm:pt-16 pb-12 sm:pb-16">
       <div className="container mx-auto px-4 sm:px-6">
@@ -44,7 +52,7 @@ export default function FinanciamientoPage() {
         </div>
 
         {/* Form Section */}
-        <FinancingForm />
+        <FinancingForm initialBranch={initialBranch} />
 
       </div>
     </div>

@@ -22,8 +22,10 @@ export interface Product {
   images: string[];
   description: string;
   featured?: boolean;
+  pinned?: boolean;
   tags: string[];
   quantity: number;
+  createdAt?: string;
 }
 
 export type AppCondition = "Gratis" | "Pago";

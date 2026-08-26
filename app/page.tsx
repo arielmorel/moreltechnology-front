@@ -1,15 +1,19 @@
 import { HeroSection } from "@/components/hero-section";
+import { getHomeProducts } from "@/lib/api";
 import dynamic from "next/dynamic";
 import Script from "next/script";
 
 const HowItWorks = dynamic(() => import("@/components/how-it-works").then(m => m.HowItWorks));
-const BenefitsSection = dynamic(() => import("@/components/benefits-section").then(m => m.BenefitsSection));
 const TrustSection = dynamic(() => import("@/components/trust-section").then(m => m.TrustSection));
 const CategoriesSection = dynamic(() => import("@/components/categories-section").then(m => m.CategoriesSection));
 const HappyClients = dynamic(() => import("@/components/happy-clients").then(m => m.HappyClients));
 const HomeFAQ = dynamic(() => import("@/components/home-faq").then(m => m.HomeFAQ));
 const BranchesSection = dynamic(() => import("@/components/branches-section").then(m => m.BranchesSection));
 const ReviewsSection = dynamic(() => import("@/components/reviews-section").then(m => m.ReviewsSection));
+const HomeProductSections = dynamic(() => import("@/components/home-product-sections").then(m => m.HomeProductSections));
+const ShopByNeed = dynamic(() => import("@/components/shop-by-need").then(m => m.ShopByNeed));
+const ShopByBrand = dynamic(() => import("@/components/shop-by-brand").then(m => m.ShopByBrand));
+const OffersCarousel = dynamic(() => import("@/components/offers-carousel").then(m => m.OffersCarousel));
 
 const organizationSchema = {
   "@context": "https://schema.org",
@@ -108,7 +112,17 @@ const faqSchema = {
   ],
 };
 
-export default function Home() {
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Inicio", item: "https://moreltechnologyrd.com" },
+  ],
+};
+
+export default async function Home() {
+  const homeProducts = await getHomeProducts();
+
   return (
     <>
       <Script
@@ -129,12 +143,24 @@ export default function Home() {
         strategy="beforeInteractive"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
+      <Script
+        id="breadcrumb-schema"
+        type="application/ld+json"
+        strategy="beforeInteractive"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
 
       <HeroSection />
-      <HowItWorks />
-      <BenefitsSection />
-      <TrustSection />
+      <OffersCarousel products={homeProducts.offers} />
+      <HomeProductSections
+        newArrivals={homeProducts.newArrivals}
+        featured={homeProducts.featured}
+      />
       <CategoriesSection />
+      <ShopByNeed />
+      <ShopByBrand />
+      <HowItWorks />
+      <TrustSection />
       <HappyClients />
       <HomeFAQ />
       <BranchesSection />

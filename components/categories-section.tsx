@@ -1,9 +1,19 @@
 "use client";
 
-import { categories } from "@/lib/data";
-import Image from "next/image";
+import { homeCategories } from "@/lib/data";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Laptop, Gamepad2, GraduationCap, Code, Briefcase, Palette, Monitor, Mouse } from "lucide-react";
+
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  Laptop,
+  Gamepad2,
+  GraduationCap,
+  Code,
+  Briefcase,
+  Palette,
+  Monitor,
+  Mouse,
+};
 
 export function CategoriesSection() {
   return (
@@ -11,40 +21,46 @@ export function CategoriesSection() {
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
           <div>
-            <h2 className="animate-slide-up text-3xl md:text-4xl font-bold tracking-tight mb-4">Categorías Destacadas</h2>
+            <h2 className="animate-slide-up text-3xl md:text-4xl font-bold tracking-tight mb-4">
+              Explora por Categoría
+            </h2>
             <p className="animate-slide-up-delay-1 text-muted-foreground text-lg max-w-2xl">
-              Explora nuestra selección de laptops según tus necesidades específicas.
+              Encuentra el equipo ideal según lo que necesites.
             </p>
           </div>
-          <Link href="/catalogo" className="inline-flex items-center gap-2 text-primary font-medium hover:underline">
+          <Link
+            href="/catalogo"
+            className="inline-flex items-center gap-2 text-primary font-medium hover:underline"
+          >
             Ver todo el catálogo <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {categories.map((category, index) => (
-            <Link key={category.id} href={`/catalogo?categoria=${category.id}`}>
-              <div
-                className={`animate-scale-in relative overflow-hidden rounded-3xl group cursor-pointer aspect-[4/3] ${
-                  index === 0 || index === 3 ? "md:col-span-2 lg:col-span-2" : ""
-                }`}
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors z-10 duration-500" />
-                <Image
-                  src={category.image}
-                  alt={category.name}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                />
-                <div className="absolute bottom-0 left-0 p-5 sm:p-8 z-20 w-full bg-gradient-to-t from-black/80 via-black/40 to-transparent">
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{category.name}</h3>
-                  <p className="text-white/80 line-clamp-2">{category.description}</p>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          {homeCategories.map((category, index) => {
+            const Icon = iconMap[category.icon];
+            return (
+              <Link key={category.id} href={category.href}>
+                <div
+                  className="animate-scale-in group relative overflow-hidden rounded-2xl bg-card border border-border/50 p-6 hover:shadow-xl hover:shadow-primary/5 hover:border-primary/20 transition-all duration-300 hover:-translate-y-1 h-full"
+                  style={{ animationDelay: `${index * 0.05}s` }}
+                >
+                  <div className={`w-12 h-12 rounded-xl ${category.bgColor} flex items-center justify-center mb-4 transition-transform group-hover:scale-110 group-hover:rotate-3`}>
+                    {Icon && <Icon className={`w-6 h-6 ${category.textColor}`} />}
+                  </div>
+                  <h3 className="font-bold text-lg mb-1 group-hover:text-primary transition-colors">
+                    {category.name}
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {category.description}
+                  </p>
+                  <div className="mt-4 text-primary font-bold text-xs uppercase tracking-[0.15em] flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    Ver opciones <ArrowRight className="w-3 h-3" />
+                  </div>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
       </div>
     </section>
