@@ -1,21 +1,37 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Product } from "@/lib/data";
+import { getProducts, PAGE_SIZE_ALL } from "@/lib/api";
 import { Badge } from "@/components/ui/badge";
 import { BadgePercent, ArrowRight } from "lucide-react";
 import { isMinioImage, productUrl } from "@/lib/utils";
 
-interface OffersCarouselProps {
-  products: Product[];
-}
-
-export function OffersCarousel({ products }: OffersCarouselProps) {
+export function OffersCarousel() {
   const [isPaused, setIsPaused] = useState(false);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  if (products.length === 0) return null;
+  useEffect(() => {
+    const loadOffers = async () => {
+      try {
+        const { products: allProducts } = await getProducts(0, PAGE_SIZE_ALL);
+        const offers = allProducts
+          .filter(p => p.originalPrice && p.originalPrice > p.price)
+          .slice(0, 12);
+        setProducts(offers);
+      } catch (error) {
+        console.error("Error loading offers:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadOffers();
+  }, []);
+
+  if (loading || products.length === 0) return null;
 
   const duplicated = [...products, ...products];
 

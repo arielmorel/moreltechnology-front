@@ -151,7 +151,7 @@ export default async function Home() {
       />
 
       <HeroSection />
-      <OffersCarousel products={homeProducts.offers} />
+      <OffersCarousel />
       <HomeProductSections
         newArrivals={homeProducts.newArrivals}
         featured={homeProducts.featured}
