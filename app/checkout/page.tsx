@@ -30,6 +30,27 @@ import Link from "next/link";
 import { WhatsApp } from "@/components/icons";
 import { isMinioImage } from "@/lib/utils";
 
+const bankStyles: Record<string, { accent: string; soft: string; text: string; hover: string }> = {
+  "Banco Popular": {
+    accent: "bg-blue-700",
+    soft: "bg-blue-50 dark:bg-blue-900/40",
+    text: "text-blue-800 dark:text-blue-300",
+    hover: "hover:text-blue-800 dark:hover:text-blue-300",
+  },
+  Banreservas: {
+    accent: "bg-blue-800",
+    soft: "bg-orange-100 dark:bg-orange-900/40",
+    text: "text-blue-800 dark:text-blue-300",
+    hover: "hover:text-blue-800 dark:hover:text-blue-300",
+  },
+  "Banco BHD": {
+    accent: "bg-green-600",
+    soft: "bg-green-50 dark:bg-green-950/30",
+    text: "text-green-700 dark:text-green-300",
+    hover: "hover:text-green-700 dark:hover:text-green-300",
+  },
+};
+
 export default function CheckoutPage() {
   const { items, totalPrice, clearCart } = useCart();
   const [mounted, setMounted] = useState(false);
@@ -330,17 +351,19 @@ export default function CheckoutPage() {
                         <h3 className="font-bold mb-6">Nuestras Cuentas Bancarias</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           {bankAccounts.map((acc, idx) => (
-                            <div key={idx} className="bg-card p-5 rounded-2xl border border-border/50 shadow-sm space-y-3 group hover:border-primary/30 transition-colors">
+                            <div key={idx} className="group overflow-hidden rounded-2xl border border-border/50 bg-card shadow-sm transition-colors hover:border-primary/30">
+                              <div className={`h-2 ${bankStyles[acc.bank]?.accent || "bg-primary"}`} />
+                              <div className="space-y-3 p-5">
                               <div className="flex justify-between items-start">
-                                <span className="font-black text-xs uppercase tracking-widest text-primary">{acc.bank}</span>
+                                <span className={`font-black text-xs uppercase tracking-widest ${bankStyles[acc.bank]?.text || "text-primary"}`}>{acc.bank}</span>
                                 <Badge variant="outline" className="text-[10px]">{acc.currency}</Badge>
                               </div>
                               <div className="flex justify-between items-center group/btn">
-                                <span className="font-mono text-lg font-bold">{acc.accountNumber}</span>
+                                <span className={`rounded-lg px-2 py-1 font-mono text-lg font-bold ${bankStyles[acc.bank]?.soft || "bg-muted"}`}>{acc.accountNumber}</span>
                                 <Button
                                   variant="ghost"
                                   size="icon"
-                                  className="h-8 w-8 text-muted-foreground hover:text-primary"
+                                  className={`h-8 w-8 text-muted-foreground ${bankStyles[acc.bank]?.hover || "hover:text-primary"}`}
                                   onClick={() => handleCopy(acc.accountNumber, "Número de cuenta")}
                                   aria-label="Copiar número de cuenta"
                                 >
@@ -350,6 +373,7 @@ export default function CheckoutPage() {
                               <div className="text-[10px] text-muted-foreground">
                                 <p>{acc.holder}</p>
                                 <p>{acc.accountType}</p>
+                              </div>
                               </div>
                             </div>
                           ))}

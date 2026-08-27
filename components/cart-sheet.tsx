@@ -27,6 +27,8 @@ export function CartSheet() {
 
   if (!mounted) return null;
 
+  const itemCount = totalItems();
+
   const orderMessage = () => {
     const itemsText = items.map(item => `- ${item.name} (${item.quantity}x) - RD$ ${(item.price * item.quantity).toLocaleString("es-DO")}`).join("\n");
     return `*NUEVO PEDIDO DESDE LA WEB* 🛒\n\n${itemsText}\n\n*Total:* RD$ ${totalPrice().toLocaleString("es-DO")}\n\n¡Hola! Me interesa comprar estos equipos. ¿Están disponibles?`;
@@ -39,10 +41,12 @@ export function CartSheet() {
           <Button variant="outline" size="icon" className="relative rounded-full border-primary/20 hover:bg-primary/5" aria-label="Abrir carrito" />
         }
       >
-        <ShoppingCart className="h-5 w-5" />
-        {totalItems() > 0 && (
-          <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center animate-in zoom-in duration-300">
-            {totalItems()}
+        <span key={`cart-icon-${itemCount}`} className="inline-flex animate-bounce">
+          <ShoppingCart className="h-5 w-5" />
+        </span>
+        {itemCount > 0 && (
+          <span key={`cart-count-${itemCount}`} className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center animate-in zoom-in duration-300">
+            {itemCount}
           </span>
         )}
       </SheetTrigger>

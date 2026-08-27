@@ -31,6 +31,7 @@ export interface ApiProduct {
   categoryName: string;
   details: string | null;
   quantity: number;
+  warranty?: number;
   tags: string[];
   pinned: boolean;
   createdAt?: string;
@@ -113,6 +114,7 @@ export const mapApiProductToProduct = (apiProduct: ApiProduct): Product => {
     pinned: apiProduct.pinned || false,
     tags: apiProduct.tags || [],
     quantity: apiProduct.quantity || 0,
+    warranty: apiProduct.warranty,
     createdAt: apiProduct.createdAt,
   };
 };
@@ -212,7 +214,7 @@ export const getHomeProducts = async (branchId?: string): Promise<HomeProducts> 
       .slice(0, 8);
 
     const featured = products
-      .filter(p => p.pinned || p.featured)
+      .filter(p => p.pinned === true)
       .slice(0, 8);
 
     const newArrivals = [...products]

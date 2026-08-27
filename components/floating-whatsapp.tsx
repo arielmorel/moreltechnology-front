@@ -3,15 +3,17 @@
 import { WhatsAppDropdown } from "./whatsapp-dropdown";
 import { WhatsApp } from "./icons";
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 export function FloatingWhatsApp() {
   const [mounted, setMounted] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  if (!mounted) return null;
+  if (!mounted || pathname.startsWith("/productos/")) return null;
 
   return (
     <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3">

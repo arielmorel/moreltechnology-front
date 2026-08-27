@@ -2,8 +2,9 @@
 
 import { Product } from "@/lib/data";
 import { ProductCard } from "./product-card";
+import { ProductCarousel } from "./product-carousel";
 import Link from "next/link";
-import { ArrowRight, Clock, Star } from "lucide-react";
+import { ArrowRight, Clock } from "lucide-react";
 
 interface HomeProductSectionsProps {
   newArrivals: Product[];
@@ -70,15 +71,7 @@ export function HomeProductSections({
 }: HomeProductSectionsProps) {
   return (
     <>
-      <ProductSection
-        title="Destacados"
-        subtitle="Nuestras recomendaciones por excelente relación calidad-precio."
-        icon={Star}
-        iconColor="text-amber-500"
-        products={featured}
-        linkHref="/catalogo"
-        linkText="Ver catálogo"
-      />
+      <ProductCarousel type="featured" products={featured} />
 
       <ProductSection
         title="Recién Llegados"

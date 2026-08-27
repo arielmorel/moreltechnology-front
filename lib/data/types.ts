@@ -21,6 +21,7 @@ export interface Product {
   condition: ProductCondition;
   images: string[];
   description: string;
+  warranty?: number;
   featured?: boolean;
   pinned?: boolean;
   tags: string[];

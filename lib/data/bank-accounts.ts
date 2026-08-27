@@ -9,7 +9,7 @@ export const bankAccounts = [
   {
     bank: "Banreservas",
     accountNumber: "9607385266",
-    accountType: "Ahorros",
+    accountType: "Corriente",
     currency: "DOP",
     holder: "MorelTechnology SRL",
   },
