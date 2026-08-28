@@ -21,6 +21,9 @@ import {
   Building2,
   Clock,
   ShieldCheck,
+  User,
+  Phone,
+  Mail,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
@@ -29,6 +32,7 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { WhatsApp } from "@/components/icons";
 import { isMinioImage } from "@/lib/utils";
+import axios from "axios";
 
 const bankStyles: Record<string, { accent: string; soft: string; text: string; hover: string }> = {
   "Banco Popular": {
@@ -61,10 +65,19 @@ export default function CheckoutPage() {
     name: "",
     phone: "",
     email: "",
+    rnc: "",
     delivery: "pickup",
     branch: "moreltechnology",
     address: "",
+    notes: "",
   });
+
+  const [errors, setErrors] = useState<{ name?: string; phone?: string; address?: string }>({});
+  const [loading, setLoading] = useState(false);
+
+  const clearError = (field: keyof typeof errors) => {
+    if (errors[field]) setErrors((prev) => ({ ...prev, [field]: undefined }));
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -77,11 +90,46 @@ export default function CheckoutPage() {
     toast.success(`${label} copiado al portapapeles`);
   };
 
-  const handleFinalize = () => {
-    const newOrderId = `MT-${Math.floor(1000 + Math.random() * 9000)}`;
-    setOrderId(newOrderId);
-    setStep("success");
-    // In a real app, we would send this to a DB here
+  const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8282";
+  const APP_TOKEN = process.env.NEXT_PUBLIC_APP_TOKEN || "smartbusiness-public-web-key-2026";
+
+  const handleFinalize = async () => {
+    setLoading(true);
+    try {
+      const payload = {
+        branchId: formData.branch,
+        publicId: formData.branch,
+        customerName: formData.name,
+        customerPhone: formData.phone,
+        customerEmail: formData.email || null,
+        customerRnc: formData.rnc || null,
+        orderType: formData.delivery === "pickup" ? "PICKUP" : "DELIVERY",
+        deliveryAddress: formData.delivery === "shipping" ? formData.address : null,
+        notes: formData.notes || null,
+        items: items.map((item) => ({
+          productId: Number(item.id),
+          productName: item.name,
+          unitPrice: item.price,
+          quantity: item.quantity,
+        })),
+      };
+
+      const response = await axios.post(`${API_BASE}/api/web/orders`, payload, {
+        headers: {
+          "X-Public-App-Token": APP_TOKEN,
+        },
+      });
+
+      const data = response.data;
+      const newOrderId = data.orderId || data.id || `MT-${Math.floor(1000 + Math.random() * 9000)}`;
+      setOrderId(String(newOrderId));
+      setStep("success");
+    } catch (error) {
+      console.error("Error creating order:", error);
+      toast.error("Hubo un error al procesar tu pedido. Intenta de nuevo.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const sendWhatsApp = () => {
@@ -136,60 +184,118 @@ export default function CheckoutPage() {
                   exit={{ opacity: 0, y: -10 }}
                   className="space-y-6"
                 >
-                  <Card className="rounded-[2rem] border-border/50 shadow-xl">
-                    <CardHeader>
+                  <Card className="rounded-[2rem] border-border/50 shadow-xl overflow-hidden">
+                    <CardHeader className="bg-primary/5 border-b border-primary/10">
                       <CardTitle className="flex items-center gap-3">
-                        <CheckCircle2 className="w-6 h-6 text-primary" />
+                        <div className="p-2 bg-primary text-primary-foreground rounded-xl">
+                          <User className="w-5 h-5" />
+                        </div>
                         Información de Contacto
                       </CardTitle>
                       <CardDescription>Dinos quién recibe el pedido</CardDescription>
                     </CardHeader>
-                    <CardContent className="space-y-4">
+                    <CardContent className="space-y-4 pt-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label htmlFor="name">Nombre Completo</Label>
-                          <Input
-                            id="name"
-                            placeholder="Ej: Juan Pérez"
-                            className="rounded-xl h-12"
-                            value={formData.name}
-                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          />
+                          <Label htmlFor="name" className="text-sm font-semibold">
+                            Nombre Completo <span className="text-destructive">*</span>
+                          </Label>
+                          <div className="relative">
+                            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                            <Input
+                              id="name"
+                              placeholder="Ej: Juan Pérez"
+                              className={`rounded-xl h-12 pl-10 ${errors.name ? "border-destructive focus-visible:ring-destructive/20" : ""}`}
+                              value={formData.name}
+                              onChange={(e) => {
+                                setFormData({ ...formData, name: e.target.value });
+                                clearError("name");
+                              }}
+                            />
+                          </div>
+                          {errors.name && (
+                            <p className="text-xs text-destructive font-medium flex items-center gap-1">
+                              <span className="inline-block w-1 h-1 rounded-full bg-destructive" />
+                              {errors.name}
+                            </p>
+                          )}
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="phone">WhatsApp / Teléfono</Label>
-                          <Input
-                            id="phone"
-                            placeholder="Ej: 809-000-0000"
-                            className="rounded-xl h-12"
-                            value={formData.phone}
-                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                          />
+                          <Label htmlFor="phone" className="text-sm font-semibold">
+                            WhatsApp / Teléfono <span className="text-destructive">*</span>
+                          </Label>
+                          <div className="relative">
+                            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                            <Input
+                              id="phone"
+                              placeholder="Ej: 809-000-0000"
+                              className={`rounded-xl h-12 pl-10 ${errors.phone ? "border-destructive focus-visible:ring-destructive/20" : ""}`}
+                              value={formData.phone}
+                              onChange={(e) => {
+                                setFormData({ ...formData, phone: e.target.value });
+                                clearError("phone");
+                              }}
+                            />
+                          </div>
+                          {errors.phone && (
+                            <p className="text-xs text-destructive font-medium flex items-center gap-1">
+                              <span className="inline-block w-1 h-1 rounded-full bg-destructive" />
+                              {errors.phone}
+                            </p>
+                          )}
                         </div>
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="email">Correo Electrónico (Opcional)</Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          placeholder="juan@ejemplo.com"
-                          className="rounded-xl h-12"
-                          value={formData.email}
-                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        />
+                        <Label htmlFor="email" className="text-sm font-semibold text-muted-foreground">
+                          Correo Electrónico
+                        </Label>
+                        <div className="relative">
+                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                          <Input
+                            id="email"
+                            type="email"
+                            placeholder="juan@ejemplo.com"
+                            className="rounded-xl h-12 pl-10"
+                            value={formData.email}
+                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                          />
+                        </div>
+                        <p className="text-xs text-muted-foreground">Opcional. Te enviaremos la confirmación de tu pedido.</p>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="rnc" className="text-sm font-semibold text-muted-foreground">
+                          RNC / Cédula
+                        </Label>
+                        <div className="relative">
+                          <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                          <Input
+                            id="rnc"
+                            placeholder="Ej: 001-12345-67"
+                            className="rounded-xl h-12 pl-10"
+                            value={formData.rnc}
+                            onChange={(e) => setFormData({ ...formData, rnc: e.target.value })}
+                          />
+                        </div>
+                        <p className="text-xs text-muted-foreground">Opcional. Para factura con RNC.</p>
                       </div>
                     </CardContent>
                   </Card>
 
-                  <Card className="rounded-[2rem] border-border/50 shadow-xl">
-                    <CardHeader>
+                  <Card className="rounded-[2rem] border-border/50 shadow-xl overflow-hidden">
+                    <CardHeader className="bg-primary/5 border-b border-primary/10">
                       <CardTitle className="flex items-center gap-3">
-                        <Truck className="w-6 h-6 text-primary" />
+                        <div className="p-2 bg-primary text-primary-foreground rounded-xl">
+                          <Truck className="w-5 h-5" />
+                        </div>
                         Método de Entrega
                       </CardTitle>
-                      <CardDescription>¿Cómo quieres recibir tus equipos?</CardDescription>
+                      <CardDescription>
+                        {formData.delivery === "pickup"
+                          ? "Recogerás tu pedido en tienda"
+                          : "Enviaremos tu pedido a domicilio"}
+                      </CardDescription>
                     </CardHeader>
-                    <CardContent className="space-y-6">
+                    <CardContent className="space-y-6 pt-6">
                       <RadioGroup
                         value={formData.delivery}
                         onValueChange={(val) => setFormData({ ...formData, delivery: val })}
@@ -199,9 +305,16 @@ export default function CheckoutPage() {
                           <RadioGroupItem value="pickup" id="pickup" className="peer sr-only" />
                           <Label
                             htmlFor="pickup"
-                            className="flex flex-col items-center justify-between rounded-3xl border-2 border-muted bg-popover p-6 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer transition-all"
+                            className="relative flex flex-col items-center justify-between rounded-3xl border-2 border-muted bg-popover p-6 hover:bg-accent hover:text-accent-foreground peer-data-[checked]:border-primary peer-data-[checked]:bg-primary/5 peer-data-[checked]:text-primary [&:has([data-checked])]:border-primary [&:has([data-checked])]:bg-primary/5 [&:has([data-checked])]:text-primary cursor-pointer transition-all"
                           >
-                            <MapPin className="mb-3 h-6 w-6 text-primary" />
+                            {formData.delivery === "pickup" && (
+                              <div className="absolute top-3 right-3">
+                                <CheckCircle2 className="w-5 h-5 text-primary" />
+                              </div>
+                            )}
+                            <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center mb-3">
+                              <MapPin className="h-6 w-6 text-emerald-600" />
+                            </div>
                             <span className="font-bold">Recoger en Tienda</span>
                             <span className="text-[10px] text-muted-foreground uppercase mt-1">Gratis</span>
                           </Label>
@@ -210,9 +323,16 @@ export default function CheckoutPage() {
                           <RadioGroupItem value="shipping" id="shipping" className="peer sr-only" />
                           <Label
                             htmlFor="shipping"
-                            className="flex flex-col items-center justify-between rounded-3xl border-2 border-muted bg-popover p-6 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer transition-all"
+                            className="relative flex flex-col items-center justify-between rounded-3xl border-2 border-muted bg-popover p-6 hover:bg-accent hover:text-accent-foreground peer-data-[checked]:border-primary peer-data-[checked]:bg-primary/5 peer-data-[checked]:text-primary [&:has([data-checked])]:border-primary [&:has([data-checked])]:bg-primary/5 [&:has([data-checked])]:text-primary cursor-pointer transition-all"
                           >
-                            <Truck className="mb-3 h-6 w-6 text-primary" />
+                            {formData.delivery === "shipping" && (
+                              <div className="absolute top-3 right-3">
+                                <CheckCircle2 className="w-5 h-5 text-primary" />
+                              </div>
+                            )}
+                            <div className="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center mb-3">
+                              <Truck className="h-6 w-6 text-blue-600" />
+                            </div>
                             <span className="font-bold">Envío a Domicilio</span>
                             <span className="text-[10px] text-muted-foreground uppercase mt-1">Desde RD$ 300</span>
                           </Label>
@@ -221,7 +341,7 @@ export default function CheckoutPage() {
 
                       {formData.delivery === "pickup" ? (
                         <div className="space-y-4 pt-4">
-                          <Label>Selecciona una sucursal</Label>
+                          <Label className="text-sm font-semibold">Selecciona una sucursal</Label>
                           <RadioGroup
                             value={formData.branch}
                             onValueChange={(val) => setFormData({ ...formData, branch: val })}
@@ -232,15 +352,16 @@ export default function CheckoutPage() {
                                 <RadioGroupItem value={branch.id} id={branch.id} className="peer sr-only" />
                                 <Label
                                   htmlFor={branch.id}
-                                  className="flex items-center gap-4 p-4 rounded-2xl border border-border/50 peer-data-[state=checked]:bg-primary/5 peer-data-[state=checked]:border-primary cursor-pointer"
+                                  className="relative flex items-center gap-4 p-4 rounded-2xl border-2 border-border/50 peer-data-[checked]:bg-primary/5 peer-data-[checked]:border-primary [&:has([data-checked])]:bg-primary/5 [&:has([data-checked])]:border-primary cursor-pointer transition-all"
                                 >
-                                  <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center">
+                                  <div className="w-10 h-10 rounded-xl bg-muted peer-data-[checked]:bg-primary/10 [&:has([data-checked])]:bg-primary/10 flex items-center justify-center transition-colors">
                                     <Building2 className="w-5 h-5 text-primary" />
                                   </div>
-                                  <div>
+                                  <div className="flex-1">
                                     <p className="font-bold text-sm">{branch.name}</p>
                                     <p className="text-xs text-muted-foreground">{branch.address}</p>
                                   </div>
+                                  <CheckCircle2 className="w-5 h-5 text-primary opacity-0 peer-data-[checked]:opacity-100 [&:has([data-checked])]:opacity-100 transition-opacity" />
                                 </Label>
                               </div>
                             ))}
@@ -249,35 +370,72 @@ export default function CheckoutPage() {
                       ) : (
                         <div className="space-y-4 pt-4">
                           <div className="space-y-2">
-                            <Label htmlFor="address">Dirección Completa (Ciudad, Sector, Calle, #)</Label>
-                            <Input
-                              id="address"
-                              placeholder="Ej: Santiago, Los Jardines, Calle 2 #15"
-                              className="rounded-xl h-12"
-                              value={formData.address}
-                              onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                            />
+                            <Label htmlFor="address" className="text-sm font-semibold">
+                              Dirección Completa <span className="text-destructive">*</span>
+                            </Label>
+                            <div className="relative">
+                              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                              <Input
+                                id="address"
+                                placeholder="Ej: Santiago, Los Jardines, Calle 2 #15"
+                                className={`rounded-xl h-12 pl-10 ${errors.address ? "border-destructive focus-visible:ring-destructive/20" : ""}`}
+                                value={formData.address}
+                                onChange={(e) => {
+                                  setFormData({ ...formData, address: e.target.value });
+                                  clearError("address");
+                                }}
+                              />
+                            </div>
+                            {errors.address && (
+                              <p className="text-xs text-destructive font-medium flex items-center gap-1">
+                                <span className="inline-block w-1 h-1 rounded-full bg-destructive" />
+                                {errors.address}
+                              </p>
+                            )}
                           </div>
                           <p className="text-xs text-muted-foreground bg-primary/5 p-4 rounded-xl border border-primary/10">
                             <strong>Nota:</strong> Los envíos al interior se realizan vía Metro Pac o Caribe Pack con cobro en destino. En Santo Domingo tenemos mensajería privada.
                           </p>
                         </div>
                       )}
+
+                      <div className="space-y-2 pt-2">
+                        <Label htmlFor="notes" className="text-sm font-semibold text-muted-foreground">
+                          Observaciones
+                        </Label>
+                        <textarea
+                          id="notes"
+                          placeholder="Ej: Llamar antes de llegar, empaque especial..."
+                          className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 min-h-[80px] resize-none"
+                          value={formData.notes}
+                          onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                        />
+                        <p className="text-xs text-muted-foreground">Opcional. Instrucciones especiales para tu pedido.</p>
+                      </div>
                     </CardContent>
                   </Card>
 
                   <Button
-                    className="w-full h-14 rounded-2xl text-lg font-bold shadow-xl shadow-primary/20 gap-2"
+                    className="w-full h-14 rounded-2xl text-base font-bold shadow-lg shadow-primary/25 gap-3 group transition-all hover:shadow-xl hover:shadow-primary/30 hover:scale-[1.01] active:scale-[0.99]"
                     onClick={() => {
-                      if (!formData.name || !formData.phone) {
-                        toast.error("Por favor completa tu nombre y teléfono");
+                      const newErrors: typeof errors = {};
+                      if (!formData.name.trim()) newErrors.name = "El nombre es requerido";
+                      if (!formData.phone.trim()) newErrors.phone = "El teléfono es requerido";
+                      if (formData.delivery === "shipping" && !formData.address.trim()) newErrors.address = "La dirección es requerida para el envío";
+
+                      if (Object.keys(newErrors).length > 0) {
+                        setErrors(newErrors);
+                        toast.error("Por favor completa los campos requeridos");
                         return;
                       }
                       setStep("payment");
                     }}
                   >
+                    <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-primary-foreground/20 text-sm">
+                      1
+                    </span>
                     Continuar al Pago
-                    <ArrowRight className="w-5 h-5" />
+                    <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-0.5" />
                   </Button>
                 </motion.div>
               )}
@@ -383,11 +541,24 @@ export default function CheckoutPage() {
                   </Card>
 
                   <Button
-                    className="w-full h-14 rounded-2xl text-lg font-bold shadow-xl shadow-primary/20 gap-2"
+                    className="w-full h-14 rounded-2xl text-base font-bold shadow-lg shadow-primary/25 gap-3 group transition-all hover:shadow-xl hover:shadow-primary/30 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
                     onClick={handleFinalize}
+                    disabled={loading}
                   >
-                    Confirmar Pedido
-                    <CheckCircle2 className="w-5 h-5" />
+                    {loading ? (
+                      <>
+                        <span className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                        Procesando...
+                      </>
+                    ) : (
+                      <>
+                        <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-primary-foreground/20 text-sm">
+                          2
+                        </span>
+                        Confirmar Pedido
+                        <CheckCircle2 className="w-5 h-5 transition-transform group-hover:scale-110" />
+                      </>
+                    )}
                   </Button>
                 </motion.div>
               )}
@@ -431,19 +602,29 @@ export default function CheckoutPage() {
             <div className="lg:col-span-4">
               <div className="sticky top-24 space-y-6">
                 <Card className="rounded-[2rem] border-border/50 shadow-xl overflow-hidden">
-                  <CardHeader>
-                    <CardTitle>Resumen del Pedido</CardTitle>
+                  <CardHeader className="bg-primary/5 border-b border-primary/10">
+                    <CardTitle className="flex items-center gap-2">
+                      <div className="p-1.5 bg-primary text-primary-foreground rounded-lg">
+                        <CreditCard className="w-4 h-4" />
+                      </div>
+                      Resumen del Pedido
+                    </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-4 pt-5">
                     <div className="space-y-3 max-h-60 overflow-y-auto pr-2">
                       {items.map(item => (
                         <div key={item.id} className="flex gap-3 text-sm">
-                          <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-muted flex-shrink-0">
-                            <Image src={item.images[0]} alt={item.name} fill unoptimized={isMinioImage(item.images[0])} sizes="48px" className="object-cover" />
+                          <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-muted flex-shrink-0 ring-1 ring-border/50">
+                            <Image src={item.images[0]} alt={item.name} fill unoptimized={isMinioImage(item.images[0])} sizes="56px" className="object-cover" />
+                            {item.quantity > 1 && (
+                              <div className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-[10px] font-bold ring-2 ring-card">
+                                {item.quantity}
+                              </div>
+                            )}
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-bold truncate">{item.name}</p>
-                            <p className="text-muted-foreground text-xs">{item.quantity} x RD$ {item.price.toLocaleString("es-DO")}</p>
+                          <div className="flex-1 min-w-0 flex flex-col justify-between">
+                            <p className="font-bold truncate text-sm">{item.name}</p>
+                            <p className="text-muted-foreground text-xs">RD$ {item.price.toLocaleString("es-DO")} c/u</p>
                           </div>
                         </div>
                       ))}
@@ -451,18 +632,23 @@ export default function CheckoutPage() {
 
                     <Separator />
 
-                    <div className="space-y-2 pt-2">
+                    <div className="space-y-2 pt-1">
                       <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Subtotal</span>
+                        <span className="text-muted-foreground">Subtotal ({items.length} {items.length === 1 ? "artículo" : "artículos"})</span>
                         <span className="font-medium">RD$ {totalPrice().toLocaleString("es-DO")}</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Envío</span>
+                        <span className="text-muted-foreground flex items-center gap-1.5">
+                          {formData.delivery === "pickup" ? <MapPin className="w-3.5 h-3.5" /> : <Truck className="w-3.5 h-3.5" />}
+                          Envío
+                        </span>
                         <span className="font-medium">{formData.delivery === "pickup" ? "Gratis" : "RD$ 300+"}</span>
                       </div>
-                      <Separator className="my-2" />
-                      <div className="flex justify-between items-end">
-                        <span className="font-bold">Total del Pedido</span>
+                    </div>
+
+                    <div className="bg-primary/5 rounded-2xl p-4 border border-primary/10">
+                      <div className="flex justify-between items-center">
+                        <span className="font-bold text-sm">Total</span>
                         <div className="text-right">
                           <div className="text-2xl font-black text-primary">RD$ {totalPrice().toLocaleString("es-DO")}</div>
                         </div>
