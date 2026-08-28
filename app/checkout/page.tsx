@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { useCart } from "@/lib/store";
 import { bankAccounts, branches } from "@/lib/data";
 import { Button } from "@/components/ui/button";
@@ -57,7 +58,20 @@ const bankStyles: Record<string, { accent: string; soft: string; text: string; h
 
 export default function CheckoutPage() {
   const { items, totalPrice, clearCart } = useCart();
+  const searchParams = useSearchParams();
   const [mounted, setMounted] = useState(false);
+  const [referralCode, setReferralCode] = useState<string | null>(null);
+
+  useEffect(() => {
+    const ref = searchParams.get("ref");
+    if (ref) {
+      localStorage.setItem("referralCode", ref);
+      setReferralCode(ref);
+    } else {
+      setReferralCode(localStorage.getItem("referralCode"));
+    }
+    setMounted(true);
+  }, [searchParams]);
   const [step, setStep] = useState<"info" | "payment" | "success">("info");
   const [orderId, setOrderId] = useState("");
 
@@ -106,6 +120,7 @@ export default function CheckoutPage() {
         orderType: formData.delivery === "pickup" ? "PICKUP" : "DELIVERY",
         deliveryAddress: formData.delivery === "shipping" ? formData.address : null,
         notes: formData.notes || null,
+        referralCode,
         items: items.map((item) => ({
           productId: Number(item.id),
           productName: item.name,
