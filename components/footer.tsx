@@ -48,6 +48,11 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/apps" className="hover:text-primary transition-colors">
+                  Apps
+                </Link>
+              </li>
+              <li>
                 <Link href="/blog" className="hover:text-primary transition-colors">
                   Blog de Tecnología
                 </Link>

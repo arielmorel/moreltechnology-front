@@ -115,7 +115,7 @@ export function HeroSection() {
           </div>
         </div>
 
-        {/* Brand Trust Bar */}
+        {/* Brand Trust Bar
         <div className="mt-20 pt-10 border-t border-border/50 animate-slide-up-delay-5">
           <p className="text-center text-sm font-bold uppercase tracking-[0.2em] text-muted-foreground mb-8">
             Distribuidor Autorizado & Marcas Aliadas
@@ -140,7 +140,7 @@ export function HeroSection() {
             ))}
           </div>
 
-          {/* Payment Methods */}
+          Payment Methods
           <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-6 md:gap-10 mt-8 pt-8 border-t border-border/30">
             <div className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
               <Banknote className="w-5 h-5 text-green-600" />
@@ -156,6 +156,7 @@ export function HeroSection() {
             </div>
           </div>
         </div>
+        */}
       </div>
     </section>
   );

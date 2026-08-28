@@ -5,7 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Moon, Sun, Home, ShoppingBag, Sparkles, Tag, CreditCard, Users, Phone, MapPin, BookOpen, Smartphone, ChevronDown, Search } from "lucide-react";
+import { Menu, X, Moon, Sun, Home, ShoppingBag, Sparkles, CreditCard, Users, Phone, MapPin, BookOpen, ChevronDown, Search } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
@@ -16,9 +16,7 @@ const SearchDialog = dynamic(() => import("./search-dialog").then(m => m.SearchD
 const navLinks = [
   { name: "Inicio", href: "/", icon: Home },
   { name: "Catálogo", href: "/catalogo/moreltechnology", icon: ShoppingBag },
-  { name: "Ofertas", href: "/ofertas", icon: Tag },
   { name: "Asistente IA", href: "/recomendador", icon: Sparkles },
-  { name: "Apps", href: "/apps", icon: Smartphone },
   { name: "Blog", href: "/blog", icon: BookOpen },
   { name: "Financiamiento", href: "/financiamiento", icon: CreditCard },
   { name: "Nosotros", href: "/nosotros", icon: Users },
