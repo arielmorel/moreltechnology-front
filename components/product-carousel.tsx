@@ -62,7 +62,7 @@ export function ProductCarousel({
 }: ProductCarouselProps) {
   const config = carouselConfig[type];
   const Icon = config.icon;
-  const carouselApiRef = useRef<{ canScrollNext: () => boolean; scrollNext: () => void; scrollTo: (index: number) => void } | null>(null);
+  const carouselApiRef = useRef<{ canScrollNext: () => boolean; scrollNext: () => void; scrollTo: (index: number) => void } | null | undefined>(null);
   const [isPaused, setIsPaused] = useState(false);
   const rotationInterval = typeof autoRotate === "number" ? autoRotate : 5000;
 
