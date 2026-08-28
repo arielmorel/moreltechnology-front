@@ -136,7 +136,7 @@ export default function CheckoutPage() {
       });
 
       const data = response.data;
-      const newOrderId = data.orderId || data.id || `MT-${Math.floor(1000 + Math.random() * 9000)}`;
+      const newOrderId = data.code || data.orderCode || data.orderId || data.id || `MT-${Math.floor(1000 + Math.random() * 9000)}`;
       setOrderId(String(newOrderId));
       setStep("success");
     } catch (error) {
@@ -590,18 +590,39 @@ export default function CheckoutPage() {
                   </div>
                   <div className="space-y-2">
                     <h2 className="text-4xl font-black italic tracking-tighter">¡PEDIDO RECIBIDO!</h2>
-                    <p className="text-muted-foreground text-lg">Tu orden <span className="font-bold text-foreground">#{orderId}</span> ha sido generada correctamente.</p>
+                    <p className="text-muted-foreground text-lg">Tu orden ha sido generada correctamente.</p>
                   </div>
 
                   <div className="max-w-md mx-auto p-8 bg-card border-2 border-dashed border-primary/20 rounded-[2.5rem] space-y-6">
-                    <p className="font-medium">Para procesar tu envío, por favor envíanos el comprobante de transferencia:</p>
-                    <Button
-                      className="w-full h-16 rounded-2xl text-lg font-black bg-green-600 hover:bg-green-700 shadow-xl shadow-green-600/20 gap-3"
-                      onClick={sendWhatsApp}
-                    >
-                      <WhatsApp size={24} />
-                      Enviar Comprobante
-                    </Button>
+                    <div className="space-y-2">
+                      <p className="text-sm text-muted-foreground uppercase tracking-widest font-semibold">Código de Orden</p>
+                      <div className="flex items-center justify-center gap-3">
+                        <span className="text-3xl font-black text-primary font-mono tracking-wide">{orderId}</span>
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(orderId);
+                            toast.success("Código copiado");
+                          }}
+                          className="p-2 rounded-xl bg-muted hover:bg-muted/80 transition-colors"
+                          aria-label="Copiar código"
+                        >
+                          <Copy className="w-5 h-5 text-muted-foreground" />
+                        </button>
+                      </div>
+                    </div>
+
+                    <Separator />
+
+                    <div className="space-y-3">
+                      <p className="font-medium text-sm">Para procesar tu envío, envíanos el comprobante de transferencia indicando tu código de orden:</p>
+                      <Button
+                        className="w-full h-16 rounded-2xl text-lg font-black bg-green-600 hover:bg-green-700 shadow-xl shadow-green-600/20 gap-3"
+                        onClick={sendWhatsApp}
+                      >
+                        <WhatsApp size={24} />
+                        Enviar Comprobante
+                      </Button>
+                    </div>
                   </div>
 
                   <p className="text-sm text-muted-foreground pt-10">
