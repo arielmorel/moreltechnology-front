@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { useCart } from "@/lib/store";
 import { bankAccounts, branches } from "@/lib/data";
@@ -56,7 +56,15 @@ const bankStyles: Record<string, { accent: string; soft: string; text: string; h
   },
 };
 
-export default function CheckoutPage() {
+export default function CheckoutPageWrapper() {
+  return (
+    <Suspense>
+      <CheckoutPage />
+    </Suspense>
+  );
+}
+
+function CheckoutPage() {
   const { items, totalPrice, clearCart } = useCart();
   const searchParams = useSearchParams();
   const [mounted, setMounted] = useState(false);
