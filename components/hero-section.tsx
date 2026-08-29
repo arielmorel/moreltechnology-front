@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ShieldCheck, CreditCard, Banknote, Building2 } from "lucide-react";
+import { ArrowRight, ShieldCheck, CreditCard, ChevronDown, CheckCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { WhatsAppDropdown } from "./whatsapp-dropdown";
@@ -22,27 +22,22 @@ export function HeroSection() {
       <div className="container mx-auto px-4 md:px-6 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
           <div className="flex flex-col gap-6 animate-slide-up">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary w-fit text-sm font-bold backdrop-blur-sm border border-primary/20 animate-slide-left-delay-2">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-              </span>
-              Equipos nuevos y usados garantizados
-            </div>
-
             {/* Title */}
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-foreground">
-              Las mejores laptops para{" "}
+              Encuentra tu laptop ideal en{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-red-500 to-blue-600">
-                estudiar, trabajar y gaming
-              </span>{" "}
-              en RD.
+                República Dominicana.
+              </span>
             </h1>
 
             {/* Description */}
             <p className="text-lg md:text-xl text-muted-foreground max-w-[600px] leading-relaxed">
-              Encuentra el equipo ideal para tus necesidades. Te asesoramos personalmente para que tomes la mejor decisión con total seguridad.
+              <strong className="text-foreground">Estudia, trabaja o juega con el equipo adecuado para ti.</strong>{" "}
+              Laptops nuevas y usadas certificadas, probadas por nuestros técnicos y respaldadas por garantía escrita.
+            </p>
+
+            <p className="text-base text-muted-foreground max-w-[600px]">
+              Te ayudamos a elegir la mejor opción según tu necesidad y presupuesto.
             </p>
 
             {/* CTA Buttons */}
@@ -64,8 +59,28 @@ export function HeroSection() {
                 className="rounded-xl font-bold h-12 flex-1 px-4 border-2 border-green-700/30 hover:bg-green-50 dark:hover:bg-green-950/30 text-green-700 text-sm"
                 showIcon={true}
               >
-                WhatsApp
+                Quiero asesoría
               </WhatsAppDropdown>
+            </div>
+
+            {/* Trust Points */}
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-2 text-sm text-muted-foreground">
+              <span className="flex items-center gap-1.5">
+                <CheckCircle className="w-4 h-4 text-green-500" />
+                Garantía escrita
+              </span>
+              <span className="flex items-center gap-1.5">
+                <CheckCircle className="w-4 h-4 text-green-500" />
+                Equipos probados
+              </span>
+              <span className="flex items-center gap-1.5">
+                <CheckCircle className="w-4 h-4 text-green-500" />
+                Financiamiento
+              </span>
+              <span className="flex items-center gap-1.5">
+                <CheckCircle className="w-4 h-4 text-green-500" />
+                Envíos nacionales
+              </span>
             </div>
 
           </div>
@@ -115,48 +130,10 @@ export function HeroSection() {
           </div>
         </div>
 
-        {/* Brand Trust Bar
-        <div className="mt-20 pt-10 border-t border-border/50 animate-slide-up-delay-5">
-          <p className="text-center text-sm font-bold uppercase tracking-[0.2em] text-muted-foreground mb-8">
-            Distribuidor Autorizado & Marcas Aliadas
-          </p>
-          <div className="grid grid-cols-3 justify-items-center gap-4 md:gap-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-            {[
-              { name: "LENOVO", href: "/laptops/lenovo", color: "#E2231A" },
-              { name: "DELL", href: "/laptops/dell", color: "#007DB8" },
-              { name: "HP", href: "/laptops/hp", color: "#0096D6" },
-              { name: "APPLE", href: "/laptops/apple", color: "#555555" },
-              { name: "ASUS", href: "/laptops/asus", color: "#00539B" },
-              { name: "RAZER", href: "/laptops/razer", color: "#44D62C" },
-            ].map((brand) => (
-              <Link
-                key={brand.name}
-                href={brand.href}
-                className="text-lg md:text-2xl font-black tracking-tighter transition-colors hover:opacity-100"
-                style={{ color: brand.color }}
-              >
-                {brand.name}
-              </Link>
-            ))}
-          </div>
-
-          Payment Methods
-          <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-6 md:gap-10 mt-8 pt-8 border-t border-border/30">
-            <div className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
-              <Banknote className="w-5 h-5 text-green-600" />
-              <span className="text-sm font-medium">Efectivo</span>
-            </div>
-            <div className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
-              <Building2 className="w-5 h-5 text-blue-600" />
-              <span className="text-sm font-medium">Transferencia</span>
-            </div>
-            <div className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
-              <CreditCard className="w-5 h-5 text-primary" />
-              <span className="text-sm font-medium">Tarjetas</span>
-            </div>
-          </div>
+        {/* Scroll indicator */}
+        <div className="hidden md:flex justify-center mt-12 animate-bounce">
+          <ChevronDown className="w-6 h-6 text-muted-foreground/40" />
         </div>
-        */}
       </div>
     </section>
   );
