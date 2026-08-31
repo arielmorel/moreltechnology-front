@@ -31,6 +31,14 @@
   --color-category-comparativa-fg: var(--category-comparativa-fg);
   --color-category-guia: var(--category-guia);
   --color-category-guia-fg: var(--category-guia-fg);
+  --color-category-gaming: var(--category-gaming);
+  --color-category-gaming-fg: var(--category-gaming-fg);
+  --color-category-laptops: var(--category-laptops);
+  --color-category-laptops-fg: var(--category-laptops-fg);
+  --color-category-tecnologia: var(--category-tecnologia);
+  --color-category-tecnologia-fg: var(--category-tecnologia-fg);
+  --color-category-gta6: var(--category-gta6);
+  --color-category-gta6-fg: var(--category-gta6-fg);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -64,6 +72,14 @@
   --category-comparativa-fg: oklch(0.35 0.15 250);
   --category-guia: oklch(0.95 0.04 80);
   --category-guia-fg: oklch(0.35 0.12 70);
+  --category-gaming: oklch(0.93 0.06 300);
+  --category-gaming-fg: oklch(0.35 0.15 300);
+  --category-laptops: oklch(0.93 0.04 250);
+  --category-laptops-fg: oklch(0.35 0.15 250);
+  --category-tecnologia: oklch(0.93 0.05 160);
+  --category-tecnologia-fg: oklch(0.35 0.12 160);
+  --category-gta6: oklch(0.93 0.06 50);
+  --category-gta6-fg: oklch(0.35 0.15 50);
 }
 
 .dark {
@@ -89,6 +105,14 @@
   --category-comparativa-fg: oklch(0.75 0.1 250);
   --category-guia: oklch(0.25 0.04 80);
   --category-guia-fg: oklch(0.75 0.1 70);
+  --category-gaming: oklch(0.25 0.06 300);
+  --category-gaming-fg: oklch(0.75 0.1 300);
+  --category-laptops: oklch(0.25 0.04 250);
+  --category-laptops-fg: oklch(0.75 0.1 250);
+  --category-tecnologia: oklch(0.25 0.05 160);
+  --category-tecnologia-fg: oklch(0.75 0.1 160);
+  --category-gta6: oklch(0.25 0.06 50);
+  --category-gta6-fg: oklch(0.75 0.1 50);
 }
 
 /* Composited animations - only transform/opacity, no layout/paint */
