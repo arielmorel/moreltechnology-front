@@ -1,32 +1,44 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
+import { getAllPosts, getPostsByCategory } from "@/lib/blog";
+import { blogCategories, getBlogCategoryBySlug } from "@/lib/data/blog-categories";
+import { BlogCard } from "@/components/blog-card";
+import { BlogFilters } from "@/components/blog-filters";
+import { BookOpen, Gamepad2, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { getAllPosts } from "@/lib/blog";
-import { cn } from "@/lib/utils";
-import { Calendar, ArrowRight, BookOpen } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Blog - Morel Technology República Dominicana",
-  description: "Guías de compra, comparativas y consejos sobre laptops en República Dominicana. Expertos ayudándote a elegir.",
+  description: "Guías de compra, comparativas, gaming y tecnología en República Dominicana. Expertos ayudándote a elegir la laptop ideal.",
   alternates: {
     canonical: "/blog",
   },
+  openGraph: {
+    title: "Blog - Morel Technology República Dominicana",
+    description: "Guías de compra, comparativas, gaming y tecnología en RD.",
+    type: "website",
+    locale: "es_DO",
+    siteName: "Morel Technology",
+  },
 };
 
-function getCategoryColor(category: string): string {
-  if (category === "Comparativa") return "bg-category-comparativa text-category-comparativa-fg";
-  if (category === "Guía de Compra") return "bg-category-guia text-category-guia-fg";
-  return "bg-muted text-muted-foreground";
+interface BlogPageProps {
+  searchParams: Promise<{ category?: string }>;
 }
 
-export default function BlogPage() {
-  const posts = getAllPosts();
+export default async function BlogPage({ searchParams }: BlogPageProps) {
+  const { category } = await searchParams;
+  const posts = category ? getPostsByCategory(category) : getAllPosts();
+  const activeCategory = category ? getBlogCategoryBySlug(category) : null;
+
+  const gta6Posts = getAllPosts().filter((p) => p.category === "GTA 6");
 
   return (
     <div className="min-h-screen pt-16 pb-16">
       <div className="container mx-auto px-4 md:px-6">
 
         {/* Header */}
-        <div className="max-w-3xl mb-12">
+        <div className="max-w-3xl mb-8">
           <div className="flex items-center gap-2 mb-4">
             <BookOpen className="w-4 h-4 text-muted-foreground" />
             <span className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
@@ -34,66 +46,49 @@ export default function BlogPage() {
             </span>
           </div>
           <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
-            Tecnología &amp; Guías
+            {activeCategory ? activeCategory.name : "Tecnología, Gaming & Guías"}
           </h1>
           <p className="text-base text-muted-foreground leading-relaxed">
-            Comparativas, consejos de compra y todo lo que necesitas saber para elegir tu laptop ideal.
+            {activeCategory
+              ? activeCategory.description
+              : "Comparativas, consejos de compra y todo lo que necesitas saber para elegir tu laptop ideal."}
           </p>
+        </div>
+
+        {/* GTA 6 Banner */}
+        {!category && gta6Posts.length > 0 && (
+          <Link href="/blog?category=gta-6" className="group block mb-10">
+            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-orange-500/10 via-red-500/10 to-purple-500/10 border border-orange-500/20 p-6 sm:p-8 transition-all hover:border-orange-500/40">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-orange-500/10">
+                  <Gamepad2 className="w-6 h-6 text-orange-600 dark:text-orange-400" />
+                </div>
+                <div className="flex-1">
+                  <h2 className="text-lg sm:text-xl font-bold mb-1 group-hover:text-orange-600 transition-colors">
+                    GTA 6 — Guías, Requisitos y Laptops Recomendadas
+                  </h2>
+                  <p className="text-sm text-muted-foreground">
+                    Todo lo que necesitas saber para jugar GTA 6: GPUs, requisitos, laptops por presupuesto y más.
+                  </p>
+                </div>
+                <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-orange-600 transition-all group-hover:translate-x-1 hidden sm:block" />
+              </div>
+            </div>
+          </Link>
+        )}
+
+        {/* Category Filters */}
+        <div className="mb-8">
+          <Suspense fallback={null}>
+            <BlogFilters activeCategory={category} />
+          </Suspense>
         </div>
 
         {/* Posts Grid */}
         {posts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {posts.map((post, index) => (
-              <Link
-                key={post.slug}
-                href={`/blog/${post.slug}`}
-                className="group block"
-              >
-                <article className={cn(
-                  "h-full bg-card border border-border/50 rounded-2xl overflow-hidden transition-all hover:border-border",
-                  index === 0 && "md:col-span-2 lg:col-span-2"
-                )}>
-                  <div className={cn(
-                    "flex flex-col h-full",
-                    index === 0 ? "p-8 sm:p-10" : "p-6"
-                  )}>
-                    <div className="flex items-center gap-3 mb-4">
-                      {post.category && (
-                        <span className={cn(
-                          "inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider",
-                          getCategoryColor(post.category)
-                        )}>
-                          {post.category}
-                        </span>
-                      )}
-                      <span className="flex items-center gap-1.5 text-xs text-muted-foreground/70">
-                        <Calendar className="w-3 h-3" />
-                        {new Date(post.date).toLocaleDateString("es-DO", { year: "numeric", month: "short", day: "numeric" })}
-                      </span>
-                    </div>
-
-                    <h2 className={cn(
-                      "font-bold mb-3 group-hover:text-foreground transition-colors line-clamp-2",
-                      index === 0 ? "text-2xl" : "text-lg"
-                    )}>
-                      {post.title}
-                    </h2>
-
-                    <p className={cn(
-                      "text-muted-foreground leading-relaxed mb-6 line-clamp-3 flex-1",
-                      index === 0 ? "text-base" : "text-sm"
-                    )}>
-                      {post.description}
-                    </p>
-
-                    <div className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">
-                      Leer artículo
-                      <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
-                    </div>
-                  </div>
-                </article>
-              </Link>
+              <BlogCard key={post.slug} post={post} featured={index === 0 && !category} />
             ))}
           </div>
         ) : (
@@ -101,10 +96,33 @@ export default function BlogPage() {
             <div className="inline-flex items-center justify-center w-12 h-12 bg-muted rounded-full mb-2">
               <BookOpen className="w-5 h-5 text-muted-foreground" />
             </div>
-            <p className="text-lg font-semibold">Próximamente artículos</p>
+            <p className="text-lg font-semibold">No hay artículos en esta categoría</p>
             <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-              Estamos preparando guías y comparativas para ayudarte a elegir tu laptop ideal.
+              Estamos preparando contenido para esta categoría. Vuelve pronto.
             </p>
+          </div>
+        )}
+
+        {/* Categories Overview (only on main blog page) */}
+        {!category && (
+          <div className="mt-16 pt-12 border-t border-border/50">
+            <h2 className="text-xl font-bold mb-6">Explorar por Categoría</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+              {blogCategories.map((cat) => (
+                <Link
+                  key={cat.slug}
+                  href={`/blog?category=${cat.slug}`}
+                  className="group p-4 rounded-xl bg-card border border-border/50 hover:border-border transition-all"
+                >
+                  <h3 className="font-semibold text-sm mb-1 group-hover:text-foreground transition-colors">
+                    {cat.name}
+                  </h3>
+                  <p className="text-xs text-muted-foreground line-clamp-2">
+                    {cat.description}
+                  </p>
+                </Link>
+              ))}
+            </div>
           </div>
         )}
 

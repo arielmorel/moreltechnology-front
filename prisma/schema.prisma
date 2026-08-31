@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum SubscriberStatus {
+  SUBSCRIBED
+  UNSUBSCRIBED
+}
+
+enum SubscriptionSource {
+  WEBSITE
+  CHECKOUT
+  INSTAGRAM
+  FACEBOOK
+  WHATSAPP
+  TIKTOK
+  REFERAL
+}
+
+model NewsletterSubscriber {
+  id              String             @id @default(uuid()) @db.Uuid
+  email           String             @unique
+  status          SubscriberStatus   @default(SUBSCRIBED)
+  source          SubscriptionSource @default(WEBSITE)
+  consentGivenAt  DateTime           @db.Timestamptz
+  consentVersion  String             @default("v1")
+  subscribedAt    DateTime           @default(now()) @db.Timestamptz
+  unsubscribedAt  DateTime?          @db.Timestamptz
+  createdAt       DateTime           @default(now()) @db.Timestamptz
+  updatedAt       DateTime           @updatedAt @db.Timestamptz
+
+  @@index([status])
+  @@index([source])
+  @@index([createdAt])
+}

@@ -2,13 +2,13 @@ import { MetadataRoute } from "next";
 import { getProducts } from "@/lib/api";
 import { productUrl } from "@/lib/utils";
 import { getAllPosts } from "@/lib/blog";
+import { blogCategories } from "@/lib/data/blog-categories";
 
 const baseUrl = "https://moreltechnologyrd.com";
 
 const brands = ["lenovo", "dell", "hp", "apple", "asus", "acer", "razer"];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-
 
   // Base pages
   const staticPages = [
@@ -40,9 +40,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Blog pages
   const blogPages = getAllPosts().map((post) => ({
     url: `${baseUrl}/blog/${post.slug}`,
-    lastModified: post.date,
+    lastModified: post.updatedAt || post.date,
     changeFrequency: "monthly" as const,
     priority: 0.7,
+  }));
+
+  // Blog category pages
+  const blogCategoryPages = blogCategories.map((cat) => ({
+    url: `${baseUrl}/blog?category=${cat.slug}`,
+    lastModified: new Date().toISOString(),
+    changeFrequency: "weekly" as const,
+    priority: 0.6,
   }));
 
   // Product pages
@@ -55,9 +63,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     }));
 
-    return [...staticPages, ...brandPages, ...blogPages, ...productPages];
+    return [...staticPages, ...brandPages, ...blogPages, ...blogCategoryPages, ...productPages];
   } catch (error) {
     console.error("Error generating sitemap products:", error);
-    return [...staticPages, ...brandPages, ...blogPages];
+    return [...staticPages, ...brandPages, ...blogPages, ...blogCategoryPages];
   }
 }

@@ -97,7 +97,7 @@ export function HeroSection() {
                 src="/laptop.jpeg"
                 alt="Laptops Modernas"
                 fill
-                sizes="(max-width: 768px) 100vw, 50vw"
+                sizes="(max-width: 768px) 50vw, 249px"
                 className="object-contain drop-shadow-2xl z-0 hover:scale-105 transition-transform duration-700 p-6 sm:p-12 md:p-16"
                 priority
               />

@@ -13,6 +13,32 @@ services:
       - '3333:3000'
     volumes:
       - /etc/letsencrypt/live/moreltechnologyrd.com:/etc/letsencrypt/live/moreltechnologyrd.com:ro  # SSL cert volume  
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: moreltechnologyrd_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-moreltechnology_db}
+      POSTGRES_USER: ${POSTGRES_USER:-moreltech_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-moreltech2026}
+    ports:
+      - '5434:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - web
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U moreltech_user -d moreltechnologyrd_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
 
 networks:
   web:
