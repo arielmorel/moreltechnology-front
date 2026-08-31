@@ -62,15 +62,31 @@ export function ProductCard({ product, variant = "default" }: ProductCardProps) 
               <h3 className={variant === "compact" ? "min-w-0 font-semibold text-sm line-clamp-2 group-hover:text-red-600 transition-colors mb-3 min-h-[2.5rem]" : "min-w-0 font-semibold text-sm sm:text-lg line-clamp-2 mt-1 group-hover:text-primary transition-colors"}>{product.name} | {product.description}</h3>
             </div>
             {variant === "compact" ? (
-              <div className="flex items-center gap-2">
-                {product.originalPrice && (
-                  <span className="text-xs text-muted-foreground line-through">
-                    RD$ {product.originalPrice.toLocaleString("es-DO")}
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  {product.originalPrice && (
+                    <span className="text-xs text-muted-foreground line-through">
+                      RD$ {product.originalPrice.toLocaleString("es-DO")}
+                    </span>
+                  )}
+                  <span className="text-lg font-bold text-red-600">
+                    RD$ {product.price.toLocaleString("es-DO")}
                   </span>
-                )}
-                <span className="text-lg font-bold text-red-600">
-                  RD$ {product.price.toLocaleString("es-DO")}
-                </span>
+                </div>
+                <Button
+                  size="icon"
+                  variant="outline"
+                  className="h-8 w-8 rounded-lg border-primary/20 shrink-0"
+                  aria-label="Agregar al carrito"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    addItem(product);
+                    toast.success(`${product.name} añadido al carrito`);
+                  }}
+                >
+                  <ShoppingCart className="w-3.5 h-3.5" />
+                </Button>
               </div>
             ) : (
               <>
