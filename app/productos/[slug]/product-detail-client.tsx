@@ -25,6 +25,7 @@ import { useCart } from "@/lib/store";
 import { toast } from "sonner";
 import { cn, isMinioImage } from "@/lib/utils";
 import { ProductCarousel } from "@/components/product-carousel";
+import { AccessoriesCarousel } from "@/components/accessories-carousel";
 import { ConditionGuide } from "@/components/condition-guide";
 import {
   Dialog,
@@ -510,6 +511,8 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
             </div>
           </div>
         </div>
+
+        <AccessoriesCarousel currentProductId={product.slug} />
 
         {relatedProducts.length > 0 && (
           <div className="mt-20 md:mt-32">

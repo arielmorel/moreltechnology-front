@@ -235,7 +235,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
 
   return (
     <div className="min-h-screen pt-16 pb-6 bg-muted/20">
-      <div className="container mx-auto px-4 md:px-6">
+      <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10">
         <div className="flex flex-col sm:flex-row items-start sm:items-baseline justify-between mb-4 md:mb-12 gap-4">
           <div className="space-y-1">
             <h1 className="text-2xl md:text-5xl font-black tracking-tight">Laptops disponibles</h1>
@@ -261,9 +261,9 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
           </div>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-4 md:gap-10">
+        <div className="flex flex-col lg:flex-row gap-4 md:gap-6 lg:gap-8">
           {/* Sidebar Filters (Desktop) */}
-          <aside className="hidden lg:block w-80 shrink-0">
+          <aside className="hidden lg:block w-72 xl:w-80 shrink-0">
             <div className="sticky top-28 bg-card/80 border border-border/60 rounded-2xl p-5 shadow-sm">
               <ProductFilters
                 selectedCategory={selectedCategory}
@@ -461,7 +461,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
             </div>
 
             {isLoading && products.length === 0 ? (
-              <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
                 {[...Array(6)].map((_, i) => (
                   <ProductCardSkeleton key={i} />
                 ))}
@@ -469,7 +469,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
             ) : filteredProducts.length > 0 ? (
               <>
                 <div className="relative" aria-busy={isLoading}>
-                  <div className={`grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-6 transition-opacity duration-200 ${isLoading ? "opacity-50" : "opacity-100"}`}>
+                  <div className={`grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 sm:gap-4 lg:gap-6 transition-opacity duration-200 ${isLoading ? "opacity-50" : "opacity-100"}`}>
                     {filteredProducts.map(product => (
                       <ProductCard key={product.id} product={product} />
                     ))}

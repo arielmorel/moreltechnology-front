@@ -14,6 +14,7 @@ const HomeProductSections = dynamic(() => import("@/components/home-product-sect
 // const ShopByNeed = dynamic(() => import("@/components/shop-by-need").then(m => m.ShopByNeed));
 const ShopByBrand = dynamic(() => import("@/components/shop-by-brand").then(m => m.ShopByBrand));
 const OffersCarousel = dynamic(() => import("@/components/offers-carousel").then(m => m.OffersCarousel));
+const GamingCarousel = dynamic(() => import("@/components/gaming-carousel").then(m => m.GamingCarousel));
 
 const organizationSchema = {
   "@context": "https://schema.org",
@@ -152,6 +153,7 @@ export default async function Home() {
 
       <HeroSection />
       <OffersCarousel />
+      <GamingCarousel />
       <HomeProductSections
         newArrivals={homeProducts.newArrivals}
         featured={homeProducts.featured}
