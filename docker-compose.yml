@@ -22,8 +22,8 @@ services:
     container_name: moreltechnologyrd_postgres
     restart: always
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-moreltechnology_newsletter}
-      POSTGRES_USER: ${POSTGRES_USER:-moreltech}
+      POSTGRES_DB: ${POSTGRES_DB:-moreltechnology_db}
+      POSTGRES_USER: ${POSTGRES_USER:-moreltech_user}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-moreltech2026}
     ports:
       - '5434:5432'
@@ -32,7 +32,7 @@ services:
     networks:
       - web
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U moreltech -d moreltechnologyrd_db"]
+      test: ["CMD-SHELL", "pg_isready -U moreltech_user -d moreltechnologyrd_db"]
       interval: 10s
       timeout: 5s
       retries: 5

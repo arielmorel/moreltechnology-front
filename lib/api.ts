@@ -6,7 +6,7 @@ const DEFAULT_BRANCH = "moreltechnology";
 
 export const PAGE_SIZE_DEFAULT = 20;
 export const PAGE_SIZE_SEARCH = 10;
-export const PAGE_SIZE_ALL = 100;
+export const PAGE_SIZE_ALL = 30;
 
 function getCatalogUrl(branchId?: string): string {
   const branch = branchId || DEFAULT_BRANCH;
