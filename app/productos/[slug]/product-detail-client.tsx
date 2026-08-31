@@ -352,7 +352,7 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
           </div>
 
           {/* Right Column: Content */}
-          <div className="flex flex-col gap-6 pb-28 md:pb-0">
+          <div className="flex flex-col gap-6">
             <div className="space-y-4">
               <div className="space-y-2">
                 <div className="flex flex-wrap items-center gap-2">
@@ -459,44 +459,35 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
               </p>
             </div>
 
-            <div className="fixed inset-x-0 bottom-0 z-50 flex flex-row gap-2 border-t border-border/60 bg-background/95 px-3 py-3 shadow-[0_-8px_24px_rgba(0,0,0,0.08)] backdrop-blur md:relative md:inset-auto md:z-auto md:flex-col md:w-full md:gap-3 md:border-0 md:bg-transparent md:px-0 md:py-6 md:shadow-none">
-              <Button
-                onClick={handleAddToCart}
-                disabled={product.quantity === 0}
-                className="flex-1 h-12 md:h-14 rounded-xl md:rounded-2xl text-sm md:text-base font-bold bg-primary hover:bg-primary/90 shadow-xl shadow-primary/20 gap-2 md:gap-3"
-              >
-                <ShoppingCart className="w-4 h-4 md:w-5 md:h-5" />
-                <span className="md:hidden">Comprar</span>
-                <span className="hidden md:inline">Añadir al carrito</span>
-              </Button>
-              <WhatsAppDropdown
-                message={`Hola, estoy interesado en la laptop ${product.name}.`}
-                className="flex-1 h-12 md:h-14 rounded-xl md:rounded-2xl text-sm md:text-base font-semibold border-2"
-                variant="outline"
-              >
-                <span className="md:hidden">Contactar</span>
-                <span className="hidden md:inline">Contactar por WhatsApp</span>
-              </WhatsAppDropdown>
+            <div className="flex flex-col gap-3 pt-2">
+              <div className="flex gap-3">
+                <Button
+                  onClick={handleAddToCart}
+                  disabled={product.quantity === 0}
+                  className="flex-1 h-12 md:h-14 rounded-xl md:rounded-2xl text-sm md:text-base font-bold gap-2"
+                >
+                  <ShoppingCart className="w-4 h-4 md:w-5 md:h-5" />
+                  <span className="md:hidden">Comprar</span>
+                  <span className="hidden md:inline">Añadir al carrito</span>
+                </Button>
+                <WhatsAppDropdown
+                  message={`Hola, estoy interesado en la laptop ${product.name}.`}
+                  className="flex-1 h-12 md:h-14 rounded-xl md:rounded-2xl text-sm md:text-base font-semibold"
+                  variant="outline"
+                >
+                  <span className="md:hidden">WhatsApp</span>
+                  <span className="hidden md:inline">Contactar por WhatsApp</span>
+                </WhatsAppDropdown>
+              </div>
               <Button
                 type="button"
-                variant="outline"
+                variant="ghost"
                 onClick={handleShare}
-                className="hidden h-12 flex-1 gap-2 rounded-xl border-blue-200 text-sm font-semibold text-blue-700 transition-all hover:border-blue-600 hover:bg-blue-600 hover:text-white md:flex md:h-14 md:rounded-2xl md:text-base"
+                className="w-full gap-2 text-muted-foreground hover:text-foreground h-10 rounded-xl text-sm"
                 aria-label="Compartir producto"
               >
                 <Share2 className="h-4 w-4" />
-                Compartir
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                onClick={handleShare}
-                className="flex h-12 w-12 shrink-0 rounded-xl border-blue-200 text-blue-700 transition-all hover:border-blue-600 hover:bg-blue-600 hover:text-white md:hidden"
-                aria-label="Compartir producto"
-                title="Compartir"
-              >
-                <Share2 className="h-5 w-5" />
+                Compartir producto
               </Button>
             </div>
 
