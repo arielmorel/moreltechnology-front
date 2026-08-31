@@ -512,6 +512,8 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
           </div>
         </div>
 
+        <AccessoriesCarousel currentProductId={product.slug} />
+
         {relatedProducts.length > 0 && (
           <div className="mt-20 md:mt-32">
             <ProductCarousel
@@ -523,8 +525,6 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
             />
           </div>
         )}
-
-        <AccessoriesCarousel currentProductId={product.slug} />
       </div>
     </div>
   );
