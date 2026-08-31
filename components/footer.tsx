@@ -4,6 +4,7 @@ import { branches } from "@/lib/data";
 import { MapPin, Phone, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Facebook, Instagram } from "@/components/icons";
+import { NewsletterForm } from "@/components/newsletter-form";
 
 export function Footer() {
   return (
@@ -31,6 +32,10 @@ export function Footer() {
               <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:text-foreground" aria-label="Facebook">
                 <Facebook size={16} />
               </Button>
+            </div>
+            <div className="space-y-2">
+              <h3 className="font-semibold text-xs md:text-sm tracking-tight">Newsletter</h3>
+              <NewsletterForm />
             </div>
           </div>
 
