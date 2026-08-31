@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type ComponentType } from "react";
 import Link from "next/link";
-import { ArrowRight, BadgePercent, Star, Sparkles, Gamepad2 } from "lucide-react";
+import { ArrowRight, BadgePercent, Star, Sparkles, Gamepad2, Cable } from "lucide-react";
 import { Product } from "@/lib/data";
 import { ProductCard } from "@/components/product-card";
 import {
@@ -13,7 +13,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 
-export type ProductCarouselType = "offers" | "featured" | "related" | "gaming";
+export type ProductCarouselType = "offers" | "featured" | "related" | "gaming" | "accessories";
 
 interface ProductCarouselProps {
   type: ProductCarouselType;
@@ -58,6 +58,13 @@ const carouselConfig: Record<ProductCarouselType, {
     iconColor: "text-purple-600",
     accentColor: "text-purple-600",
   },
+  accessories: {
+    title: "Accesorios recomendados",
+    subtitle: "Complementa tu laptop con los accesorios que necesitas.",
+    icon: Cable,
+    iconColor: "text-teal-600",
+    accentColor: "text-teal-600",
+  },
 };
 
 export function ProductCarousel({
@@ -94,18 +101,18 @@ export function ProductCarousel({
   return (
     <section className="py-16 md:py-20 bg-muted/30 relative overflow-hidden">
       <div className="absolute inset-0 -z-10">
-        <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] ${type === "offers" ? "bg-red-500/5" : type === "gaming" ? "bg-purple-500/5" : "bg-primary/5"} blur-[120px] rounded-full`} />
+        <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] ${type === "offers" ? "bg-red-500/5" : type === "gaming" ? "bg-purple-500/5" : type === "accessories" ? "bg-teal-500/5" : "bg-primary/5"} blur-[120px] rounded-full`} />
       </div>
 
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
           <div className="space-y-2">
-            <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full ${type === "offers" ? "bg-red-500/10 border-red-500/20" : type === "gaming" ? "bg-purple-500/10 border-purple-500/20" : "bg-primary/10 border-primary/20"} ${config.accentColor} text-xs font-bold uppercase tracking-widest border`}>
+            <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full ${type === "offers" ? "bg-red-500/10 border-red-500/20" : type === "gaming" ? "bg-purple-500/10 border-purple-500/20" : type === "accessories" ? "bg-teal-500/10 border-teal-500/20" : "bg-primary/10 border-primary/20"} ${config.accentColor} text-xs font-bold uppercase tracking-widest border`}>
               <Icon className={`w-3.5 h-3.5 ${config.iconColor}`} />
               {config.title}
             </div>
             <h2 className="text-3xl md:text-4xl font-black tracking-tight">
-              {type === "offers" ? <>Ofertas <span className="text-red-600">Flash</span></> : type === "gaming" ? <>Laptops <span className="text-purple-600">Gaming</span></> : config.title}
+              {type === "offers" ? <>Ofertas <span className="text-red-600">Flash</span></> : type === "gaming" ? <>Laptops <span className="text-purple-600">Gaming</span></> : type === "accessories" ? <>Accesorios <span className="text-teal-600">recomendados</span></> : config.title}
             </h2>
             <p className="text-muted-foreground text-sm max-w-xl">{config.subtitle}</p>
           </div>
