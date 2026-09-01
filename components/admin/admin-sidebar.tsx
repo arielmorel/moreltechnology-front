@@ -14,6 +14,7 @@ import {
   Menu,
   X,
   Shield,
+  Bell,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { adminLogout } from "@/app/actions/admin-auth";
@@ -24,6 +25,7 @@ const navItems = [
   { href: "/admin/orders", label: "Pedidos", icon: ShoppingCart },
   { href: "/admin/customers", label: "Clientes", icon: Users },
   { href: "/admin/reviews", label: "Reseñas", icon: Star },
+  { href: "/admin/notifications", label: "Notificaciones", icon: Bell },
   { href: "/admin/settings", label: "Configuración", icon: Settings },
 ];
 
