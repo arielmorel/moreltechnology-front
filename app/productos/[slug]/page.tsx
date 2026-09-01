@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Script from "next/script";
 import { getProductBySlug } from "@/lib/api";
+import { getApprovedReviews } from "@/app/actions/reviews";
 import { productUrl } from "@/lib/utils";
 import ProductDetailClient from "./product-detail-client";
 
@@ -56,6 +57,40 @@ export default async function ProductDetailPage({ params }: PageProps) {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
 
+  let aggregateRating = null;
+  let jsonLdReviews: Array<Record<string, unknown>> = [];
+  if (product) {
+    const productId = parseInt(product.id, 10);
+    if (!isNaN(productId)) {
+      const { reviews, averageRating, totalReviews } = await getApprovedReviews(productId);
+      if (totalReviews > 0) {
+        aggregateRating = {
+          "@type": "AggregateRating" as const,
+          ratingValue: averageRating,
+          reviewCount: totalReviews,
+          bestRating: 5,
+          worstRating: 1,
+        };
+        jsonLdReviews = reviews.map((r) => ({
+          "@type": "Review",
+          author: {
+            "@type": "Person",
+            name: r.customerName,
+          },
+          reviewRating: {
+            "@type": "Rating",
+            ratingValue: r.rating,
+            bestRating: 5,
+            worstRating: 1,
+          },
+          name: r.title || undefined,
+          reviewBody: r.comment,
+          datePublished: new Date(r.createdAt).toISOString().split("T")[0],
+        }));
+      }
+    }
+  }
+
   const productSchema = product ? {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -74,6 +109,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
       itemCondition: product.condition === "Nuevo" ? "https://schema.org/NewCondition" : "https://schema.org/UsedCondition",
     },
     category: product.category,
+    ...(aggregateRating && { aggregateRating }),
+    ...(jsonLdReviews.length > 0 && { review: jsonLdReviews }),
   } : null;
 
   const breadcrumbSchema = {

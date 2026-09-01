@@ -38,3 +38,29 @@ model NewsletterSubscriber {
   @@index([source])
   @@index([createdAt])
 }
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model ProductReview {
+  id                String       @id @default(uuid())
+  productId         Int
+  customerId        String?
+  customerName      String
+  customerEmail     String
+  rating            Int
+  title             String?
+  comment           String
+  verifiedPurchase  Boolean      @default(false)
+  status            ReviewStatus @default(PENDING)
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  @@index([productId])
+  @@index([customerId])
+  @@index([productId, status])
+  @@index([customerEmail])
+}

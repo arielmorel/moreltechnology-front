@@ -27,6 +27,9 @@ import { cn, isMinioImage } from "@/lib/utils";
 import { ProductCarousel } from "@/components/product-carousel";
 import { AccessoriesCarousel } from "@/components/accessories-carousel";
 import { ConditionGuide } from "@/components/condition-guide";
+import { ProductReviewForm } from "@/components/product-review-form";
+import { ProductReviewsCarousel } from "@/components/product-reviews-carousel";
+import { getApprovedReviews } from "@/app/actions/reviews";
 import {
   Dialog,
   DialogContent,
@@ -44,6 +47,19 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [activeImage, setActiveImage] = useState(0);
   const [isImageViewerOpen, setIsImageViewerOpen] = useState(false);
+  const [reviewsData, setReviewsData] = useState({
+    reviews: [] as Array<{
+      id: string;
+      customerName: string;
+      rating: number;
+      title: string | null;
+      comment: string;
+      verifiedPurchase: boolean;
+      createdAt: Date;
+    }>,
+    averageRating: 0,
+    totalReviews: 0,
+  });
   const { addItem } = useCart();
 
   const warrantyLabel = product?.warranty
@@ -107,6 +123,14 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
             ).slice(0, 8)
           : [];
         setRelatedProducts(related);
+
+        if (currentProduct) {
+          const productId = parseInt(currentProduct.id, 10);
+          if (!isNaN(productId)) {
+            const reviews = await getApprovedReviews(productId);
+            setReviewsData(reviews);
+          }
+        }
       } catch (error) {
         console.error("Error loading product:", error);
       } finally {
@@ -504,6 +528,33 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
         </div>
 
         <AccessoriesCarousel currentProductId={product.slug} />
+
+        {/* Approved Reviews */}
+        {reviewsData.totalReviews > 0 && (
+          <div className="mt-16 md:mt-24">
+            <ProductReviewsCarousel
+              reviews={reviewsData.reviews}
+              averageRating={reviewsData.averageRating}
+              totalReviews={reviewsData.totalReviews}
+            />
+          </div>
+        )}
+
+        {/* Review Form */}
+        <div className="mt-16 md:mt-24">
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold flex items-center gap-2">
+              Escribir una reseña
+              <span className="w-8 h-1 bg-primary/20 rounded-full" />
+            </h2>
+            <p className="mt-2 text-muted-foreground">
+              Comparte tu experiencia con este producto
+            </p>
+          </div>
+          <div className="max-w-2xl">
+            <ProductReviewForm productId={parseInt(product.id, 10)} />
+          </div>
+        </div>
 
         {relatedProducts.length > 0 && (
           <div className="mt-20 md:mt-32">
