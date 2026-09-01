@@ -2,6 +2,7 @@
 
 import { categories } from "@/lib/data";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { Slider } from "@/components/ui/slider";
 import {
@@ -114,39 +115,48 @@ export function ProductFilters({
       <div className="space-y-4 border-t border-border/60 pt-6">
         <label className="text-[13px] font-semibold text-foreground">Especificaciones</label>
         <div className="space-y-3">
-          <Select value={selectedProcessor} onValueChange={(val) => setSelectedProcessor(val || "todas")}>
-            <SelectTrigger className="h-11 w-full rounded-lg border-border/60 bg-background hover:border-primary/30 transition-all font-medium">
-              <SelectValue placeholder="Todos los procesadores" />
-            </SelectTrigger>
-            <SelectContent className="rounded-lg shadow-xl">
-              <SelectItem value="todas">Todos los procesadores</SelectItem>
-              {processors.map((processor) => (
-                <SelectItem key={processor} value={processor}>{processor}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={selectedRam} onValueChange={(val) => setSelectedRam(val || "todas")}>
-            <SelectTrigger className="h-11 w-full rounded-lg border-border/60 bg-background hover:border-primary/30 transition-all font-medium">
-              <SelectValue placeholder="Toda la memoria RAM" />
-            </SelectTrigger>
-            <SelectContent className="rounded-lg shadow-xl">
-              <SelectItem value="todas">Toda la memoria RAM</SelectItem>
-              {rams.map((ram) => (
-                <SelectItem key={ram} value={ram}>{ram}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={selectedStorage} onValueChange={(val) => setSelectedStorage(val || "todas")}>
-            <SelectTrigger className="h-11 w-full rounded-lg border-border/60 bg-background hover:border-primary/30 transition-all font-medium">
-              <SelectValue placeholder="Todo el almacenamiento" />
-            </SelectTrigger>
-            <SelectContent className="rounded-lg shadow-xl">
-              <SelectItem value="todas">Todo el almacenamiento</SelectItem>
-              {storages.map((storage) => (
-                <SelectItem key={storage} value={storage}>{storage}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="space-y-1.5">
+            <label className="text-xs font-medium text-muted-foreground">Procesador</label>
+            <Select value={selectedProcessor} onValueChange={(val) => setSelectedProcessor(val || "todas")}>
+              <SelectTrigger className="h-11 w-full rounded-lg border-border/60 bg-background hover:border-primary/30 transition-all font-medium">
+                <SelectValue placeholder="Todos los procesadores" />
+              </SelectTrigger>
+              <SelectContent className="rounded-lg shadow-xl">
+                <SelectItem value="todas">Todos los procesadores</SelectItem>
+                {processors.map((processor) => (
+                  <SelectItem key={processor} value={processor}>{processor}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-medium text-muted-foreground">Memoria RAM</label>
+            <Select value={selectedRam} onValueChange={(val) => setSelectedRam(val || "todas")}>
+              <SelectTrigger className="h-11 w-full rounded-lg border-border/60 bg-background hover:border-primary/30 transition-all font-medium">
+                <SelectValue placeholder="Toda la memoria RAM" />
+              </SelectTrigger>
+              <SelectContent className="rounded-lg shadow-xl">
+                <SelectItem value="todas">Toda la memoria RAM</SelectItem>
+                {rams.map((ram) => (
+                  <SelectItem key={ram} value={ram}>{ram}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-medium text-muted-foreground">Almacenamiento</label>
+            <Select value={selectedStorage} onValueChange={(val) => setSelectedStorage(val || "todas")}>
+              <SelectTrigger className="h-11 w-full rounded-lg border-border/60 bg-background hover:border-primary/30 transition-all font-medium">
+                <SelectValue placeholder="Todo el almacenamiento" />
+              </SelectTrigger>
+              <SelectContent className="rounded-lg shadow-xl">
+                <SelectItem value="todas">Todo el almacenamiento</SelectItem>
+                {storages.map((storage) => (
+                  <SelectItem key={storage} value={storage}>{storage}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
 
@@ -168,9 +178,38 @@ export function ProductFilters({
             className="[&_[role=slider]]:h-5 [&_[role=slider]]:w-5 [&_[role=slider]]:border-primary [&_[role=slider]]:bg-background"
           />
         </div>
-        <div className="flex justify-between text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-1">
-          <span>Min: RD$ 0</span>
-          <span>Max: RD$ {maxPrice.toLocaleString("es-DO")}</span>
+        <div className="flex items-center gap-2">
+          <div className="flex-1 space-y-1">
+            <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Mín</label>
+            <Input
+              type="number"
+              min={0}
+              max={priceRange[1]}
+              step={1000}
+              value={priceRange[0]}
+              onChange={(e) => {
+                const val = Math.max(0, Math.min(Number(e.target.value), priceRange[1]));
+                setPriceRange([val, priceRange[1]]);
+              }}
+              className="h-9 rounded-lg border-border/60 bg-background text-sm font-medium tabular-nums"
+            />
+          </div>
+          <span className="mt-5 text-muted-foreground text-xs">—</span>
+          <div className="flex-1 space-y-1">
+            <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Máx</label>
+            <Input
+              type="number"
+              min={priceRange[0]}
+              max={maxPrice}
+              step={1000}
+              value={priceRange[1]}
+              onChange={(e) => {
+                const val = Math.min(maxPrice, Math.max(Number(e.target.value), priceRange[0]));
+                setPriceRange([priceRange[0], val]);
+              }}
+              className="h-9 rounded-lg border-border/60 bg-background text-sm font-medium tabular-nums"
+            />
+          </div>
         </div>
       </div>
 

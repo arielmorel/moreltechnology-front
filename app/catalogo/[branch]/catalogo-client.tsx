@@ -6,7 +6,6 @@ import { getProducts, searchProducts, AvailabilityFilter } from "@/lib/api";
 import { useDebounce } from "@/hooks/use-debounce";
 import { ProductCard } from "@/components/product-card";
 import { ProductCardSkeleton } from "@/components/product-card-skeleton";
-import { Input } from "@/components/ui/input";
 import { Search, SlidersHorizontal, MapPin, Share2, Loader2, X, BadgePercent } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -68,7 +67,6 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
   };
 
   const [search, setSearch] = useState("");
-  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const debouncedSearch = useDebounce(search, 300);
   const [selectedCategory, setSelectedCategory] = useState<string>("todas");
   const [selectedBrand, setSelectedBrand] = useState<string>("todas");
@@ -265,29 +263,17 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
   return (
     <div className="min-h-screen pt-16 pb-6 bg-muted/20">
       <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10">
-        <div className="flex flex-col sm:flex-row items-start sm:items-baseline justify-between mb-4 md:mb-12 gap-4">
-          <div className="space-y-1">
-            <h1 className="text-2xl md:text-5xl font-black tracking-tight">Laptops disponibles</h1>
-          </div>
+        <div className="flex justify-between items-center w-full mb-6">
+          <h1 className="font-sans text-2xl font-bold text-slate-900 tracking-tight">Laptops disponibles</h1>
 
-          <div className="flex items-center gap-3">
-            {/* Share Button */}
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={handleShare}
-              className="rounded-xl h-10 w-10"
-              aria-label="Compartir catálogo"
-            >
-              <Share2 className="h-5 w-5" />
-            </Button>
-
-            <div className="bg-background/50 backdrop-blur-sm border border-border/50 rounded-lg p-1 flex items-center">
-              <span className="text-[10px] md:text-xs font-bold px-2 py-0.5 text-primary uppercase">
-                {filteredProducts.length} <span className="hidden xs:inline">Equipos</span>
-              </span>
-            </div>
-          </div>
+          <button
+            type="button"
+            onClick={handleShare}
+            className="p-2.5 border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg transition-colors flex items-center justify-center"
+            aria-label="Compartir catálogo"
+          >
+            <Share2 className="h-5 w-5" />
+          </button>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-4 md:gap-6 lg:gap-8">
@@ -323,202 +309,159 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
 
           {/* Main Content */}
           <div className="flex-1 space-y-4 md:space-y-8">
-            <div className="space-y-3 rounded-2xl border border-border/60 bg-card/70 p-3 shadow-sm md:p-4">
-              <div className="flex flex-row items-center gap-2 md:gap-4">
-              {/* Branch Selector */}
-              <div className="flex h-12 shrink-0 items-center gap-2 rounded-xl border border-border/50 bg-card px-3 md:h-14">
-                <MapPin className="h-4 w-4 shrink-0 text-muted-foreground" />
-                <Select value={branch} onValueChange={handleBranchChange}>
-                  <SelectTrigger className="h-auto w-[120px] border-0 bg-transparent p-0 text-sm font-semibold shadow-none focus:ring-0 focus:ring-offset-0 md:w-[150px]">
-                    <SelectValue>
-                      <span className="font-semibold">{getBranchLabel(branch)}</span>
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    {branches.map(b => (
-                      <SelectItem key={b.id} value={b.id}>
-                        {b.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="relative hidden flex-1 sm:block">
-                <Search className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 h-5 text-muted-foreground" />
-                <Input
-                  placeholder="Buscar equipo..."
-                  className="pl-10 md:pl-12 h-12 md:h-14 rounded-xl md:rounded-2xl border-border/50 bg-card shadow-sm focus:ring-primary/20 text-sm md:text-base"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-              </div>
-
-              {isSearchExpanded ? (
-                <div className="relative min-w-0 flex-1 sm:hidden">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    autoFocus
-                    placeholder="Buscar equipo..."
-                    className="h-12 w-full rounded-xl border-border/50 bg-card pl-10 pr-10 text-sm shadow-sm focus:ring-primary/20"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setIsSearchExpanded(false)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                    aria-label="Cerrar búsqueda"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
+            <div className="flex flex-col gap-3 p-4 bg-card rounded-xl border border-border/60">
+              {/* Top Controls Row */}
+              <div className="flex flex-row items-center gap-2 md:gap-3">
+                {/* Branch Selector */}
+                <div className="flex h-10 shrink-0 items-center gap-2 rounded-lg border border-border/50 bg-background px-3">
+                  <MapPin className="h-4 w-4 shrink-0 text-muted-foreground" />
+                  <Select value={branch} onValueChange={handleBranchChange}>
+                    <SelectTrigger className="h-auto w-[120px] border-0 bg-transparent p-0 text-sm font-medium shadow-none focus:ring-0 focus:ring-offset-0 md:w-[150px]">
+                      <SelectValue>
+                        <span className="font-medium">{getBranchLabel(branch)}</span>
+                      </SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                      {branches.map(b => (
+                        <SelectItem key={b.id} value={b.id}>
+                          {b.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
-              ) : (
-                <Button
+
+                {/* Offers Toggle */}
+                <button
                   type="button"
-                  variant="outline"
-                  size="icon"
-                  onClick={() => setIsSearchExpanded(true)}
-                  className="h-12 w-12 shrink-0 rounded-xl border-border/50 bg-card sm:hidden"
-                  aria-label="Abrir búsqueda"
-                  title="Buscar"
+                  onClick={() => setShowOnlyOffers(!showOnlyOffers)}
+                  className={cn(
+                    "h-10 shrink-0 gap-2 rounded-lg text-sm px-3 py-2 font-medium transition-colors flex items-center",
+                    showOnlyOffers
+                      ? "bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100"
+                      : "bg-background border border-border/50 text-muted-foreground hover:bg-muted hover:text-foreground"
+                  )}
+                  aria-pressed={showOnlyOffers}
+                  aria-label={showOnlyOffers ? "Quitar ofertas" : "Mostrar ofertas"}
+                  title={showOnlyOffers ? "Quitar ofertas" : "Mostrar ofertas"}
                 >
-                  <Search className="h-5 w-5" />
-                </Button>
-              )}
+                  <BadgePercent className="h-4 w-4" />
+                  <span className="hidden sm:inline">{showOnlyOffers ? "Ofertas" : "Ofertas"}</span>
+                </button>
 
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setShowOnlyOffers(!showOnlyOffers)}
-                className={cn(
-                  "h-12 shrink-0 gap-2 rounded-xl border-red-200 px-2.5 text-red-600 transition-all hover:border-red-300 hover:bg-red-50 hover:text-red-700 md:h-14 md:px-4",
-                  showOnlyOffers && "border-red-600 bg-red-600 text-white hover:bg-red-700 hover:text-white"
-                )}
-                aria-pressed={showOnlyOffers}
-                aria-label={showOnlyOffers ? "Quitar ofertas" : "Mostrar ofertas"}
-                title={showOnlyOffers ? "Quitar ofertas" : "Mostrar ofertas"}
-              >
-                <BadgePercent className="h-4 w-4" />
-                <span className="hidden sm:inline">{showOnlyOffers ? "Quitar ofertas" : "Mostrar ofertas"}</span>
-              </Button>
-
-              {/* Stock Filter Tabs */}
-              <div className="flex h-12 shrink-0 items-center rounded-xl border border-border/50 bg-card overflow-hidden md:h-14">
-                {[
-                  { value: "IN_STOCK" as const, label: "Disponibles", count: stockCounts.available },
-                  { value: "OUT_OF_STOCK" as const, label: "Agotados", count: stockCounts.outOfStock },
-                  { value: "ALL" as const, label: "Todos", count: stockCounts.total },
-                ].map((tab) => (
-                  <button
-                    key={tab.value}
-                    type="button"
-                    onClick={() => setStockFilter(tab.value)}
-                    className={cn(
-                      "px-3 text-xs font-semibold transition-colors md:px-4 md:text-sm flex items-center gap-1.5",
-                      stockFilter === tab.value
-                        ? "bg-primary text-primary-foreground"
-                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                    )}
-                  >
-                    {tab.label}
-                    <span
+                {/* Stock Filter Tabs - Segmented Control */}
+                <div className="bg-slate-100 p-1 rounded-xl flex items-center gap-1 inline-flex">
+                  {[
+                    { value: "IN_STOCK" as const, label: "Disponibles", count: stockCounts.available },
+                    { value: "OUT_OF_STOCK" as const, label: "Agotados", count: stockCounts.outOfStock },
+                    { value: "ALL" as const, label: "Todos", count: stockCounts.total },
+                  ].filter(tab => tab.count > 0 || tab.value === "ALL").map((tab) => (
+                    <button
+                      key={tab.value}
+                      type="button"
+                      onClick={() => setStockFilter(tab.value)}
                       className={cn(
-                        "rounded-full px-1.5 py-0.5 text-[10px] font-bold min-w-[20px] text-center",
+                        "text-xs font-medium px-3 py-1.5 rounded-lg transition-all duration-200 flex items-center gap-1.5",
                         stockFilter === tab.value
-                          ? "bg-primary-foreground/20"
-                          : "bg-foreground/10"
+                          ? "bg-white text-slate-900 shadow-sm font-semibold"
+                          : "text-slate-500 hover:text-slate-800 hover:bg-slate-200/50"
                       )}
                     >
-                      {tab.count}
-                    </span>
-                  </button>
-                ))}
-              </div>
-
-              {/* Mobile Filters Trigger */}
-              <div className="lg:hidden">
-                <Sheet>
-                  <SheetTrigger
-                    render={
-                      <Button
-                        variant="outline"
-                        className={cn(
-                          "h-12 w-12 p-0 rounded-xl relative bg-card border-border/50 shrink-0",
-                          activeFiltersCount > 0 && "border-primary/50 text-primary"
-                        )}
-                      />
-                    }
-                  >
-                    <SlidersHorizontal className="w-5 h-5" />
-                    {activeFiltersCount > 0 && (
-                      <span className="absolute -top-1 -right-1 h-5 w-5 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-[10px] font-bold shadow-lg shadow-primary/20">
-                        {activeFiltersCount}
+                      {tab.label}
+                      <span className={cn(
+                        "text-[10px]",
+                        tab.count === 0 ? "text-slate-400" : "text-inherit opacity-70"
+                      )}>
+                        ({tab.count})
                       </span>
-                    )}
-                  </SheetTrigger>
-                  <SheetContent side="right" className="w-[300px] sm:w-[400px] p-0">
-                    <SheetHeader className="p-6 border-b border-border/50">
-                      <SheetTitle className="text-2xl font-bold flex items-center gap-2">
-                        <SlidersHorizontal className="w-5 h-5 text-primary" />
-                        Filtros
-                      </SheetTitle>
-                    </SheetHeader>
-                    <div className="p-6 h-[calc(100vh-100px)] overflow-y-auto">
-                      <ProductFilters
-                        selectedCategory={selectedCategory}
-                        setSelectedCategory={setSelectedCategory}
-                        selectedBrand={selectedBrand}
-                        setSelectedBrand={setSelectedBrand}
-                        selectedProcessor={selectedProcessor}
-                        setSelectedProcessor={setSelectedProcessor}
-                        selectedRam={selectedRam}
-                        setSelectedRam={setSelectedRam}
-                        selectedStorage={selectedStorage}
-                        setSelectedStorage={setSelectedStorage}
-                        selectedCondition={selectedCondition}
-                        setSelectedCondition={setSelectedCondition}
-                        selectedTag={selectedTag}
-                        setSelectedTag={setSelectedTag}
-                        priceRange={priceRange}
-                        setPriceRange={setPriceRange}
-                        maxPrice={maxPrice}
-                        brands={brands}
-                        processors={processors}
-                        rams={rams}
-                        storages={storages}
-                        tags={allTags}
-                      />
-                    </div>
-                  </SheetContent>
-                </Sheet>
-              </div>
-            </div>
+                    </button>
+                  ))}
+                </div>
 
-              {appliedFilters.length > 0 && (
-                <div className="flex flex-wrap items-center gap-2 border-t border-border/60 pt-3">
-                <span className="mr-1 text-xs font-semibold text-muted-foreground">Filtros:</span>
-                {appliedFilters.map((filter) => (
-                  <button
-                    key={filter.label}
-                    type="button"
-                    onClick={filter.remove}
-                    className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1 text-xs font-medium text-primary transition-colors hover:bg-primary/10"
-                    aria-label={`Quitar ${filter.label}`}
-                  >
-                    <span className="truncate">{filter.label}</span>
-                    <X className="h-3 w-3 shrink-0" />
-                  </button>
-                ))}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={clearFilters}
-                  className="ml-auto h-8 shrink-0 px-2 text-xs font-semibold text-muted-foreground hover:bg-muted hover:text-foreground"
-                >
-                  Limpiar todo
-                </Button>
+                {/* Mobile Filters Trigger */}
+                <div className="lg:hidden ml-auto">
+                  <Sheet>
+                    <SheetTrigger
+                      render={
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "h-10 w-10 p-0 rounded-lg relative bg-background border-border/50 shrink-0",
+                            activeFiltersCount > 0 && "border-primary/50 text-primary"
+                          )}
+                        />
+                      }
+                    >
+                      <SlidersHorizontal className="w-5 h-5" />
+                      {activeFiltersCount > 0 && (
+                        <span className="absolute -top-1 -right-1 h-5 w-5 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-[10px] font-bold shadow-lg shadow-primary/20">
+                          {activeFiltersCount}
+                        </span>
+                      )}
+                    </SheetTrigger>
+                    <SheetContent side="right" className="w-[300px] sm:w-[400px] p-0">
+                      <SheetHeader className="p-6 border-b border-border/50">
+                        <SheetTitle className="text-2xl font-bold flex items-center gap-2">
+                          <SlidersHorizontal className="w-5 h-5 text-primary" />
+                          Filtros
+                        </SheetTitle>
+                      </SheetHeader>
+                      <div className="p-6 h-[calc(100vh-100px)] overflow-y-auto">
+                        <ProductFilters
+                          selectedCategory={selectedCategory}
+                          setSelectedCategory={setSelectedCategory}
+                          selectedBrand={selectedBrand}
+                          setSelectedBrand={setSelectedBrand}
+                          selectedProcessor={selectedProcessor}
+                          setSelectedProcessor={setSelectedProcessor}
+                          selectedRam={selectedRam}
+                          setSelectedRam={setSelectedRam}
+                          selectedStorage={selectedStorage}
+                          setSelectedStorage={setSelectedStorage}
+                          selectedCondition={selectedCondition}
+                          setSelectedCondition={setSelectedCondition}
+                          selectedTag={selectedTag}
+                          setSelectedTag={setSelectedTag}
+                          priceRange={priceRange}
+                          setPriceRange={setPriceRange}
+                          maxPrice={maxPrice}
+                          brands={brands}
+                          processors={processors}
+                          rams={rams}
+                          storages={storages}
+                          tags={allTags}
+                        />
+                      </div>
+                    </SheetContent>
+                  </Sheet>
+                </div>
               </div>
+
+              {/* Active Filters Section */}
+              {appliedFilters.length > 0 && (
+                <div className="border-t border-border/40 pt-3 flex justify-between items-center">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {appliedFilters.map((filter) => (
+                      <button
+                        key={filter.label}
+                        type="button"
+                        onClick={filter.remove}
+                        className="inline-flex max-w-full items-center gap-1.5 bg-muted text-muted-foreground text-xs px-3 py-1 rounded-full transition-colors hover:text-foreground"
+                        aria-label={`Quitar ${filter.label}`}
+                      >
+                        <span className="truncate">{filter.label}</span>
+                        <X className="h-3 w-3 shrink-0" />
+                      </button>
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={clearFilters}
+                    className="text-xs text-muted-foreground hover:text-foreground font-medium underline shrink-0 ml-3"
+                  >
+                    Limpiar todo
+                  </button>
+                </div>
               )}
             </div>
 
@@ -572,22 +515,12 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
                     ? `No hay resultados para "${search}". Intenta con otro término.`
                     : "No hay equipos disponibles con los filtros seleccionados."}
                 </p>
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-                  <Button
-                    onClick={clearFilters}
-                    variant="outline"
-                    className="rounded-xl h-11 px-6 text-sm"
-                  >
-                    Limpiar filtros
-                  </Button>
-                  <Button
-                    onClick={() => setSearch("")}
-                    variant="ghost"
-                    className="rounded-xl h-11 px-6 text-sm text-muted-foreground"
-                  >
-                    Borrar búsqueda
-                  </Button>
-                </div>
+                <Button
+                  onClick={clearFilters}
+                  className="bg-slate-900 text-white hover:bg-slate-800 px-5 py-2.5 rounded-lg transition-all"
+                >
+                  Restablecer todos los filtros
+                </Button>
               </div>
             )}
           </div>
