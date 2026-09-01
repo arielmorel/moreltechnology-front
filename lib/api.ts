@@ -119,7 +119,9 @@ export const mapApiProductToProduct = (apiProduct: ApiProduct): Product => {
   };
 };
 
-export const getProducts = async (page = 0, size = PAGE_SIZE_DEFAULT, category?: string, branchId?: string, tags?: string): Promise<{ products: Product[], total: number }> => {
+export type AvailabilityFilter = "IN_STOCK" | "OUT_OF_STOCK" | "ALL";
+
+export const getProducts = async (page = 0, size = PAGE_SIZE_DEFAULT, category?: string, branchId?: string, tags?: string, availability?: AvailabilityFilter): Promise<{ products: Product[], total: number }> => {
   try {
     const params: Record<string, string | number> = { page, size };
     if (category && category !== "todas") {
@@ -127,6 +129,9 @@ export const getProducts = async (page = 0, size = PAGE_SIZE_DEFAULT, category?:
     }
     if (tags) {
       params.tags = tags;
+    }
+    if (availability && availability !== "ALL") {
+      params.availability = availability;
     }
     const response = await axios.get<ApiResponse>(getCatalogUrl(branchId), { params });
 
@@ -178,7 +183,7 @@ export const getProductsByBrand = async (brand: string, branchId?: string): Prom
   }
 };
 
-export const searchProducts = async (query: string, page = 0, size = PAGE_SIZE_DEFAULT, category?: string, branchId?: string, tags?: string): Promise<{ products: Product[], total: number }> => {
+export const searchProducts = async (query: string, page = 0, size = PAGE_SIZE_DEFAULT, category?: string, branchId?: string, tags?: string, availability?: AvailabilityFilter): Promise<{ products: Product[], total: number }> => {
   try {
     const params: Record<string, string | number> = { query, page, size };
     if (category && category !== "todas") {
@@ -186,6 +191,9 @@ export const searchProducts = async (query: string, page = 0, size = PAGE_SIZE_D
     }
     if (tags) {
       params.tags = tags;
+    }
+    if (availability && availability !== "ALL") {
+      params.availability = availability;
     }
     const response = await axios.get<ApiResponse>(`${getCatalogUrl(branchId)}/search`, { params });
 

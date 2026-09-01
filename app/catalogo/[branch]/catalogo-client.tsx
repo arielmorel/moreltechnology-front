@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import { categories, Product } from "@/lib/data";
-import { getProducts, searchProducts } from "@/lib/api";
+import { getProducts, searchProducts, AvailabilityFilter } from "@/lib/api";
 import { useDebounce } from "@/hooks/use-debounce";
 import { ProductCard } from "@/components/product-card";
 import { ProductCardSkeleton } from "@/components/product-card-skeleton";
@@ -79,14 +79,14 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
   const [selectedCondition, setSelectedCondition] = useState<string>("todas");
   const [selectedTag, setSelectedTag] = useState<string>("todas");
   const [priceRange, setPriceRange] = useState<number[]>([0, 200000]);
-  const [stockFilter, setStockFilter] = useState<"available" | "out_of_stock" | "all">("available");
+  const [stockFilter, setStockFilter] = useState<AvailabilityFilter>("IN_STOCK");
 
   const [products, setProducts] = useState<Product[]>([]);
   const [total, setTotal] = useState(0);
   const pageRef = useRef(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const filtersKey = `${debouncedSearch}-${selectedCategory}-${branch}`;
+  const filtersKey = `${debouncedSearch}-${selectedCategory}-${branch}-${stockFilter}`;
 
   const hasMore = products.length < total;
 
@@ -98,9 +98,9 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
       try {
         let result;
         if (debouncedSearch.trim() === "") {
-          result = await getProducts(0, PAGE_SIZE, selectedCategory, branch);
+          result = await getProducts(0, PAGE_SIZE, selectedCategory, branch, undefined, stockFilter);
         } else {
-          result = await searchProducts(debouncedSearch, 0, PAGE_SIZE, selectedCategory, branch);
+          result = await searchProducts(debouncedSearch, 0, PAGE_SIZE, selectedCategory, branch, undefined, stockFilter);
         }
         if (!cancelled) {
           setProducts(result.products);
@@ -112,7 +112,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
     };
     loadInitial();
     return () => { cancelled = true; };
-  }, [filtersKey, debouncedSearch, selectedCategory, branch]);
+  }, [filtersKey, debouncedSearch, selectedCategory, branch, stockFilter]);
 
   useEffect(() => {
     if (!sentinelRef.current || !hasMore || isLoadingMore) return;
@@ -127,9 +127,9 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
             try {
               let result;
               if (debouncedSearch.trim() === "") {
-                result = await getProducts(nextPage, PAGE_SIZE, selectedCategory, branch);
+                result = await getProducts(nextPage, PAGE_SIZE, selectedCategory, branch, undefined, stockFilter);
               } else {
-                result = await searchProducts(debouncedSearch, nextPage, PAGE_SIZE, selectedCategory, branch);
+                result = await searchProducts(debouncedSearch, nextPage, PAGE_SIZE, selectedCategory, branch, undefined, stockFilter);
               }
               setProducts(prev => [...prev, ...result.products]);
               setTotal(result.total);
@@ -145,7 +145,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
 
     observer.observe(sentinelRef.current);
     return () => observer.disconnect();
-  }, [hasMore, isLoadingMore, debouncedSearch, selectedCategory, branch, products.length]);
+  }, [hasMore, isLoadingMore, debouncedSearch, selectedCategory, branch, products.length, stockFilter]);
 
   const allTags = useMemo(() => {
     const tags = new Set<string>();
@@ -184,13 +184,10 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
         (selectedCondition === "Nuevo" && product.condition === "Nuevo") ||
         (selectedCondition === "Usado" && product.condition.includes("Usado"));
       const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1];
-      const matchesStock = stockFilter === "all" ||
-        (stockFilter === "available" && product.quantity > 0) ||
-        (stockFilter === "out_of_stock" && product.quantity <= 0);
 
-      return matchesSearch && matchesBrand && matchesProcessor && matchesRam && matchesStorage && matchesOffers && matchesCondition && matchesPrice && matchesTag && matchesStock;
+      return matchesSearch && matchesBrand && matchesProcessor && matchesRam && matchesStorage && matchesOffers && matchesCondition && matchesPrice && matchesTag;
     });
-  }, [products, search, selectedBrand, selectedProcessor, selectedRam, selectedStorage, showOnlyOffers, selectedCondition, selectedTag, priceRange, stockFilter]);
+  }, [products, search, selectedBrand, selectedProcessor, selectedRam, selectedStorage, showOnlyOffers, selectedCondition, selectedTag, priceRange]);
 
   const clearFilters = () => {
     setSearch("");
@@ -203,7 +200,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
     setSelectedCondition("todas");
     setSelectedTag("todas");
     setPriceRange([0, 200000]);
-    setStockFilter("available");
+    setStockFilter("IN_STOCK");
   };
 
   const activeFiltersCount = (selectedCategory !== "todas" ? 1 : 0) +
@@ -382,9 +379,9 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
               {/* Stock Filter Tabs */}
               <div className="flex h-12 shrink-0 items-center rounded-xl border border-border/50 bg-card overflow-hidden md:h-14">
                 {[
-                  { value: "available" as const, label: "Disponibles" },
-                  { value: "out_of_stock" as const, label: "Agotados" },
-                  { value: "all" as const, label: "Todos" },
+                  { value: "IN_STOCK" as const, label: "Disponibles" },
+                  { value: "OUT_OF_STOCK" as const, label: "Agotados" },
+                  { value: "ALL" as const, label: "Todos" },
                 ].map((tab) => (
                   <button
                     key={tab.value}
