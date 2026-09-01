@@ -79,6 +79,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
   const [selectedCondition, setSelectedCondition] = useState<string>("todas");
   const [selectedTag, setSelectedTag] = useState<string>("todas");
   const [priceRange, setPriceRange] = useState<number[]>([0, 200000]);
+  const [stockFilter, setStockFilter] = useState<"available" | "out_of_stock" | "all">("available");
 
   const [products, setProducts] = useState<Product[]>([]);
   const [total, setTotal] = useState(0);
@@ -183,10 +184,13 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
         (selectedCondition === "Nuevo" && product.condition === "Nuevo") ||
         (selectedCondition === "Usado" && product.condition.includes("Usado"));
       const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1];
+      const matchesStock = stockFilter === "all" ||
+        (stockFilter === "available" && product.quantity > 0) ||
+        (stockFilter === "out_of_stock" && product.quantity <= 0);
 
-      return matchesSearch && matchesBrand && matchesProcessor && matchesRam && matchesStorage && matchesOffers && matchesCondition && matchesPrice && matchesTag;
+      return matchesSearch && matchesBrand && matchesProcessor && matchesRam && matchesStorage && matchesOffers && matchesCondition && matchesPrice && matchesTag && matchesStock;
     });
-  }, [products, search, selectedBrand, selectedProcessor, selectedRam, selectedStorage, showOnlyOffers, selectedCondition, selectedTag, priceRange]);
+  }, [products, search, selectedBrand, selectedProcessor, selectedRam, selectedStorage, showOnlyOffers, selectedCondition, selectedTag, priceRange, stockFilter]);
 
   const clearFilters = () => {
     setSearch("");
@@ -199,6 +203,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
     setSelectedCondition("todas");
     setSelectedTag("todas");
     setPriceRange([0, 200000]);
+    setStockFilter("available");
   };
 
   const activeFiltersCount = (selectedCategory !== "todas" ? 1 : 0) +
@@ -373,6 +378,29 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
                 <BadgePercent className="h-4 w-4" />
                 <span className="hidden sm:inline">{showOnlyOffers ? "Quitar ofertas" : "Mostrar ofertas"}</span>
               </Button>
+
+              {/* Stock Filter Tabs */}
+              <div className="flex h-12 shrink-0 items-center rounded-xl border border-border/50 bg-card overflow-hidden md:h-14">
+                {[
+                  { value: "available" as const, label: "Disponibles" },
+                  { value: "out_of_stock" as const, label: "Agotados" },
+                  { value: "all" as const, label: "Todos" },
+                ].map((tab) => (
+                  <button
+                    key={tab.value}
+                    type="button"
+                    onClick={() => setStockFilter(tab.value)}
+                    className={cn(
+                      "px-3 text-xs font-semibold transition-colors md:px-4 md:text-sm",
+                      stockFilter === tab.value
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    )}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
 
               {/* Mobile Filters Trigger */}
               <div className="lg:hidden">

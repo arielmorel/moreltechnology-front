@@ -39,6 +39,38 @@ model NewsletterSubscriber {
   @@index([createdAt])
 }
 
+enum StockNotificationStatus {
+  PENDING
+  NOTIFIED
+  CANCELLED
+  FAILED
+}
+
+model StockNotification {
+  id            String   @id @default(uuid())
+
+  // Referencia al producto en NovusBill
+  productId     String
+
+  // Datos del cliente
+  customerName  String?
+  customerEmail String
+
+  // Estado de la solicitud
+  status        StockNotificationStatus @default(PENDING)
+
+  // Auditoría de la notificación
+  notifiedAt    DateTime?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([productId, customerEmail])
+  @@index([productId])
+  @@index([customerEmail])
+  @@index([status])
+}
+
 enum ReviewStatus {
   PENDING
   APPROVED
