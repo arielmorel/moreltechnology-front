@@ -40,7 +40,7 @@ const faqs: { category: string; icon: React.ElementType; items: { q: string; a: 
     items: [
       {
         q: "¿Las laptops tienen garantía?",
-        a: <>Sí, todos nuestros equipos tienen garantía. Los equipos nuevos tienen hasta 1 año de garantía con el fabricante. Los equipos usados certificados incluyen 6 meses de garantía en piezas y servicios. Consulta los <Link href="/garantia" className="text-primary font-bold hover:underline">detalles completos de nuestra garantía</Link>.</>
+        a: <>Sí, todos nuestros equipos tienen garantía. Los equipos nuevos tienen hasta 1 año de garantía con el fabricante. Los equipos usados certificados incluyen 6 meses de garantía en piezas y servicios. Consulta los <Link href="/politicas/garantia" className="text-primary font-bold hover:underline">detalles completos de nuestra garantía</Link>.</>
       },
       {
         q: "¿Qué cubre la garantía?",

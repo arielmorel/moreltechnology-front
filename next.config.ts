@@ -39,6 +39,15 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/garantia",
+        destination: "/politicas/garantia",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

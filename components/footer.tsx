@@ -135,6 +135,12 @@ export function Footer() {
         <div className="border-t mt-6 md:mt-12 pt-4 md:pt-8 flex flex-col md:flex-row justify-between items-center gap-2 md:gap-4 text-xs md:text-sm text-muted-foreground">
           <p>© {new Date().getFullYear()} MorelTechnology.</p>
           <div className="flex gap-3 md:gap-4">
+            <Link href="/politicas" className="hover:text-foreground transition-colors">
+              Políticas
+            </Link>
+            <Link href="/politicas/envios" className="hover:text-foreground transition-colors">
+              Envíos
+            </Link>
             <Link href="/privacidad" className="hover:text-foreground transition-colors">
               Privacidad
             </Link>

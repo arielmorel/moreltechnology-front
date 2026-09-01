@@ -33,6 +33,7 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { WhatsApp } from "@/components/icons";
 import { isMinioImage } from "@/lib/utils";
+import { getShippingCost, getShippingZoneLabel } from "@/lib/shipping";
 import axios from "axios";
 
 const bankStyles: Record<string, { accent: string; soft: string; text: string; hover: string }> = {
@@ -357,7 +358,7 @@ function CheckoutPage() {
                               <Truck className="h-6 w-6 text-blue-600" />
                             </div>
                             <span className="font-bold">Envío a Domicilio</span>
-                            <span className="text-[10px] text-muted-foreground uppercase mt-1">Desde RD$ 300</span>
+                            <span className="text-[10px] text-muted-foreground uppercase mt-1">Desde RD$ {getShippingCost("").toLocaleString("es-DO")}</span>
                           </Label>
                         </div>
                       </RadioGroup>
@@ -686,7 +687,9 @@ function CheckoutPage() {
                           {formData.delivery === "pickup" ? <MapPin className="w-3.5 h-3.5" /> : <Truck className="w-3.5 h-3.5" />}
                           Envío
                         </span>
-                        <span className="font-medium">{formData.delivery === "pickup" ? "Gratis" : "RD$ 300+"}</span>
+                        <span className="font-medium">
+                          {formData.delivery === "pickup" ? "Gratis" : `RD$ ${getShippingCost(formData.address).toLocaleString("es-DO")}`}
+                        </span>
                       </div>
                     </div>
 
@@ -694,7 +697,9 @@ function CheckoutPage() {
                       <div className="flex justify-between items-center">
                         <span className="font-bold text-sm">Total</span>
                         <div className="text-right">
-                          <div className="text-2xl font-black text-primary">RD$ {totalPrice().toLocaleString("es-DO")}</div>
+                          <div className="text-2xl font-black text-primary">
+                            RD$ {(totalPrice() + (formData.delivery === "shipping" ? getShippingCost(formData.address) : 0)).toLocaleString("es-DO")}
+                          </div>
                         </div>
                       </div>
                     </div>

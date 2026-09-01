@@ -12,7 +12,7 @@ import Link from "next/link";
 const faqs = [
   {
     question: "¿Qué garantía tienen las laptops?",
-    answer: "Ofrecemos 6 meses de garantía en laptops usadas certificadas y 1 año en laptops nuevas. Toda garantía es por escrito y cubre defectos de hardware. Puedes revisar nuestros <a href='/garantia' class='text-primary font-semibold hover:underline'>términos completos aquí</a>.",
+    answer: "Ofrecemos 6 meses de garantía en laptops usadas certificadas y 1 año en laptops nuevas. Toda garantía es por escrito y cubre defectos de hardware. Puedes revisar nuestros <a href='/politicas/garantia' class='text-primary font-semibold hover:underline'>términos completos aquí</a>.",
   },
   {
     question: "¿Puedo pagar con tarjeta de crédito o débito?",
