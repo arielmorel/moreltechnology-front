@@ -86,6 +86,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
   const pageRef = useRef(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [stockCounts, setStockCounts] = useState({ available: 0, outOfStock: 0, total: 0 });
   const filtersKey = `${debouncedSearch}-${selectedCategory}-${branch}-${stockFilter}`;
 
   const hasMore = products.length < total;
@@ -113,6 +114,32 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
     loadInitial();
     return () => { cancelled = true; };
   }, [filtersKey, debouncedSearch, selectedCategory, branch, stockFilter]);
+
+  // Fetch stock counts for all categories (IN_STOCK, OUT_OF_STOCK, ALL)
+  useEffect(() => {
+    let cancelled = false;
+    const loadCounts = async () => {
+      const categoryParam = selectedCategory !== "todas" ? selectedCategory : undefined;
+      try {
+        const [available, outOfStock, all] = await Promise.all([
+          getProducts(0, 1, categoryParam, branch, undefined, "IN_STOCK"),
+          getProducts(0, 1, categoryParam, branch, undefined, "OUT_OF_STOCK"),
+          getProducts(0, 1, categoryParam, branch, undefined, "ALL"),
+        ]);
+        if (!cancelled) {
+          setStockCounts({
+            available: available.total,
+            outOfStock: outOfStock.total,
+            total: all.total,
+          });
+        }
+      } catch {
+        // Silently fail - counts will stay at 0
+      }
+    };
+    loadCounts();
+    return () => { cancelled = true; };
+  }, [selectedCategory, branch]);
 
   useEffect(() => {
     if (!sentinelRef.current || !hasMore || isLoadingMore) return;
@@ -379,22 +406,32 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
               {/* Stock Filter Tabs */}
               <div className="flex h-12 shrink-0 items-center rounded-xl border border-border/50 bg-card overflow-hidden md:h-14">
                 {[
-                  { value: "IN_STOCK" as const, label: "Disponibles" },
-                  { value: "OUT_OF_STOCK" as const, label: "Agotados" },
-                  { value: "ALL" as const, label: "Todos" },
+                  { value: "IN_STOCK" as const, label: "Disponibles", count: stockCounts.available },
+                  { value: "OUT_OF_STOCK" as const, label: "Agotados", count: stockCounts.outOfStock },
+                  { value: "ALL" as const, label: "Todos", count: stockCounts.total },
                 ].map((tab) => (
                   <button
                     key={tab.value}
                     type="button"
                     onClick={() => setStockFilter(tab.value)}
                     className={cn(
-                      "px-3 text-xs font-semibold transition-colors md:px-4 md:text-sm",
+                      "px-3 text-xs font-semibold transition-colors md:px-4 md:text-sm flex items-center gap-1.5",
                       stockFilter === tab.value
                         ? "bg-primary text-primary-foreground"
                         : "text-muted-foreground hover:bg-muted hover:text-foreground"
                     )}
                   >
                     {tab.label}
+                    <span
+                      className={cn(
+                        "rounded-full px-1.5 py-0.5 text-[10px] font-bold min-w-[20px] text-center",
+                        stockFilter === tab.value
+                          ? "bg-primary-foreground/20"
+                          : "bg-foreground/10"
+                      )}
+                    >
+                      {tab.count}
+                    </span>
                   </button>
                 ))}
               </div>
