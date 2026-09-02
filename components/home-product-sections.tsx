@@ -71,7 +71,7 @@ export function HomeProductSections({
 }: HomeProductSectionsProps) {
   return (
     <>
-      <ProductCarousel type="featured" products={featured} />
+      <ProductCarousel type="featured" products={featured} autoRotate />
 
       <ProductSection
         title="Recién Llegados"

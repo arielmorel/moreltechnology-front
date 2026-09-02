@@ -31,5 +31,5 @@ export function GamingCarousel() {
 
   if (loading || products.length === 0) return null;
 
-  return <ProductCarousel type="gaming" products={products} linkHref="/laptops/gaming" linkText="Ver laptops gaming" />;
+  return <ProductCarousel type="gaming" products={products} linkHref="/laptops/gaming" linkText="Ver laptops gaming" autoRotate />;
 }

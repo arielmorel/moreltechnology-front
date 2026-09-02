@@ -28,5 +28,5 @@ export function OffersCarousel() {
 
   if (loading || products.length === 0) return null;
 
-  return <ProductCarousel type="offers" products={products} linkHref="/ofertas" linkText="Ver ofertas" />;
+  return <ProductCarousel type="offers" products={products} linkHref="/ofertas" linkText="Ver ofertas" autoRotate />;
 }
