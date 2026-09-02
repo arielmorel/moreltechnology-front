@@ -43,6 +43,7 @@ export function AccessoriesCarousel({ currentProductId }: AccessoriesCarouselPro
         products={products}
         linkHref="/catalogo?categoria=accesorios"
         linkText="Ver accesorios"
+        autoRotate
       />
     </div>
   );

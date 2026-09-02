@@ -147,59 +147,6 @@ export function ProductCarousel({
       </div>
 
       <div className="container mx-auto px-4 md:px-6">
-        {/* Header */}
-        <div className="mb-6 flex flex-col items-start justify-between gap-4 md:mb-10 md:flex-row md:items-end">
-          <div className="min-w-0 space-y-1.5 md:space-y-2">
-            {/* Badge */}
-            <div
-              className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest md:gap-2 md:px-3 md:py-1.5 md:text-xs ${accentStyles.badge} ${config.accentColor}`}
-            >
-              <Icon
-                className={`h-3 w-3 md:h-3.5 md:w-3.5 ${accentStyles.icon}`}
-              />
-
-              {config.title}
-            </div>
-
-            {/* Title */}
-            <h2 className="text-2xl font-black leading-tight tracking-tight md:text-4xl">
-              {type === "offers" ? (
-                <>
-                  Ofertas{" "}
-                  <span className={accentStyles.title}>Flash</span>
-                </>
-              ) : type === "gaming" ? (
-                <>
-                  Laptops{" "}
-                  <span className={accentStyles.title}>Gaming</span>
-                </>
-              ) : type === "accessories" ? (
-                <>
-                  Accesorios{" "}
-                  <span className={accentStyles.title}>recomendados</span>
-                </>
-              ) : (
-                config.title
-              )}
-            </h2>
-
-            {/* Subtitle */}
-            <p className="max-w-xl text-xs leading-relaxed text-muted-foreground md:text-sm">
-              {config.subtitle}
-            </p>
-          </div>
-
-          {/* Catalog button */}
-          <Link
-            href={linkHref}
-            className="group flex h-9 shrink-0 items-center gap-1.5 rounded-lg border border-border/50 bg-card px-4 text-xs font-bold shadow-sm transition-all duration-300 hover:bg-primary hover:text-primary-foreground md:h-11 md:gap-2 md:rounded-xl md:px-6 md:text-sm"
-          >
-            {linkText}
-
-            <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1 md:h-4 md:w-4" />
-          </Link>
-        </div>
-
         {/* Carousel */}
         <Carousel
           opts={{
@@ -216,6 +163,71 @@ export function ProductCarousel({
           onBlur={() => setIsPaused(false)}
           className="relative"
         >
+          {/* Header */}
+          <div className="mb-6 flex items-end justify-between gap-4 md:mb-10">
+            <div className="min-w-0 space-y-1.5 md:space-y-2">
+              {/* Badge */}
+              <div
+                className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest md:gap-2 md:px-3 md:py-1.5 md:text-xs ${accentStyles.badge} ${config.accentColor}`}
+              >
+                <Icon
+                  className={`h-3 w-3 md:h-3.5 md:w-3.5 ${accentStyles.icon}`}
+                />
+
+                {config.title}
+              </div>
+
+              {/* Title */}
+              <h2 className="text-2xl font-black leading-tight tracking-tight md:text-4xl">
+                {type === "offers" ? (
+                  <>
+                    Ofertas{" "}
+                    <span className={accentStyles.title}>Flash</span>
+                  </>
+                ) : type === "gaming" ? (
+                  <>
+                    Laptops{" "}
+                    <span className={accentStyles.title}>Gaming</span>
+                  </>
+                ) : type === "accessories" ? (
+                  <>
+                    Accesorios{" "}
+                    <span className={accentStyles.title}>recomendados</span>
+                  </>
+                ) : (
+                  config.title
+                )}
+              </h2>
+
+              {/* Subtitle */}
+              <p className="max-w-xl text-xs leading-relaxed text-muted-foreground md:text-sm">
+                {config.subtitle}
+              </p>
+            </div>
+
+            {/* Navigation - Button + Arrows */}
+            <div className="flex items-center gap-2 shrink-0">
+              <Link
+                href={linkHref}
+                className="group flex h-9 items-center gap-1.5 rounded-lg border border-border/50 bg-card px-4 text-xs font-bold shadow-sm transition-all duration-300 hover:bg-primary hover:text-primary-foreground md:h-10 md:gap-2 md:rounded-xl md:px-5 md:text-sm"
+              >
+                {linkText}
+                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1 md:h-4 md:w-4" />
+              </Link>
+
+              <div className="flex items-center gap-1">
+                <CarouselPrevious
+                  className="!static !translate-y-0 !-translate-x-0 h-9 w-9 border-border/50 bg-card hover:bg-primary hover:text-primary-foreground md:h-10 md:w-10"
+                  aria-label="Anterior"
+                />
+                <CarouselNext
+                  className="!static !translate-y-0 !-translate-x-0 h-9 w-9 border-border/50 bg-card hover:bg-primary hover:text-primary-foreground md:h-10 md:w-10"
+                  aria-label="Siguiente"
+                />
+              </div>
+            </div>
+          </div>
+
           <CarouselContent className="-ml-3 md:-ml-5">
             {products.slice(0, 12).map((product) => (
               <CarouselItem
@@ -230,17 +242,6 @@ export function ProductCarousel({
               </CarouselItem>
             ))}
           </CarouselContent>
-
-          {/* Navigation */}
-          <CarouselPrevious
-            className="left-auto right-12 -top-12 h-9 w-9 translate-y-0 border-border/50 bg-card hover:bg-primary hover:text-primary-foreground md:right-14 md:-top-16 md:h-10 md:w-10"
-            aria-label="Anterior"
-          />
-
-          <CarouselNext
-            className="right-0 -top-12 h-9 w-9 translate-y-0 border-border/50 bg-card hover:bg-primary hover:text-primary-foreground md:-top-16 md:h-10 md:w-10"
-            aria-label="Siguiente"
-          />
         </Carousel>
       </div>
     </section>
