@@ -102,6 +102,8 @@ export const mapApiProductToProduct = (apiProduct: ApiProduct): Product => {
     processor: parts[0] || "Consultar",
     ram: parts[1] || "N/A",
     ssd: parts[2] || "N/A",
+    gpu: parts[3] || undefined,
+    screenSize: parts[4] || undefined,
     price: price,
     originalPrice: originalPrice,
     prices: productPrices,

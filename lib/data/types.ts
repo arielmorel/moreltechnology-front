@@ -15,6 +15,8 @@ export interface Product {
   processor: string;
   ram: string;
   ssd: string;
+  gpu?: string;
+  screenSize?: string;
   price: number;
   originalPrice?: number;
   prices: ProductPrice[];
