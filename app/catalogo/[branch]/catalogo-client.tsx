@@ -396,6 +396,13 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
           </FilterChip>
 
           <FilterChip
+            active={stockFilter === "OUT_OF_STOCK"}
+            onClick={() => setStockFilter("OUT_OF_STOCK")}
+          >
+            Agotados ({stockCounts.outOfStock})
+          </FilterChip>
+
+          <FilterChip
             active={stockFilter === "ALL"}
             onClick={() => setStockFilter("ALL")}
           >
@@ -510,6 +517,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
               <div className="bg-slate-100 p-0.5 rounded-lg flex items-center gap-0.5">
                 {[
                   { value: "IN_STOCK" as const, label: "Disponibles" },
+                  { value: "OUT_OF_STOCK" as const, label: "Agotados" },
                   { value: "ALL" as const, label: "Todos" },
                 ].map((tab) => (
                   <button
