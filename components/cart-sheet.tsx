@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Trash2, Plus, Minus, MessageCircle, ArrowRight } from "lucide-react";
 import Image from "next/image";
+import { cn, isMinioImage } from "@/lib/utils";
 import { WhatsAppDropdown } from "./whatsapp-dropdown";
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -70,39 +71,40 @@ export function CartSheet() {
           ) : (
             items.map((item) => (
               <div key={item.id} className="flex gap-4 group">
-                <div className="relative w-20 h-20 rounded-xl overflow-hidden bg-muted shrink-0 border border-border/50">
+                <div className="w-16 h-16 rounded-xl bg-slate-100 border border-slate-200/80 overflow-hidden shrink-0 relative">
                   <Image
-                    src={item.images[0]}
+                    src={item.images?.[0] || '/images/placeholder-laptop.png'}
                     alt={item.name}
                     fill
-                    sizes="80px"
+                    sizes="64px"
+                    unoptimized={isMinioImage(item.images?.[0] || '')}
                     className="object-cover"
                   />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-start gap-2">
-                    <h4 className="font-semibold text-sm line-clamp-2 leading-snug">{item.name}</h4>
+                    <h4 className="font-sans text-sm font-semibold text-slate-900 truncate">{item.name}</h4>
                     <button
                       onClick={() => removeItem(item.id)}
-                      className="text-muted-foreground hover:text-destructive transition-colors p-1"
+                      className="text-slate-400 hover:text-red-500 transition-colors p-1"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
-                  <p className="text-primary font-bold text-sm mt-1">US${item.price.toLocaleString("en-US")}</p>
+                  <p className="text-xs font-bold text-slate-700 mt-1">RD${item.price.toLocaleString("es-DO")}</p>
 
                   <div className="flex items-center gap-3 mt-3">
-                    <div className="flex items-center border border-border rounded-lg bg-background overflow-hidden">
+                    <div className="flex items-center border border-slate-200 rounded-lg overflow-hidden bg-slate-50">
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        className="p-1 hover:bg-muted transition-colors border-r"
+                        className="px-2 py-0.5 text-xs font-semibold text-slate-600 hover:bg-slate-200 transition-colors"
                       >
                         <Minus className="w-3 h-3" />
                       </button>
-                      <span className="px-3 text-xs font-bold">{item.quantity}</span>
+                      <span className="px-2 text-xs font-bold text-slate-800">{item.quantity}</span>
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="p-1 hover:bg-muted transition-colors border-l"
+                        className="px-2 py-0.5 text-xs font-semibold text-slate-600 hover:bg-slate-200 transition-colors"
                       >
                         <Plus className="w-3 h-3" />
                       </button>

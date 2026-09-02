@@ -31,7 +31,7 @@ const carouselConfig: Record<ProductCarouselType, {
   accentColor: string;
 }> = {
   offers: {
-    title: "Ofertas Flash",
+    title: "Ofertas",
     subtitle: "Los precios más bajos en laptops seleccionadas. ¡No te los pierdas!",
     icon: BadgePercent,
     iconColor: "text-red-600",
@@ -52,14 +52,14 @@ const carouselConfig: Record<ProductCarouselType, {
     accentColor: "text-primary",
   },
   gaming: {
-    title: "Laptops Gaming",
+    title: "Laptops",
     subtitle: "Alto rendimiento para gamers. GPU dedicada, pantallas 144Hz y cooling premium.",
     icon: Gamepad2,
     iconColor: "text-purple-600",
     accentColor: "text-purple-600",
   },
   accessories: {
-    title: "Accesorios recomendados",
+    title: "Accesorios",
     subtitle: "Complementa tu laptop con los accesorios que necesitas.",
     icon: Cable,
     iconColor: "text-teal-600",
@@ -76,16 +76,26 @@ export function ProductCarousel({
 }: ProductCarouselProps) {
   const config = carouselConfig[type];
   const Icon = config.icon;
-  const carouselApiRef = useRef<{ canScrollNext: () => boolean; scrollNext: () => void; scrollTo: (index: number) => void } | null | undefined>(null);
+
+  const carouselApiRef = useRef<{
+    canScrollNext: () => boolean;
+    scrollNext: () => void;
+    scrollTo: (index: number) => void;
+  } | null | undefined>(null);
+
   const [isPaused, setIsPaused] = useState(false);
-  const rotationInterval = typeof autoRotate === "number" ? autoRotate : 5000;
+
+  const rotationInterval =
+    typeof autoRotate === "number" ? autoRotate : 5000;
 
   useEffect(() => {
     if (!autoRotate || products.length < 2 || isPaused) return;
 
     const interval = window.setInterval(() => {
       const api = carouselApiRef.current;
+
       if (!api) return;
+
       if (api.canScrollNext()) {
         api.scrollNext();
       } else {
@@ -98,35 +108,105 @@ export function ProductCarousel({
 
   if (products.length === 0) return null;
 
+  const accentStyles =
+    type === "offers"
+      ? {
+          badge: "bg-red-500/10 border-red-500/20",
+          icon: "text-red-600",
+          title: "text-red-600",
+          glow: "bg-red-500/5",
+        }
+      : type === "gaming"
+        ? {
+            badge: "bg-purple-500/10 border-purple-500/20",
+            icon: "text-purple-600",
+            title: "text-purple-600",
+            glow: "bg-purple-500/5",
+          }
+        : type === "accessories"
+          ? {
+              badge: "bg-teal-500/10 border-teal-500/20",
+              icon: "text-teal-600",
+              title: "text-teal-600",
+              glow: "bg-teal-500/5",
+            }
+          : {
+              badge: "bg-primary/10 border-primary/20",
+              icon: "text-primary",
+              title: "text-primary",
+              glow: "bg-primary/5",
+            };
+
   return (
-    <section className="py-16 md:py-20 bg-muted/30 relative overflow-hidden">
-      <div className="absolute inset-0 -z-10">
-        <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] ${type === "offers" ? "bg-red-500/5" : type === "gaming" ? "bg-purple-500/5" : type === "accessories" ? "bg-teal-500/5" : "bg-primary/5"} blur-[120px] rounded-full`} />
+    <section className="relative overflow-hidden bg-muted/30 py-8 md:py-16">
+      {/* Background glow */}
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <div
+          className={`absolute left-1/2 top-1/2 h-[450px] w-[450px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[80px] md:h-[800px] md:w-[800px] md:blur-[120px] ${accentStyles.glow}`}
+        />
       </div>
 
       <div className="container mx-auto px-4 md:px-6">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
-          <div className="space-y-2">
-            <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full ${type === "offers" ? "bg-red-500/10 border-red-500/20" : type === "gaming" ? "bg-purple-500/10 border-purple-500/20" : type === "accessories" ? "bg-teal-500/10 border-teal-500/20" : "bg-primary/10 border-primary/20"} ${config.accentColor} text-xs font-bold uppercase tracking-widest border`}>
-              <Icon className={`w-3.5 h-3.5 ${config.iconColor}`} />
+        {/* Header */}
+        <div className="mb-6 flex flex-col items-start justify-between gap-4 md:mb-10 md:flex-row md:items-end">
+          <div className="min-w-0 space-y-1.5 md:space-y-2">
+            {/* Badge */}
+            <div
+              className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest md:gap-2 md:px-3 md:py-1.5 md:text-xs ${accentStyles.badge} ${config.accentColor}`}
+            >
+              <Icon
+                className={`h-3 w-3 md:h-3.5 md:w-3.5 ${accentStyles.icon}`}
+              />
+
               {config.title}
             </div>
-            <h2 className="text-3xl md:text-4xl font-black tracking-tight">
-              {type === "offers" ? <>Ofertas <span className="text-red-600">Flash</span></> : type === "gaming" ? <>Laptops <span className="text-purple-600">Gaming</span></> : type === "accessories" ? <>Accesorios <span className="text-teal-600">recomendados</span></> : config.title}
+
+            {/* Title */}
+            <h2 className="text-2xl font-black leading-tight tracking-tight md:text-4xl">
+              {type === "offers" ? (
+                <>
+                  Ofertas{" "}
+                  <span className={accentStyles.title}>Flash</span>
+                </>
+              ) : type === "gaming" ? (
+                <>
+                  Laptops{" "}
+                  <span className={accentStyles.title}>Gaming</span>
+                </>
+              ) : type === "accessories" ? (
+                <>
+                  Accesorios{" "}
+                  <span className={accentStyles.title}>recomendados</span>
+                </>
+              ) : (
+                config.title
+              )}
             </h2>
-            <p className="text-muted-foreground text-sm max-w-xl">{config.subtitle}</p>
+
+            {/* Subtitle */}
+            <p className="max-w-xl text-xs leading-relaxed text-muted-foreground md:text-sm">
+              {config.subtitle}
+            </p>
           </div>
+
+          {/* Catalog button */}
           <Link
             href={linkHref}
-            className="group h-11 px-6 rounded-xl bg-card border border-border/50 shadow-sm flex items-center gap-2 font-bold text-sm hover:bg-primary hover:text-primary-foreground transition-all duration-300 shrink-0"
+            className="group flex h-9 shrink-0 items-center gap-1.5 rounded-lg border border-border/50 bg-card px-4 text-xs font-bold shadow-sm transition-all duration-300 hover:bg-primary hover:text-primary-foreground md:h-11 md:gap-2 md:rounded-xl md:px-6 md:text-sm"
           >
             {linkText}
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+
+            <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1 md:h-4 md:w-4" />
           </Link>
         </div>
 
+        {/* Carousel */}
         <Carousel
-          opts={{ align: "start", dragFree: true, loop: Boolean(autoRotate) }}
+          opts={{
+            align: "start",
+            dragFree: true,
+            loop: Boolean(autoRotate),
+          }}
           setApi={(api) => {
             carouselApiRef.current = api;
           }}
@@ -136,18 +216,31 @@ export function ProductCarousel({
           onBlur={() => setIsPaused(false)}
           className="relative"
         >
-          <CarouselContent className="-ml-5">
+          <CarouselContent className="-ml-3 md:-ml-5">
             {products.slice(0, 12).map((product) => (
               <CarouselItem
                 key={product.id}
-                className={`pl-5 ${type === "related" ? "basis-full" : "basis-[85%]"} sm:basis-[48%] lg:basis-[31%] xl:basis-[24%]`}
+                className={`pl-3 md:pl-5 ${
+                  type === "related"
+                    ? "basis-full"
+                    : "basis-[72%]"
+                } sm:basis-[48%] lg:basis-[31%] xl:basis-[24%]`}
               >
-                <ProductCard product={product} variant="compact" />
+                <ProductCard product={product} />
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="left-auto right-14 -top-16 translate-y-0 bg-card border-border/50 hover:bg-primary hover:text-primary-foreground" aria-label="Anterior" />
-          <CarouselNext className="right-0 -top-16 translate-y-0 bg-card border-border/50 hover:bg-primary hover:text-primary-foreground" aria-label="Siguiente" />
+
+          {/* Navigation */}
+          <CarouselPrevious
+            className="left-auto right-12 -top-12 h-9 w-9 translate-y-0 border-border/50 bg-card hover:bg-primary hover:text-primary-foreground md:right-14 md:-top-16 md:h-10 md:w-10"
+            aria-label="Anterior"
+          />
+
+          <CarouselNext
+            className="right-0 -top-12 h-9 w-9 translate-y-0 border-border/50 bg-card hover:bg-primary hover:text-primary-foreground md:-top-16 md:h-10 md:w-10"
+            aria-label="Siguiente"
+          />
         </Carousel>
       </div>
     </section>
