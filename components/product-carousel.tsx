@@ -217,11 +217,11 @@ export function ProductCarousel({
 
               <div className="flex items-center gap-1">
                 <CarouselPrevious
-                  className="relative h-9 w-9 translate-y-0 border-border/50 bg-card hover:bg-primary hover:text-primary-foreground md:h-10 md:w-10"
+                  className="!static !translate-y-0 !-translate-x-0 h-9 w-9 border-border/50 bg-card hover:bg-primary hover:text-primary-foreground md:h-10 md:w-10"
                   aria-label="Anterior"
                 />
                 <CarouselNext
-                  className="relative h-9 w-9 translate-y-0 border-border/50 bg-card hover:bg-primary hover:text-primary-foreground md:h-10 md:w-10"
+                  className="!static !translate-y-0 !-translate-x-0 h-9 w-9 border-border/50 bg-card hover:bg-primary hover:text-primary-foreground md:h-10 md:w-10"
                   aria-label="Siguiente"
                 />
               </div>
