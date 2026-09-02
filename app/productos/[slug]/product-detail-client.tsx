@@ -17,6 +17,7 @@ import { getApprovedReviews } from "@/app/actions/reviews";
 import { ProductImageGallery } from "@/components/product-detail/product-image-gallery";
 import { ProductInfoCard } from "@/components/product-detail/product-info-card";
 import { ProductReviewsSummary } from "@/components/product-detail/product-reviews-summary";
+import { NotifyWhenAvailable } from "@/components/notify-when-available";
 
 interface ProductDetailClientProps {
   slug: string;
@@ -240,31 +241,38 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
 
       {/* Mobile Sticky CTA Bar */}
       <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-200 py-2 px-3 shadow-lg flex items-center justify-between gap-2 md:hidden">
-        <div className="flex flex-col">
-          <span className="text-[8px] font-bold uppercase tracking-wider text-slate-400 leading-none">Precio</span>
-          <span className="text-sm font-bold text-slate-900">
-            RD$ {(product.prices?.[0]?.offerPrice || product.prices?.[0]?.priceOut || product.price).toLocaleString("es-DO")}
-          </span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <button
-            type="button"
-            onClick={handleAddToCart}
-            disabled={product.quantity === 0}
-            className="bg-slate-900 hover:bg-slate-800 text-white text-[10px] font-semibold py-2 px-3 rounded-lg transition-colors disabled:opacity-50"
-          >
-            {product.quantity === 0 ? "Agotado" : "Agregar"}
-          </button>
-          <a
-            href={`https://wa.me/18095551234?text=${encodeURIComponent(`Hola, estoy interesado en ${product.name}.`)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-emerald-500 hover:bg-emerald-600 text-white p-2 rounded-lg transition-colors"
-            aria-label="WhatsApp"
-          >
-            <MessageCircle className="w-3.5 h-3.5" />
-          </a>
-        </div>
+        {product.quantity === 0 ? (
+          <div className="w-full">
+            <NotifyWhenAvailable productId={product.id} productName={product.name} />
+          </div>
+        ) : (
+          <>
+            <div className="flex flex-col">
+              <span className="text-[8px] font-bold uppercase tracking-wider text-slate-400 leading-none">Precio</span>
+              <span className="text-sm font-bold text-slate-900">
+                RD$ {(product.prices?.[0]?.offerPrice || product.prices?.[0]?.priceOut || product.price).toLocaleString("es-DO")}
+              </span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={handleAddToCart}
+                className="bg-slate-900 hover:bg-slate-800 text-white text-[10px] font-semibold py-2 px-3 rounded-lg transition-colors"
+              >
+                Agregar
+              </button>
+              <a
+                href={`https://wa.me/18095551234?text=${encodeURIComponent(`Hola, estoy interesado en ${product.name}.`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-emerald-500 hover:bg-emerald-600 text-white p-2 rounded-lg transition-colors"
+                aria-label="WhatsApp"
+              >
+                <MessageCircle className="w-3.5 h-3.5" />
+              </a>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

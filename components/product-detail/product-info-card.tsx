@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ConditionGuide } from "@/components/condition-guide";
+import { NotifyWhenAvailable } from "@/components/notify-when-available";
 
 interface ProductInfoCardProps {
   product: Product;
@@ -153,34 +154,39 @@ export function ProductInfoCard({
 
         {/* Desktop Buttons */}
         <div className="hidden md:flex flex-col gap-2">
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={onAddToCart}
-              disabled={product.quantity === 0}
-              className="flex-1 h-10 bg-slate-900 hover:bg-slate-800 text-white font-medium text-sm rounded-xl transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
-            >
-              <ShoppingCart className="w-4 h-4" />
-              {product.quantity === 0 ? "Agotado" : "Añadir al carrito"}
-            </button>
-            <button
-              type="button"
-              onClick={onShare}
-              className="h-10 px-3 border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-xl transition-colors flex items-center justify-center"
-              aria-label="Compartir"
-            >
-              <Share2 className="w-4 h-4" />
-            </button>
-          </div>
-          <a
-            href={`https://wa.me/18095551234?text=${encodeURIComponent(`Hola, estoy interesado en ${product.name}.`)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-medium py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2 text-xs"
-          >
-            <MessageCircle className="w-3.5 h-3.5" />
-            Contactar por WhatsApp
-          </a>
+          {product.quantity === 0 ? (
+            <NotifyWhenAvailable productId={product.id} productName={product.name} />
+          ) : (
+            <>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={onAddToCart}
+                  className="flex-1 h-10 bg-slate-900 hover:bg-slate-800 text-white font-medium text-sm rounded-xl transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  <ShoppingCart className="w-4 h-4" />
+                  Añadir al carrito
+                </button>
+                <button
+                  type="button"
+                  onClick={onShare}
+                  className="h-10 px-3 border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-xl transition-colors flex items-center justify-center"
+                  aria-label="Compartir"
+                >
+                  <Share2 className="w-4 h-4" />
+                </button>
+              </div>
+              <a
+                href={`https://wa.me/18095551234?text=${encodeURIComponent(`Hola, estoy interesado en ${product.name}.`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-medium py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2 text-xs"
+              >
+                <MessageCircle className="w-3.5 h-3.5" />
+                Contactar por WhatsApp
+              </a>
+            </>
+          )}
         </div>
       </div>
     </div>
