@@ -38,3 +38,61 @@ model NewsletterSubscriber {
   @@index([source])
   @@index([createdAt])
 }
+
+enum StockNotificationStatus {
+  PENDING
+  NOTIFIED
+  CANCELLED
+  FAILED
+}
+
+model StockNotification {
+  id            String   @id @default(uuid())
+
+  // Referencia al producto en NovusBill
+  productId     String
+
+  // Datos del cliente
+  customerName  String?
+  customerEmail String
+
+  // Estado de la solicitud
+  status        StockNotificationStatus @default(PENDING)
+
+  // Auditoría de la notificación
+  notifiedAt    DateTime?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([productId, customerEmail])
+  @@index([productId])
+  @@index([customerEmail])
+  @@index([status])
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model ProductReview {
+  id                String       @id @default(uuid())
+  productId         Int
+  customerId        String?
+  customerName      String
+  customerEmail     String
+  rating            Int
+  title             String?
+  comment           String
+  verifiedPurchase  Boolean      @default(false)
+  status            ReviewStatus @default(PENDING)
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  @@index([productId])
+  @@index([customerId])
+  @@index([productId, status])
+  @@index([customerEmail])
+}

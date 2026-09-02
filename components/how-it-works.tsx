@@ -35,7 +35,7 @@ const steps = [
     color: "from-primary to-foreground",
     bgColor: "bg-primary/10",
     textColor: "text-primary",
-    link: "/garantia",
+    link: "/politicas/garantia",
     linkText: "Ver garantía",
   },
 ];

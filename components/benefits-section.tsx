@@ -9,7 +9,7 @@ const benefits = [
     icon: <Shield className="w-7 h-7" />,
     title: "Garantía Real",
     description: "Todos nuestros equipos cuentan con garantía escrita para tu tranquilidad.",
-    href: "/garantia",
+    href: "/politicas/garantia",
     color: "from-green-500 to-emerald-500",
     bgColor: "bg-green-500/10",
     textColor: "text-green-700",
