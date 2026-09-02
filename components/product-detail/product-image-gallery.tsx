@@ -25,6 +25,7 @@ export function ProductImageGallery({
 }: ProductImageGalleryProps) {
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
+  const [imageTransitionKey, setImageTransitionKey] = React.useState(0);
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
@@ -38,13 +39,20 @@ export function ProductImageGallery({
       if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
         if (deltaX < 0 && activeImage < product.images.length - 1) {
           onActiveImageChange(activeImage + 1);
+          setImageTransitionKey(prev => prev + 1);
         } else if (deltaX > 0 && activeImage > 0) {
           onActiveImageChange(activeImage - 1);
+          setImageTransitionKey(prev => prev + 1);
         }
       }
     },
     [activeImage, product.images.length, onActiveImageChange]
   );
+
+  const handleImageChange = useCallback((index: number) => {
+    onActiveImageChange(index);
+    setImageTransitionKey(prev => prev + 1);
+  }, [onActiveImageChange]);
 
   return (
     <div className="space-y-2">
@@ -64,12 +72,13 @@ export function ProductImageGallery({
         onTouchEnd={handleTouchEnd}
       >
         <Image
+          key={`main-${imageTransitionKey}`}
           src={product.images[activeImage]}
           alt={product.name}
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
           unoptimized={isMinioImage(product.images[activeImage])}
-          className="object-contain p-4"
+          className="object-contain p-4 animate-fade-in"
           priority
         />
 
@@ -95,7 +104,7 @@ export function ProductImageGallery({
               <button
                 onClick={(event) => {
                   event.stopPropagation();
-                  onActiveImageChange(activeImage - 1);
+                  handleImageChange(activeImage - 1);
                 }}
                 className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md md:hidden transition-transform active:scale-95"
                 aria-label="Imagen anterior"
@@ -107,7 +116,7 @@ export function ProductImageGallery({
               <button
                 onClick={(event) => {
                   event.stopPropagation();
-                  onActiveImageChange(activeImage + 1);
+                  handleImageChange(activeImage + 1);
                 }}
                 className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md md:hidden transition-transform active:scale-95"
                 aria-label="Imagen siguiente"
@@ -143,20 +152,21 @@ export function ProductImageGallery({
             className="absolute inset-0 flex items-center justify-center"
             onKeyDown={(event) => {
               if (event.key === "ArrowLeft" && activeImage > 0) {
-                onActiveImageChange(activeImage - 1);
+                handleImageChange(activeImage - 1);
               }
               if (event.key === "ArrowRight" && activeImage < product.images.length - 1) {
-                onActiveImageChange(activeImage + 1);
+                handleImageChange(activeImage + 1);
               }
             }}
             tabIndex={0}
           >
             <Image
+              key={`viewer-${imageTransitionKey}`}
               src={product.images[activeImage]}
               alt={product.name}
               fill
               unoptimized={isMinioImage(product.images[activeImage])}
-              className="object-contain p-8 sm:p-12"
+              className="object-contain p-8 sm:p-12 animate-fade-in"
               sizes="100vw"
               priority
             />
@@ -164,7 +174,7 @@ export function ProductImageGallery({
               <>
                 <button
                   type="button"
-                  onClick={() => onActiveImageChange(activeImage - 1)}
+                  onClick={() => handleImageChange(activeImage - 1)}
                   disabled={activeImage === 0}
                   className="absolute left-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20 disabled:opacity-30 sm:left-6"
                   aria-label="Imagen anterior"
@@ -173,7 +183,7 @@ export function ProductImageGallery({
                 </button>
                 <button
                   type="button"
-                  onClick={() => onActiveImageChange(activeImage + 1)}
+                  onClick={() => handleImageChange(activeImage + 1)}
                   disabled={activeImage === product.images.length - 1}
                   className="absolute right-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20 disabled:opacity-30 sm:right-6"
                   aria-label="Imagen siguiente"
@@ -194,7 +204,7 @@ export function ProductImageGallery({
           {product.images.map((img, idx) => (
             <button
               key={idx}
-              onClick={() => onActiveImageChange(idx)}
+              onClick={() => handleImageChange(idx)}
               className={cn(
                 "relative w-12 h-12 md:w-16 md:h-16 rounded-lg overflow-hidden border-2 transition-all flex-shrink-0 bg-white",
                 activeImage === idx ? "border-slate-900 shadow-sm" : "border-slate-100 hover:border-slate-300"

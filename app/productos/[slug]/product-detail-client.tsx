@@ -152,10 +152,10 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
   }
 
   return (
-        <div className="min-h-screen pt-24 pb-16">
+        <div className="min-h-screen pt-24 pb-16 animate-fade-in">
       <div className="container mx-auto px-3 md:px-6">
         {/* Breadcrumbs - Ultra Compact */}
-        <nav className="flex items-center gap-1 text-[10px] text-slate-400 mb-3 md:mb-4">
+        <nav className="flex items-center gap-1 text-[10px] text-slate-400 mb-3 md:mb-4 animate-slide-up">
           <button
             onClick={() => window.history.back()}
             className="md:hidden flex items-center hover:text-slate-900 transition-colors -ml-1 shrink-0"
@@ -170,15 +170,17 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
         </nav>
 
         <div className="grid lg:grid-cols-2 gap-4 lg:gap-8 items-start">
-          <ProductImageGallery
-            product={product}
-            activeImage={activeImage}
-            onActiveImageChange={setActiveImage}
-            isImageViewerOpen={isImageViewerOpen}
-            onImageViewerOpenChange={setIsImageViewerOpen}
-          />
+          <div className="animate-slide-up-delay-1">
+            <ProductImageGallery
+              product={product}
+              activeImage={activeImage}
+              onActiveImageChange={setActiveImage}
+              isImageViewerOpen={isImageViewerOpen}
+              onImageViewerOpenChange={setIsImageViewerOpen}
+            />
+          </div>
 
-          <div>
+          <div className="animate-slide-up-delay-2">
             <ProductInfoCard
               product={product}
               warrantyLabel={warrantyLabel}
@@ -208,19 +210,21 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
         </div>
 
         {/* Accessories Carousel */}
-        <div className="mt-8 md:mt-12">
+        <div className="mt-8 md:mt-12 animate-slide-up-delay-3">
           <AccessoriesCarousel currentProductId={product.slug} />
         </div>
 
         {/* Reviews Summary Card */}
-        <ProductReviewsSummary
-          reviews={reviewsData.reviews}
-          averageRating={reviewsData.averageRating}
-          totalReviews={reviewsData.totalReviews}
-        />
+        <div className="animate-slide-up-delay-4">
+          <ProductReviewsSummary
+            reviews={reviewsData.reviews}
+            averageRating={reviewsData.averageRating}
+            totalReviews={reviewsData.totalReviews}
+          />
+        </div>
 
         {/* Review Form */}
-        <div id="review-form" className="mt-6 scroll-mt-20">
+        <div id="review-form" className="mt-6 scroll-mt-20 animate-slide-up-delay-5">
           <div className="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-sm">
             <ProductReviewForm productId={parseInt(product.id, 10)} />
           </div>
@@ -228,7 +232,7 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
 
         {/* Related Products */}
         {relatedProducts.length > 0 && (
-          <div className="mt-8 md:mt-12">
+          <div className="mt-8 md:mt-12 animate-slide-up-delay-6">
             <ProductCarousel
               type="related"
               products={relatedProducts}
