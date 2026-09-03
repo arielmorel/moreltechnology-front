@@ -4,12 +4,15 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { blogCategories } from "@/lib/data/blog-categories";
-import { Gamepad2, Laptop, Cpu, BookOpen, Crosshair } from "lucide-react";
+import { Gamepad2, Laptop, Cpu, Settings, Building2, Brain, BookOpen, Crosshair } from "lucide-react";
 
 const iconMap: Record<string, React.ElementType> = {
   Gamepad2,
   Laptop,
   Cpu,
+  Settings,
+  Building2,
+  Brain,
   BookOpen,
   Crosshair,
 };

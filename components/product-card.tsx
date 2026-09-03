@@ -31,14 +31,19 @@ export function ProductCard({ product }: ProductCardProps) {
     <Link
       href={productUrl(product.slug)}
       className={cn(
-        "flex gap-3 p-3 bg-white rounded-xl border border-slate-200 transition-all duration-200",
+        "flex bg-white rounded-xl border border-slate-200 transition-all duration-200",
         "hover:shadow-lg hover:border-slate-300 hover:-translate-y-0.5",
+        "p-3 gap-3",
+        "lg:p-0 lg:gap-0",
         isOutOfStock && "opacity-70"
       )}
     >
       {/* Image - Left side */}
       <div className={cn(
-        "relative w-[100px] h-[100px] shrink-0 overflow-hidden rounded-lg bg-slate-50",
+        "relative shrink-0 overflow-hidden bg-slate-100",
+        "w-[110px] h-[110px] rounded-lg",
+        "sm:w-[130px] sm:h-[130px]",
+        "lg:w-[170px] lg:h-full lg:rounded-l-xl lg:rounded-tr-none",
         isOutOfStock && "grayscale"
       )}>
         <Image
@@ -46,8 +51,8 @@ export function ProductCard({ product }: ProductCardProps) {
           alt={product.name}
           fill
           unoptimized={isMinioImage(product.images[0])}
-          className="object-contain p-2"
-          sizes="100px"
+          className="object-contain p-1"
+          sizes="(max-width: 640px) 110px, (max-width: 1024px) 130px, 170px"
         />
         {/* Discount badge */}
         {hasDiscount && (
@@ -58,7 +63,7 @@ export function ProductCard({ product }: ProductCardProps) {
       </div>
 
       {/* Content - Right side */}
-      <div className="flex-1 min-w-0 flex flex-col justify-between">
+      <div className="flex-1 min-w-0 flex flex-col justify-between lg:py-3 lg:pr-3 lg:pl-4">
         {/* Top section */}
         <div>
           {/* Brand */}

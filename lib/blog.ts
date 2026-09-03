@@ -65,8 +65,13 @@ export function getAllPosts(): BlogPostSummary[] {
 export function getPostsByCategory(categorySlug: string): BlogPostSummary[] {
   const allPosts = getAllPosts();
   return allPosts.filter((post) => {
-    const normalizedCategory = post.category.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
-    return normalizedCategory === categorySlug || post.category.toLowerCase() === categorySlug.toLowerCase();
+    const normalizedCategory = post.category
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9-]/g, "");
+    return normalizedCategory === categorySlug;
   });
 }
 

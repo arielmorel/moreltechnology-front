@@ -125,6 +125,21 @@ export default async function ProductDetailPage({ params }: PageProps) {
             addressCountry: "DO",
             addressRegion: ["Distrito Nacional", "Santo Domingo"],
           },
+          deliveryTime: {
+            "@type": "ShippingDeliveryTime",
+            handlingTime: {
+              "@type": "QuantitativeValue",
+              minValue: 0,
+              maxValue: 1,
+              unitCode: "DAY",
+            },
+            transitTime: {
+              "@type": "QuantitativeValue",
+              minValue: 0,
+              maxValue: 1,
+              unitCode: "DAY",
+            },
+          },
         },
         {
           "@type": "OfferShippingDetails",
@@ -166,6 +181,21 @@ export default async function ProductDetailPage({ params }: PageProps) {
               "Monseñor Nouel",
               "Hato Mayor",
             ],
+          },
+          deliveryTime: {
+            "@type": "ShippingDeliveryTime",
+            handlingTime: {
+              "@type": "QuantitativeValue",
+              minValue: 0,
+              maxValue: 1,
+              unitCode: "DAY",
+            },
+            transitTime: {
+              "@type": "QuantitativeValue",
+              minValue: 2,
+              maxValue: 7,
+              unitCode: "DAY",
+            },
           },
         },
       ],
