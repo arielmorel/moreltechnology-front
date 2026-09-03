@@ -15,6 +15,7 @@ import {
   X,
   Shield,
   Bell,
+  Mail,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { adminLogout } from "@/app/actions/admin-auth";
@@ -26,6 +27,7 @@ const navItems = [
   { href: "/admin/customers", label: "Clientes", icon: Users },
   { href: "/admin/reviews", label: "Reseñas", icon: Star },
   { href: "/admin/notifications", label: "Notificaciones", icon: Bell },
+  { href: "/admin/newsletters", label: "Newsletter", icon: Mail },
   { href: "/admin/settings", label: "Configuración", icon: Settings },
 ];
 

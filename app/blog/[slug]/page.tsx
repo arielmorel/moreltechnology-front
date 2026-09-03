@@ -9,6 +9,7 @@ import { getBlogCategoryBySlug, getCategoryColorClass } from "@/lib/data/blog-ca
 import { buttonVariants } from "@/components/ui/button";
 import { WhatsAppDropdown } from "@/components/whatsapp-dropdown";
 import { Calendar, User, ArrowLeft, Tag, Clock, ArrowRight, ShoppingBag } from "lucide-react";
+import { BlogProductCarousel } from "@/components/blog-product-carousel";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -116,7 +117,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen pt-16 pb-16">
-      <div className="container mx-auto px-4 md:px-6 max-w-4xl">
+      <div className="container mx-auto px-4 md:px-6">
 
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8 flex-wrap">
@@ -194,7 +195,13 @@ export default async function BlogPostPage({ params }: PageProps) {
 
         {/* Article Content */}
         <article className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-black prose-headings:tracking-tight prose-a:text-primary prose-strong:text-foreground">
-          <MDXRemote source={post.content} options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }} />
+          <MDXRemote
+            source={post.content}
+            options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }}
+            components={{
+              BlogProductCarousel,
+            }}
+          />
         </article>
 
         {/* Related Posts */}
