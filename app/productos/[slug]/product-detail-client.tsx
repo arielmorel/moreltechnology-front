@@ -43,7 +43,6 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
     averageRating: 0,
     totalReviews: 0,
   });
-  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const { addItem } = useCart();
 
   const warrantyLabel = product?.warranty
@@ -187,25 +186,6 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
               onAddToCart={handleAddToCart}
               onShare={handleShare}
             />
-
-            {/* Description Card */}
-            <div className="bg-white rounded-2xl border border-slate-200/80 p-4 mt-3 shadow-sm">
-              <h3 className="text-xs font-bold text-slate-900 mb-2 uppercase tracking-wider">Descripción</h3>
-              <p className={cn(
-                "font-sans text-[11px] text-slate-600 leading-relaxed whitespace-pre-line",
-                !isDescriptionExpanded && "line-clamp-3"
-              )}>
-                {product.description}
-              </p>
-              {product.description.length > 150 && (
-                <button
-                  onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-                  className="text-[10px] font-semibold text-slate-900 mt-2 hover:underline"
-                >
-                  {isDescriptionExpanded ? "Ver menos" : "Ver más"}
-                </button>
-              )}
-            </div>
           </div>
         </div>
 

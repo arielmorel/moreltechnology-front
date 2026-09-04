@@ -13,6 +13,8 @@ import {
   MessageCircle,
   Monitor,
   Gamepad2,
+  ChevronDown,
+  FileText,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ConditionGuide } from "@/components/condition-guide";
@@ -151,20 +153,38 @@ export function ProductInfoCard({
 
         {/* Trust Signals */}
         <div className="flex flex-col gap-2">
-          {/* Warranty */}
           <div className="flex items-center gap-2.5 text-emerald-700">
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
             <span className="text-xs font-medium">Garantía de {warrantyLabel}</span>
           </div>
-          {/* Shipping */}
           <div className="flex items-center gap-2.5 text-emerald-700">
             <Truck className="w-4 h-4 text-emerald-600" />
             <span className="text-xs font-medium">Envío express disponible</span>
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="border-t border-slate-100" />
+        {/* Description Accordion */}
+        <div className="border-t border-slate-100 pt-4">
+          <button
+            type="button"
+            onClick={() => {
+              const el = document.getElementById("product-description");
+              el?.classList.toggle("hidden");
+            }}
+            className="flex items-center justify-between w-full group"
+          >
+            <div className="flex items-center gap-2">
+              <FileText className="w-4 h-4 text-slate-400" />
+              <span className="text-xs font-semibold text-slate-900 uppercase tracking-wider">Descripción</span>
+            </div>
+            <ChevronDown className="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-transform" />
+          </button>
+          <div id="product-description" className="hidden mt-3">
+            <p className="font-sans text-xs text-slate-600 leading-relaxed whitespace-pre-line">
+              {product.description}
+            </p>
+          </div>
+        </div>
 
         {/* Desktop Buttons */}
         <div className="hidden md:flex flex-col gap-3">
