@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type ComponentType } from "react";
 import Link from "next/link";
 import { ArrowRight, BadgePercent, Star, Sparkles, Gamepad2, Cable } from "lucide-react";
 import { Product } from "@/lib/data";
-import { ProductCard } from "@/components/product-card";
+import { ProductCardCarousel } from "@/components/product-card-carousel";
 import {
   Carousel,
   CarouselContent,
@@ -238,7 +238,7 @@ export function ProductCarousel({
                     : "basis-[72%]"
                 } sm:basis-[48%] lg:basis-[31%] xl:basis-[24%]`}
               >
-                <ProductCard product={product} />
+                <ProductCardCarousel product={product} />
               </CarouselItem>
             ))}
           </CarouselContent>

@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import { categories, Product } from "@/lib/data";
-import { getProducts, searchProducts, AvailabilityFilter } from "@/lib/api";
+import { getProducts, searchProducts, AvailabilityFilter, SortFilter } from "@/lib/api";
 import { useDebounce } from "@/hooks/use-debounce";
 import { ProductCard } from "@/components/product-card";
 import { ProductCardSkeleton } from "@/components/product-card-skeleton";
@@ -42,11 +42,48 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
 
   const [branch] = useState<string>(initialBranch);
 
+  const [search, setSearch] = useState(() => searchParams.get("q") || "");
+  const debouncedSearch = useDebounce(search, 300);
+  const [selectedCategory, setSelectedCategory] = useState<string>(() => searchParams.get("category") || "todas");
+  const [selectedBrand, setSelectedBrand] = useState<string>(() => searchParams.get("brand") || "todas");
+  const [selectedProcessor, setSelectedProcessor] = useState<string>(() => searchParams.get("processor") || "todas");
+  const [selectedRam, setSelectedRam] = useState<string>(() => searchParams.get("ram") || "todas");
+  const [selectedStorage, setSelectedStorage] = useState<string>(() => searchParams.get("storage") || "todas");
+  const [showOnlyOffers, setShowOnlyOffers] = useState(() => searchParams.get("offers") === "true");
+  const [selectedCondition, setSelectedCondition] = useState<string>(() => searchParams.get("condition") || "todas");
+  const [selectedTag, setSelectedTag] = useState<string>(() => searchParams.get("tag") || "todas");
+  const [priceRange, setPriceRange] = useState<number[]>(() => {
+    const min = parseInt(searchParams.get("priceMin") || "0", 10);
+    const max = parseInt(searchParams.get("priceMax") || "200000", 10);
+    return [isNaN(min) ? 0 : min, isNaN(max) ? 200000 : max];
+  });
+  const [stockFilter, setStockFilter] = useState<AvailabilityFilter>(
+    () => (searchParams.get("availability") as AvailabilityFilter) || "IN_STOCK"
+  );
+  const [sortBy, setSortBy] = useState<SortFilter>(
+    () => (searchParams.get("sort") as SortFilter) || "newest"
+  );
+
   const buildShareUrl = useCallback(() => {
     const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams();
+    if (debouncedSearch) params.set("q", debouncedSearch);
+    if (selectedCategory !== "todas") params.set("category", selectedCategory);
+    if (selectedBrand !== "todas") params.set("brand", selectedBrand);
+    if (selectedProcessor !== "todas") params.set("processor", selectedProcessor);
+    if (selectedRam !== "todas") params.set("ram", selectedRam);
+    if (selectedStorage !== "todas") params.set("storage", selectedStorage);
+    if (showOnlyOffers) params.set("offers", "true");
+    if (selectedCondition !== "todas") params.set("condition", selectedCondition);
+    if (selectedTag !== "todas") params.set("tag", selectedTag);
+    if (priceRange[0] > 0 || priceRange[1] < 200000) {
+      params.set("priceMin", priceRange[0].toString());
+      params.set("priceMax", priceRange[1].toString());
+    }
+    if (stockFilter !== "IN_STOCK") params.set("availability", stockFilter);
+    if (sortBy !== "newest") params.set("sort", sortBy);
     return `${baseUrl}/catalogo/${branch}?${params.toString()}`;
-  }, [branch, searchParams]);
+  }, [branch, debouncedSearch, selectedCategory, selectedBrand, selectedProcessor, selectedRam, selectedStorage, showOnlyOffers, selectedCondition, selectedTag, priceRange, stockFilter, sortBy]);
 
   const handleShare = async () => {
     const url = buildShareUrl();
@@ -67,18 +104,27 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
     }
   };
 
-  const [search, setSearch] = useState("");
-  const debouncedSearch = useDebounce(search, 300);
-  const [selectedCategory, setSelectedCategory] = useState<string>("todas");
-  const [selectedBrand, setSelectedBrand] = useState<string>("todas");
-  const [selectedProcessor, setSelectedProcessor] = useState<string>("todas");
-  const [selectedRam, setSelectedRam] = useState<string>("todas");
-  const [selectedStorage, setSelectedStorage] = useState<string>("todas");
-  const [showOnlyOffers, setShowOnlyOffers] = useState(false);
-  const [selectedCondition, setSelectedCondition] = useState<string>("todas");
-  const [selectedTag, setSelectedTag] = useState<string>("todas");
-  const [priceRange, setPriceRange] = useState<number[]>([0, 200000]);
-  const [stockFilter, setStockFilter] = useState<AvailabilityFilter>("IN_STOCK");
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (debouncedSearch) params.set("q", debouncedSearch);
+    if (selectedCategory !== "todas") params.set("category", selectedCategory);
+    if (selectedBrand !== "todas") params.set("brand", selectedBrand);
+    if (selectedProcessor !== "todas") params.set("processor", selectedProcessor);
+    if (selectedRam !== "todas") params.set("ram", selectedRam);
+    if (selectedStorage !== "todas") params.set("storage", selectedStorage);
+    if (showOnlyOffers) params.set("offers", "true");
+    if (selectedCondition !== "todas") params.set("condition", selectedCondition);
+    if (selectedTag !== "todas") params.set("tag", selectedTag);
+    if (priceRange[0] > 0 || priceRange[1] < 200000) {
+      params.set("priceMin", priceRange[0].toString());
+      params.set("priceMax", priceRange[1].toString());
+    }
+    if (stockFilter !== "IN_STOCK") params.set("availability", stockFilter);
+    if (sortBy !== "newest") params.set("sort", sortBy);
+    const queryString = params.toString();
+    const newUrl = `/catalogo/${branch}${queryString ? `?${queryString}` : ""}`;
+    router.push(newUrl, { scroll: false });
+  }, [debouncedSearch, selectedCategory, selectedBrand, selectedProcessor, selectedRam, selectedStorage, showOnlyOffers, selectedCondition, selectedTag, priceRange, stockFilter, sortBy, branch, router]);
 
   const [products, setProducts] = useState<Product[]>([]);
   const [total, setTotal] = useState(0);
@@ -214,6 +260,16 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
       return matchesSearch && matchesBrand && matchesProcessor && matchesRam && matchesStorage && matchesOffers && matchesCondition && matchesPrice && matchesTag;
     });
   }, [products, search, selectedBrand, selectedProcessor, selectedRam, selectedStorage, showOnlyOffers, selectedCondition, selectedTag, priceRange]);
+
+  const sortedProducts = useMemo(() => {
+    const sorted = [...filteredProducts];
+    if (sortBy === "price_asc") {
+      sorted.sort((a, b) => a.price - b.price);
+    } else if (sortBy === "price_desc") {
+      sorted.sort((a, b) => b.price - a.price);
+    }
+    return sorted;
+  }, [filteredProducts, sortBy]);
 
   const clearFilters = () => {
     setSearch("");
@@ -409,6 +465,20 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
             Todos ({stockCounts.total})
           </FilterChip>
 
+          <FilterChip
+            active={sortBy === "price_asc"}
+            onClick={() => setSortBy(sortBy === "price_asc" ? "newest" : "price_asc")}
+          >
+            Precio ↑
+          </FilterChip>
+
+          <FilterChip
+            active={sortBy === "price_desc"}
+            onClick={() => setSortBy(sortBy === "price_desc" ? "newest" : "price_desc")}
+          >
+            Precio ↓
+          </FilterChip>
+
           {brands.slice(0, 3).map(brand => (
             <FilterChip
               key={brand}
@@ -512,7 +582,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
             {/* Results count */}
             <div className="flex items-center justify-between mb-3">
               <p className="text-xs text-slate-500">
-                {filteredProducts.length} {filteredProducts.length === 1 ? "equipo" : "equipos"} encontrados
+                {sortedProducts.length} {sortedProducts.length === 1 ? "equipo" : "equipos"} encontrados
               </p>
               <div className="bg-slate-100 p-0.5 rounded-lg flex items-center gap-0.5">
                 {[
@@ -538,15 +608,15 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
             </div>
 
             {isLoading && products.length === 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {[...Array(6)].map((_, i) => (
                   <ProductCardSkeleton key={i} />
                 ))}
               </div>
-            ) : filteredProducts.length > 0 ? (
+            ) : sortedProducts.length > 0 ? (
               <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" aria-busy={isLoading}>
-                  {filteredProducts.map(product => (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" aria-busy={isLoading}>
+                  {sortedProducts.map(product => (
                     <ProductCard key={product.id} product={product} />
                   ))}
                 </div>
@@ -559,9 +629,9 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
                       <span className="text-xs">Cargando más equipos...</span>
                     </div>
                   )}
-                  {!hasMore && filteredProducts.length > 0 && (
+                  {!hasMore && sortedProducts.length > 0 && (
                     <p className="text-slate-400 text-xs">
-                      Has visto todos los {filteredProducts.length} equipos
+                      Has visto todos los {sortedProducts.length} equipos
                     </p>
                   )}
                 </div>
