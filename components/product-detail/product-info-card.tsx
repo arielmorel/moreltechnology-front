@@ -36,21 +36,32 @@ export function ProductInfoCard({
   return (
     <div className="px-3 md:px-0 mt-3 md:mt-0">
       <div className="bg-white rounded-2xl p-4 md:p-6 shadow-sm space-y-6">
-        {/* Title, Condition & Share */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="inline-flex items-center text-[10px] font-semibold bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full uppercase tracking-wider border border-slate-200/50">
-                {product.condition}
-              </span>
-              <span className="hidden sm:inline-flex">
-                <ConditionGuide />
-              </span>
+        {/* Title, Condition, Tags & Share */}
+        <div className="space-y-3">
+          <div className="flex items-start justify-between gap-3">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center text-[10px] font-semibold bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full uppercase tracking-wider border border-slate-200/50">
+                  {product.condition}
+                </span>
+                <span className="hidden sm:inline-flex">
+                  <ConditionGuide />
+                </span>
+              </div>
+              {product.tags.length > 0 && (
+                <div className="flex flex-wrap gap-1.5">
+                  {product.tags.map((tag) => (
+                    <span key={tag} className="text-[9px] font-medium bg-slate-50 text-slate-500 px-2 py-0.5 rounded-full">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
             <button
               type="button"
               onClick={onShare}
-              className="p-2 border border-slate-200 hover:bg-slate-50 text-slate-500 rounded-lg transition-colors"
+              className="p-2 border border-slate-200 hover:bg-slate-50 text-slate-500 rounded-lg transition-colors shrink-0"
               aria-label="Compartir"
             >
               <Share2 className="w-4 h-4" />
@@ -90,17 +101,6 @@ export function ProductInfoCard({
             );
           })}
         </div>
-
-        {/* Tags */}
-        {product.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1.5">
-            {product.tags.map((tag) => (
-              <span key={tag} className="text-[10px] font-medium bg-slate-100 text-slate-500 px-2.5 py-1 rounded-full border border-slate-200/50">
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
 
         {/* Divider */}
         <div className="border-t border-slate-100" />
