@@ -138,7 +138,7 @@ export function ProductCarousel({
             };
 
   return (
-    <section className="relative overflow-hidden bg-muted/30 py-8 md:py-16">
+    <section className="relative overflow-hidden py-6 md:py-16">
       {/* Background glow */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div
@@ -147,102 +147,98 @@ export function ProductCarousel({
       </div>
 
       <div className="container mx-auto px-4 md:px-6">
-        {/* Carousel */}
-        <Carousel
-          opts={{
-            align: "start",
-            dragFree: true,
-            loop: Boolean(autoRotate),
-          }}
-          setApi={(api) => {
-            carouselApiRef.current = api;
-          }}
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-          onFocus={() => setIsPaused(true)}
-          onBlur={() => setIsPaused(false)}
-          className="relative"
-        >
-          {/* Header */}
-          <div className="mb-6 flex items-end justify-between gap-4 md:mb-10">
-            <div className="min-w-0 space-y-1.5 md:space-y-2">
-              {/* Badge */}
-              <div
-                className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest md:gap-2 md:px-3 md:py-1.5 md:text-xs ${accentStyles.badge} ${config.accentColor}`}
-              >
-                <Icon
-                  className={`h-3 w-3 md:h-3.5 md:w-3.5 ${accentStyles.icon}`}
-                />
+        {/* Header */}
+        <div className="mb-4 md:mb-10">
+          <div className="min-w-0 space-y-1.5 md:space-y-2">
+            <div
+              className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest md:gap-2 md:px-3 md:py-1.5 md:text-xs ${accentStyles.badge} ${config.accentColor}`}
+            >
+              <Icon className={`h-3 w-3 md:h-3.5 md:w-3.5 ${accentStyles.icon}`} />
+              {config.title}
+            </div>
 
-                {config.title}
-              </div>
-
-              {/* Title */}
-              <h2 className="text-2xl font-black leading-tight tracking-tight md:text-4xl">
+            <div className="flex items-end justify-between gap-4">
+              <h2 className="text-xl md:text-4xl font-black leading-tight tracking-tight">
                 {type === "offers" ? (
-                  <>
-                    Ofertas{" "}
-                    <span className={accentStyles.title}>Flash</span>
-                  </>
+                  <>Ofertas <span className={accentStyles.title}>Flash</span></>
                 ) : type === "gaming" ? (
-                  <>
-                    Laptops{" "}
-                    <span className={accentStyles.title}>Gaming</span>
-                  </>
+                  <>Laptops <span className={accentStyles.title}>Gaming</span></>
                 ) : type === "accessories" ? (
-                  <>
-                    Accesorios{" "}
-                    <span className={accentStyles.title}>recomendados</span>
-                  </>
+                  <>Accesorios <span className={accentStyles.title}>recomendados</span></>
                 ) : (
                   config.title
                 )}
               </h2>
 
-              {/* Subtitle */}
-              <p className="max-w-xl text-xs leading-relaxed text-muted-foreground md:text-sm">
-                {config.subtitle}
-              </p>
-            </div>
-
-            {/* Navigation - Button + Arrows */}
-            <div className="flex items-center gap-2 shrink-0">
               <Link
                 href={linkHref}
-                className="group flex h-9 items-center gap-1.5 rounded-lg border border-border/50 bg-card px-4 text-xs font-bold shadow-sm transition-all duration-300 hover:bg-primary hover:text-primary-foreground md:h-10 md:gap-2 md:rounded-xl md:px-5 md:text-sm"
+                className="group hidden md:flex h-9 items-center gap-1.5 rounded-lg border border-border/50 bg-card px-4 text-xs font-bold shadow-sm transition-all duration-300 hover:bg-primary hover:text-primary-foreground md:h-10 md:gap-2 md:rounded-xl md:px-5 md:text-sm shrink-0"
               >
                 {linkText}
                 <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1 md:h-4 md:w-4" />
               </Link>
-
-              <div className="flex items-center gap-1">
-                <CarouselPrevious
-                  className="!static !translate-y-0 !-translate-x-0 h-9 w-9 border-border/50 bg-card hover:bg-primary hover:text-primary-foreground md:h-10 md:w-10"
-                  aria-label="Anterior"
-                />
-                <CarouselNext
-                  className="!static !translate-y-0 !-translate-x-0 h-9 w-9 border-border/50 bg-card hover:bg-primary hover:text-primary-foreground md:h-10 md:w-10"
-                  aria-label="Siguiente"
-                />
-              </div>
             </div>
-          </div>
 
-          <CarouselContent className="-ml-3 md:-ml-5">
-            {products.slice(0, 12).map((product) => (
-              <CarouselItem
-                key={product.id}
-                className={`pl-3 md:pl-5 ${
-                  type === "related"
-                    ? "basis-full"
-                    : "basis-[72%]"
-                } sm:basis-[48%] lg:basis-[31%] xl:basis-[24%]`}
-              >
-                <ProductCardCarousel product={product} />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-        </Carousel>
+            <p className="max-w-xl text-xs leading-relaxed text-muted-foreground md:text-sm hidden md:block">
+              {config.subtitle}
+            </p>
+          </div>
+        </div>
+
+        {/* Mobile: Horizontal Scroll */}
+        <div className="md:hidden flex gap-3 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4">
+          {products.slice(0, 8).map((product) => (
+            <div
+              key={product.id}
+              className="shrink-0 w-[70%] snap-start"
+            >
+              <ProductCardCarousel product={product} />
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop: Carousel */}
+        <div className="hidden md:block">
+          <Carousel
+            opts={{
+              align: "start",
+              dragFree: true,
+              loop: Boolean(autoRotate),
+            }}
+            setApi={(api) => {
+              carouselApiRef.current = api;
+            }}
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+            onFocus={() => setIsPaused(true)}
+            onBlur={() => setIsPaused(false)}
+            className="relative"
+          >
+            <CarouselContent className="-ml-5">
+              {products.slice(0, 12).map((product) => (
+                <CarouselItem
+                  key={product.id}
+                  className="pl-5 basis-[31%] xl:basis-[24%]"
+                >
+                  <ProductCardCarousel product={product} />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="!static !translate-y-0 !-translate-x-0 h-10 w-10 border-border/50 bg-card hover:bg-primary hover:text-primary-foreground" />
+            <CarouselNext className="!static !translate-y-0 !-translate-x-0 h-10 w-10 border-border/50 bg-card hover:bg-primary hover:text-primary-foreground" />
+          </Carousel>
+        </div>
+
+        {/* Mobile: See all link */}
+        <div className="md:hidden mt-4">
+          <Link
+            href={linkHref}
+            className="flex items-center justify-center gap-2 w-full py-2.5 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
+          >
+            {linkText}
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
       </div>
     </section>
   );
