@@ -185,12 +185,12 @@ export function ProductCarousel({
           </div>
         </div>
 
-        {/* Mobile: Horizontal Scroll */}
+        {/* Mobile: Horizontal Scroll with Peek */}
         <div className="md:hidden flex gap-3 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4">
           {products.slice(0, 8).map((product) => (
             <div
               key={product.id}
-              className="shrink-0 w-[70%] snap-start"
+              className="shrink-0 w-[75%] snap-center"
             >
               <ProductCardCarousel product={product} />
             </div>
