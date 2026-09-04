@@ -69,7 +69,7 @@ export function ProductImageGallery({
             }
           }}
           aria-label="Abrir imagen en pantalla completa"
-          className="relative aspect-[4/3] cursor-zoom-in rounded-2xl overflow-hidden bg-slate-50 border border-slate-100 touch-pan-y focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2"
+          className="relative aspect-[4/3] cursor-zoom-in rounded-2xl overflow-hidden bg-slate-50 touch-pan-y focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2"
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >

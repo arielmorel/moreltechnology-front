@@ -35,7 +35,7 @@ export function ProductInfoCard({
 }: ProductInfoCardProps) {
   return (
     <div className="px-3 md:px-0 mt-3 md:mt-0">
-      <div className="bg-white rounded-2xl border border-slate-100 p-4 md:p-6 shadow-sm space-y-6">
+      <div className="bg-white rounded-2xl p-4 md:p-6 shadow-sm space-y-6">
         {/* Title, Condition & Share */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
