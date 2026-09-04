@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Product } from "@/lib/data";
 import { getProductBySlug, getProducts } from "@/lib/api";
-import { ArrowLeft, MessageCircle, ShoppingCart } from "lucide-react";
+import { ArrowLeft, MessageCircle, ShoppingCart, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/lib/store";
 import { toast } from "sonner";
@@ -151,7 +151,7 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
   }
 
   return (
-    <div className="min-h-screen pt-28 pb-16 animate-fade-in">
+    <div className="min-h-screen pt-24 md:pt-28 pb-20 md:pb-16 animate-fade-in">
       <div className="container mx-auto px-3 md:px-6">
         {/* Mobile Back Button */}
         <div className="md:hidden mb-4">
@@ -208,16 +208,22 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
           />
         </div>
 
-        {/* Review Form */}
-        <div id="review-form" className="mt-6 scroll-mt-20 animate-slide-up-delay-5">
-          <div className="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-sm">
-            <ProductReviewForm productId={parseInt(product.id, 10)} />
-          </div>
+        {/* Review Form - Collapsible on mobile */}
+        <div id="review-form" className="mt-4 md:mt-6 scroll-mt-20 animate-slide-up-delay-5">
+          <details className="group">
+            <summary className="flex items-center justify-between cursor-pointer list-none bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
+              <span className="text-sm font-semibold text-slate-900">Dejar una reseña</span>
+              <ChevronDown className="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" />
+            </summary>
+            <div className="bg-white rounded-2xl border border-slate-100 p-4 mt-2 shadow-sm">
+              <ProductReviewForm productId={parseInt(product.id, 10)} />
+            </div>
+          </details>
         </div>
 
         {/* Related Products */}
         {relatedProducts.length > 0 && (
-          <div className="mt-8 md:mt-12 animate-slide-up-delay-6">
+          <div className="mt-6 md:mt-10 animate-slide-up-delay-6">
             <ProductCarousel
               type="related"
               products={relatedProducts}
