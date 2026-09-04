@@ -1,15 +1,45 @@
 export const categories = [
   {
-    id: "laptop",
+    id: "laptops",
     name: "Laptops",
     description: "Equipos de alto rendimiento, nuevos y usados certificados",
     image: "/images/accessories/laptops.png",
+    icon: "Laptop",
+  },
+  {
+    id: "computadoras",
+    name: "Computadoras",
+    description: "Computadoras de escritorio y all-in-one",
+    image: "/images/accessories/computadoras.png",
+    icon: "Monitor",
+  },
+  {
+    id: "televisores",
+    name: "Televisores",
+    description: "Smart TVs y monitores de última generación",
+    image: "/images/accessories/televisores.png",
+    icon: "Tv",
+  },
+  {
+    id: "celulares",
+    name: "Celulares",
+    description: "Smartphones nuevos y reacondicionados",
+    image: "/images/accessories/celulares.png",
+    icon: "Smartphone",
   },
   {
     id: "accesorios",
     name: "Accesorios",
     description: "Cargadores, mouses, teclados y más periféricos",
     image: "/images/accessories/keyboards.png",
+    icon: "Cable",
+  },
+  {
+    id: "componentes",
+    name: "Componentes",
+    description: "Partes y componentes para upgrades",
+    image: "/images/accessories/componentes.png",
+    icon: "Cpu",
   },
 ];
 

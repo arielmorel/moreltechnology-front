@@ -12,6 +12,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Laptop, Monitor, Tv, Smartphone, Cable, Cpu, LayoutGrid } from "lucide-react";
+
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  Laptop,
+  Monitor,
+  Tv,
+  Smartphone,
+  Cable,
+  Cpu,
+};
 
 interface ProductFiltersProps {
   selectedCategory: string;
@@ -73,26 +83,31 @@ export function ProductFilters({
             size="sm"
             onClick={() => setSelectedCategory("todas")}
             className={cn(
-              "rounded-lg h-9 px-4 font-medium transition-all",
+              "rounded-lg h-9 px-4 font-medium transition-all gap-1.5",
               selectedCategory === "todas" ? "shadow-sm" : "border-border/60"
             )}
           >
+            <LayoutGrid className="w-3.5 h-3.5" />
             Todas
           </Button>
-          {categories.map((cat) => (
-            <Button
-              key={cat.id}
-              variant={selectedCategory === cat.id ? "default" : "outline"}
-              size="sm"
-              onClick={() => setSelectedCategory(cat.id)}
-              className={cn(
-                "rounded-lg h-9 px-4 font-medium transition-all",
-                selectedCategory === cat.id ? "shadow-sm" : "border-border/60"
-              )}
-            >
-              {cat.name}
-            </Button>
-          ))}
+          {categories.map((cat) => {
+            const Icon = iconMap[cat.icon];
+            return (
+              <Button
+                key={cat.id}
+                variant={selectedCategory === cat.id ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSelectedCategory(cat.id)}
+                className={cn(
+                  "rounded-lg h-9 px-4 font-medium transition-all gap-1.5",
+                  selectedCategory === cat.id ? "shadow-sm" : "border-border/60"
+                )}
+              >
+                {Icon && <Icon className="w-3.5 h-3.5" />}
+                {cat.name}
+              </Button>
+            );
+          })}
         </div>
       </div>
 
@@ -163,7 +178,7 @@ export function ProductFilters({
       {/* Price Range Slider */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <label className="text-sm font-semibold text-foreground">Presupuesto</label>
+          <label className="text-sm font-semibold text-foreground">Precio</label>
           <span className="text-xs font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md">
             RD$ {priceRange[0].toLocaleString("es-DO")} - RD$ {priceRange[1].toLocaleString("es-DO")}
           </span>

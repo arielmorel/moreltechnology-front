@@ -43,7 +43,7 @@ export function ProductCard({ product }: ProductCardProps) {
         "relative shrink-0 overflow-hidden bg-slate-50",
         "w-[110px] h-[110px] rounded-lg",
         "sm:w-[130px] sm:h-[130px]",
-        "lg:w-[170px] lg:h-full lg:rounded-l-xl lg:rounded-tr-none",
+        "lg:w-[240px] lg:h-[240px] lg:rounded-l-xl lg:rounded-tr-none",
         isOutOfStock && "grayscale"
       )}>
         <Image
@@ -63,7 +63,7 @@ export function ProductCard({ product }: ProductCardProps) {
       </div>
 
       {/* Content - Right side */}
-      <div className="flex-1 min-w-0 flex flex-col justify-between lg:py-3 lg:pr-3 lg:pl-4">
+      <div className="flex-1 min-w-0 flex flex-col justify-between lg:py-6 lg:pr-5 lg:pl-6">
         {/* Top section */}
         <div>
           {/* Brand */}
@@ -139,10 +139,11 @@ export function ProductCard({ product }: ProductCardProps) {
                   description: product.name,
                 });
               }}
-              className="mt-2 w-full h-8 bg-amber-400 hover:bg-amber-500 text-black text-xs font-bold font-sans rounded-lg transition-colors flex items-center justify-center gap-1.5 shadow-none"
+              className="mt-2 w-full h-8 bg-amber-400 hover:bg-amber-500 text-black text-xs font-bold font-sans rounded-lg transition-colors flex items-center justify-center gap-1.5 shadow-none border-none outline-none"
+              style={{ textShadow: 'none', fontFamily: 'system-ui, -apple-system, sans-serif' }}
             >
-              <ShoppingCart className="w-3.5 h-3.5" />
-              Agregar al carrito
+              <ShoppingCart className="w-3.5 h-3.5 flex-shrink-0" />
+              <span className="leading-none">Agregar al carrito</span>
             </button>
           ) : (
             <p className="mt-2 text-xs text-slate-400 font-medium font-sans">Agotado</p>
