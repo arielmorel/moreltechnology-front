@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Product } from "@/lib/data";
 import { getProductBySlug, getProducts } from "@/lib/api";
-import { ArrowLeft, MessageCircle } from "lucide-react";
+import { ArrowLeft, MessageCircle, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/lib/store";
 import { toast } from "sonner";
@@ -224,35 +224,38 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
       </div>
 
       {/* Mobile Sticky CTA Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-200 py-2 px-3 shadow-lg flex items-center justify-between gap-2 md:hidden">
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-100 py-3 px-4 shadow-lg flex items-center gap-3 md:hidden safe-area-pb">
         {product.quantity === 0 ? (
           <div className="w-full">
             <NotifyWhenAvailable productId={product.id} productName={product.name} />
           </div>
         ) : (
           <>
-            <div className="flex flex-col">
-              <span className="text-[8px] font-bold uppercase tracking-wider text-slate-400 leading-none">Precio</span>
-              <span className="text-sm font-bold text-slate-900">
+            <div className="flex flex-col items-start shrink-0">
+              <span className="text-lg font-extrabold text-slate-900 leading-tight">
                 RD$ {(product.prices?.[0]?.offerPrice || product.prices?.[0]?.priceOut || product.price).toLocaleString("es-DO")}
               </span>
+              <span className="text-[9px] font-medium text-emerald-600 leading-none mt-0.5">
+                Envío gratis
+              </span>
             </div>
-            <div className="flex items-center gap-1.5">
+            <div className="flex-1 flex items-center gap-2">
               <button
                 type="button"
                 onClick={handleAddToCart}
-                className="bg-slate-900 hover:bg-slate-800 text-white text-[10px] font-semibold py-2 px-3 rounded-lg transition-colors"
+                className="flex-1 h-12 bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold rounded-xl transition-all shadow-md flex items-center justify-center gap-2"
               >
+                <ShoppingCart className="w-4 h-4" />
                 Agregar
               </button>
               <a
                 href={`https://wa.me/18095551234?text=${encodeURIComponent(`Hola, estoy interesado en ${product.name}.`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-emerald-500 hover:bg-emerald-600 text-white p-2 rounded-lg transition-colors"
+                className="h-12 w-12 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl transition-colors flex items-center justify-center shrink-0"
                 aria-label="WhatsApp"
               >
-                <MessageCircle className="w-3.5 h-3.5" />
+                <MessageCircle className="w-5 h-5" />
               </a>
             </div>
           </>
