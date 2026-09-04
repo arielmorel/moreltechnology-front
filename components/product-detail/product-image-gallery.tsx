@@ -80,12 +80,7 @@ export function ProductImageGallery({
             fill
             sizes="(max-width: 768px) 100vw, 50vw"
             unoptimized={isMinioImage(product.images[activeImage])}
-            className={cn(
-              product.images[activeImage].toLowerCase().endsWith(".png")
-                ? "object-contain bg-slate-50"
-                : "object-cover",
-              "animate-fade-in hover:scale-105 transition-transform duration-300"
-            )}
+            className="object-contain p-4 animate-fade-in hover:scale-105 transition-transform duration-300"
             priority
           />
 
