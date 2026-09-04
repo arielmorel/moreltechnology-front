@@ -3,9 +3,10 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Product } from "@/lib/data";
 import { getProductBySlug, getProducts } from "@/lib/api";
-import { ArrowLeft, MessageCircle, ShoppingCart, ChevronDown } from "lucide-react";
+import { ArrowLeft, MessageCircle, ShoppingCart, ChevronDown, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/lib/store";
 import { toast } from "sonner";
@@ -153,15 +154,28 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
   return (
     <div className="min-h-screen pt-24 md:pt-28 pb-20 md:pb-16 animate-fade-in">
       <div className="container mx-auto px-3 md:px-6">
-        {/* Mobile Back Button */}
-        <div className="md:hidden mb-4">
+        {/* Mobile Header */}
+        <div className="md:hidden flex items-center justify-between mb-4">
           <button
             onClick={() => window.history.back()}
-            className="flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900 transition-colors min-h-[44px]"
+            className="flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900 transition-colors min-h-[44px] min-w-[44px]"
           >
-            <ArrowLeft className="w-4 h-4" />
-            Volver
+            <ArrowLeft className="w-5 h-5" />
           </button>
+          <Link href="/" className="flex items-center min-h-[44px] min-w-[44px] justify-center">
+            <Image
+              src="/logo/moreltechnology.png"
+              alt="MorelTechnology"
+              width={100}
+              height={24}
+              className="object-contain h-6 w-auto"
+              sizes="100px"
+            />
+          </Link>
+          <Link href="/catalogo/moreltechnology" className="flex items-center gap-1.5 text-xs font-medium text-slate-600 hover:text-slate-900 transition-colors min-h-[44px] min-w-[44px] justify-end">
+            <Search className="w-4 h-4" />
+            <span className="hidden">Catálogo</span>
+          </Link>
         </div>
 
         {/* Desktop Breadcrumbs */}
