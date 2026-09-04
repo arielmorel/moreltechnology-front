@@ -67,7 +67,7 @@ export function ProductImageGallery({
           }
         }}
         aria-label="Abrir imagen en pantalla completa"
-        className="relative aspect-square cursor-zoom-in rounded-[2rem] md:rounded-[2.5rem] overflow-hidden bg-muted border border-border/50 touch-pan-y focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+        className="relative aspect-[4/3] cursor-zoom-in rounded-[2rem] md:rounded-[2.5rem] overflow-hidden bg-muted border border-border/50 touch-pan-y focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
@@ -78,7 +78,12 @@ export function ProductImageGallery({
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
           unoptimized={isMinioImage(product.images[activeImage])}
-          className="object-contain p-4 animate-fade-in"
+          className={cn(
+            product.images[activeImage].toLowerCase().endsWith(".png")
+              ? "object-contain bg-slate-50"
+              : "object-cover",
+            "animate-fade-in hover:scale-105 transition-transform duration-300"
+          )}
           priority
         />
 
@@ -166,7 +171,12 @@ export function ProductImageGallery({
               alt={product.name}
               fill
               unoptimized={isMinioImage(product.images[activeImage])}
-              className="object-contain p-8 sm:p-12 animate-fade-in"
+              className={cn(
+                product.images[activeImage].toLowerCase().endsWith(".png")
+                  ? "object-contain bg-black/90"
+                  : "object-cover",
+                "p-8 sm:p-12 animate-fade-in"
+              )}
               sizes="100vw"
               priority
             />
@@ -207,10 +217,14 @@ export function ProductImageGallery({
               onClick={() => handleImageChange(idx)}
               className={cn(
                 "relative w-12 h-12 md:w-16 md:h-16 rounded-lg overflow-hidden border-2 transition-all flex-shrink-0 bg-white",
-                activeImage === idx ? "border-slate-900 shadow-sm" : "border-slate-100 hover:border-slate-300"
+                activeImage === idx ? "border-indigo-600 shadow-md ring-2 ring-indigo-600/20" : "border-slate-100 hover:border-slate-300"
               )}
             >
-              <Image src={img} alt={`${product.name} ${idx + 1}`} fill unoptimized={isMinioImage(img)} sizes="48px" className="object-contain p-1" />
+              <Image src={img} alt={`${product.name} ${idx + 1}`} fill unoptimized={isMinioImage(img)} sizes="48px" className={cn(
+                img.toLowerCase().endsWith(".png")
+                  ? "object-contain bg-slate-50"
+                  : "object-cover"
+              )} />
             </button>
           ))}
         </div>
