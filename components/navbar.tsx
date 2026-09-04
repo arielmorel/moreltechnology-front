@@ -92,15 +92,16 @@ export function Navbar() {
     <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
     <header
       className={cn(
-        "fixed top-0 w-full z-50 transition-all duration-300 border-b border-transparent",
+        "fixed top-0 w-full z-50 transition-all duration-300",
         isScrolled
-          ? "bg-background/80 backdrop-blur-md border-border shadow-sm"
+          ? "bg-white/90 md:bg-background/80 backdrop-blur-md border-b border-slate-100 md:border-border shadow-sm"
           : "bg-transparent"
       )}
     >
-      <div className="container mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
+      <div className="container mx-auto px-4 md:px-6 h-14 md:h-16 flex items-center justify-between">
+        {/* Logo */}
         <div className="flex items-center gap-2">
-          <Link href="/" className="flex items-center transition-transform hover:scale-105">
+          <Link href="/" className="flex items-center transition-transform hover:scale-105 min-h-[44px] min-w-[44px] justify-center -ml-2">
             <Image
               src="/logo/moreltechnology.png"
               alt="MorelTechnology Logo"
@@ -115,7 +116,7 @@ export function Navbar() {
             const activeLink = navLinks.find(link => link.href !== "/" && pathname.startsWith(link.href));
             if (!activeLink) return null;
             return (
-              <span className="md:hidden text-xs font-black uppercase tracking-widest text-primary ml-2 px-2 py-0.5 bg-primary/10 rounded-md">
+              <span className="md:hidden text-[10px] font-bold uppercase tracking-widest text-primary px-2 py-0.5 bg-primary/10 rounded-md">
                 {activeLink.name}
               </span>
             );
@@ -236,6 +237,7 @@ export function Navbar() {
           </div>
         </nav>
 
+        {/* Desktop Right Actions */}
         <div className="hidden md:flex items-center gap-4">
           <button
             onClick={() => setSearchOpen(true)}
@@ -258,40 +260,19 @@ export function Navbar() {
               {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </Button>
           )}
-
         </div>
 
-        {/* Mobile Menu Toggle */}
-        <div className="flex md:hidden items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setSearchOpen(true)}
-            className="rounded-full"
-            aria-label="Buscar laptops"
-          >
-            <Search className="h-4 w-4" />
-          </Button>
+        {/* Mobile Menu - Only Logo, Cart, Hamburger */}
+        <div className="flex md:hidden items-center gap-1">
           <CartSheet />
-          {mounted && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="rounded-full"
-              aria-label="Cambiar tema de color"
-            >
-              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            </Button>
-          )}
           <Button
             variant="ghost"
             size="icon"
-            className="rounded-full w-10 h-10"
+            className="rounded-full w-11 h-11 min-h-[44px] min-w-[44px]"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
           >
-            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
         </div>
       </div>
@@ -314,6 +295,18 @@ export function Navbar() {
 
             {/* Scrollable content */}
             <div className="overflow-y-auto px-3 pb-6 flex-1 overscroll-contain">
+              {/* Search in mobile menu */}
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setSearchOpen(true);
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3 bg-muted rounded-xl text-muted-foreground text-sm font-medium mb-3"
+              >
+                <Search className="w-4 h-4" />
+                Buscar...
+              </button>
+
               <nav className="flex flex-col gap-0.5">
                 {navLinks.map((link) => {
                   const isActive = mounted && pathname === link.href;
@@ -323,7 +316,7 @@ export function Navbar() {
                       href={link.href}
                       onClick={() => setMobileMenuOpen(false)}
                       className={cn(
-                        "text-sm font-medium px-3 py-2.5 rounded-xl transition-all active:scale-[0.98] flex items-center gap-3",
+                        "text-sm font-medium px-4 py-3 rounded-xl transition-all active:scale-[0.98] flex items-center gap-3 min-h-[44px]",
                         isActive
                           ? "bg-primary text-primary-foreground"
                           : "text-foreground/80 active:bg-muted"
@@ -337,11 +330,11 @@ export function Navbar() {
               </nav>
 
               {/* Divider */}
-              <div className="my-2 mx-3 h-px bg-border" />
+              <div className="my-3 mx-3 h-px bg-border" />
 
               {/* Secondary Links */}
               <div className="px-1 pt-0.5">
-                <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1 px-2">Más</div>
+                <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1 px-3">Más</div>
                 <div className="flex flex-col gap-0.5">
                   {secondaryLinks.map((link) => {
                     const isActive = mounted && pathname === link.href;
@@ -351,7 +344,7 @@ export function Navbar() {
                         href={link.href}
                         onClick={() => setMobileMenuOpen(false)}
                         className={cn(
-                          "text-sm font-medium px-3 py-2.5 rounded-xl transition-all active:scale-[0.98] flex items-center gap-3",
+                          "text-sm font-medium px-4 py-3 rounded-xl transition-all active:scale-[0.98] flex items-center gap-3 min-h-[44px]",
                           isActive
                             ? "bg-primary text-primary-foreground"
                             : "text-foreground/80 active:bg-muted"
@@ -366,11 +359,11 @@ export function Navbar() {
               </div>
 
               {/* Divider */}
-              <div className="my-2 mx-3 h-px bg-border" />
+              <div className="my-3 mx-3 h-px bg-border" />
 
               {/* Sucursales */}
               <div className="px-1 pt-0.5">
-                <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1 px-2">Sucursales</div>
+                <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1 px-3">Sucursales</div>
                 <div className="flex flex-col gap-0.5">
                   {sucursalLinks.map((link) => {
                     const isActive = mounted && pathname === link.href;
@@ -380,7 +373,7 @@ export function Navbar() {
                         href={link.href}
                         onClick={() => setMobileMenuOpen(false)}
                         className={cn(
-                          "text-sm font-medium px-3 py-2.5 rounded-xl transition-all active:scale-[0.98] flex items-center gap-3",
+                          "text-sm font-medium px-4 py-3 rounded-xl transition-all active:scale-[0.98] flex items-center gap-3 min-h-[44px]",
                           isActive
                             ? "bg-primary text-primary-foreground"
                             : "text-foreground/80 active:bg-muted"
@@ -393,6 +386,20 @@ export function Navbar() {
                   })}
                 </div>
               </div>
+
+              {/* Divider */}
+              <div className="my-3 mx-3 h-px bg-border" />
+
+              {/* Dark Mode Toggle in mobile menu */}
+              {mounted && (
+                <button
+                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-foreground/80 active:bg-muted text-sm font-medium min-h-[44px]"
+                >
+                  {theme === "dark" ? <Sun className="w-4 h-4 text-primary" /> : <Moon className="w-4 h-4 text-primary" />}
+                  {theme === "dark" ? "Modo Claro" : "Modo Oscuro"}
+                </button>
+              )}
             </div>
           </div>
         </div>

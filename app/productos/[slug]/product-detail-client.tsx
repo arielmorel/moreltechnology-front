@@ -153,14 +153,19 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
   return (
     <div className="min-h-screen pt-28 pb-16 animate-fade-in">
       <div className="container mx-auto px-3 md:px-6">
-        {/* Breadcrumbs */}
-        <nav className="flex items-center gap-1.5 text-xs text-slate-400 mb-6 md:mb-8 animate-slide-up">
+        {/* Mobile Back Button */}
+        <div className="md:hidden mb-4">
           <button
             onClick={() => window.history.back()}
-            className="md:hidden flex items-center hover:text-slate-900 transition-colors -ml-1 shrink-0"
+            className="flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900 transition-colors min-h-[44px]"
           >
-            <ArrowLeft className="w-3.5 h-3.5" />
+            <ArrowLeft className="w-4 h-4" />
+            Volver
           </button>
+        </div>
+
+        {/* Desktop Breadcrumbs */}
+        <nav className="hidden md:flex items-center gap-1.5 text-xs text-slate-400 mb-6 md:mb-8 animate-slide-up">
           <Link href="/" className="hover:text-slate-900 transition-colors">Inicio</Link>
           <span className="text-slate-300">/</span>
           <Link href="/catalogo/moreltechnology" className="hover:text-slate-900 transition-colors">Catálogo</Link>
