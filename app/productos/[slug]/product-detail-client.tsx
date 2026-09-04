@@ -153,9 +153,6 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
   return (
     <div className="min-h-screen pt-24 md:pt-28 pb-20 md:pb-16 animate-fade-in">
       <div className="container mx-auto px-3 md:px-6">
-        {/* Spacer for navbar on mobile */}
-        <div className="md:hidden h-2" />
-
         {/* Desktop Breadcrumbs */}
         <nav className="hidden md:flex items-center gap-1.5 text-xs text-slate-400 mb-6 md:mb-8 animate-slide-up">
           <Link href="/" className="hover:text-slate-900 transition-colors">Inicio</Link>
