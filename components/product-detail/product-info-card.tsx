@@ -35,16 +35,26 @@ export function ProductInfoCard({
 }: ProductInfoCardProps) {
   return (
     <div className="px-3 md:px-0 mt-3 md:mt-0">
-      <div className="bg-white rounded-2xl border border-slate-100 p-4 md:p-6 shadow-sm space-y-5">
-        {/* Title & Condition */}
+      <div className="bg-white rounded-2xl border border-slate-100 p-4 md:p-6 shadow-sm space-y-6">
+        {/* Title, Condition & Share */}
         <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <span className="inline-flex items-center text-[10px] font-semibold bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full uppercase tracking-wider border border-slate-200/50">
-              {product.condition}
-            </span>
-            <span className="hidden sm:inline-flex">
-              <ConditionGuide />
-            </span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="inline-flex items-center text-[10px] font-semibold bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full uppercase tracking-wider border border-slate-200/50">
+                {product.condition}
+              </span>
+              <span className="hidden sm:inline-flex">
+                <ConditionGuide />
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={onShare}
+              className="p-2 border border-slate-200 hover:bg-slate-50 text-slate-500 rounded-lg transition-colors"
+              aria-label="Compartir"
+            >
+              <Share2 className="w-4 h-4" />
+            </button>
           </div>
           <h1 className="font-sans text-xl md:text-2xl font-bold text-slate-900 tracking-tight leading-tight">
             {product.name}
@@ -191,7 +201,7 @@ export function ProductInfoCard({
           {product.quantity === 0 ? (
             <NotifyWhenAvailable productId={product.id} productName={product.name} />
           ) : (
-            <>
+            <div className="flex flex-col gap-2">
               <button
                 type="button"
                 onClick={onAddToCart}
@@ -200,26 +210,16 @@ export function ProductInfoCard({
                 <ShoppingCart className="w-4 h-4" />
                 Añadir al carrito
               </button>
-              <div className="flex gap-2">
-                <a
-                  href={`https://wa.me/18095551234?text=${encodeURIComponent(`Hola, estoy interesado en ${product.name}.`)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-medium py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2 text-xs"
-                >
-                  <MessageCircle className="w-3.5 h-3.5" />
-                  WhatsApp
-                </a>
-                <button
-                  type="button"
-                  onClick={onShare}
-                  className="h-10 px-3 border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-xl transition-colors flex items-center justify-center"
-                  aria-label="Compartir"
-                >
-                  <Share2 className="w-4 h-4" />
-                </button>
-              </div>
-            </>
+              <a
+                href={`https://wa.me/18095551234?text=${encodeURIComponent(`Hola, estoy interesado en ${product.name}.`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-medium py-3 rounded-xl transition-colors flex items-center justify-center gap-2 text-xs"
+              >
+                <MessageCircle className="w-3.5 h-3.5" />
+                Contactar por WhatsApp
+              </a>
+            </div>
           )}
         </div>
       </div>
