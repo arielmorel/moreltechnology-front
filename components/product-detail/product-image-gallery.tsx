@@ -84,7 +84,7 @@ export function ProductImageGallery({
               product.images[activeImage].toLowerCase().endsWith(".png")
                 ? "object-contain bg-slate-50"
                 : "object-cover",
-              "animate-fade-in"
+              "animate-fade-in hover:scale-105 transition-transform duration-300"
             )}
             priority
           />
