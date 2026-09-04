@@ -154,19 +154,19 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
   return (
         <div className="min-h-screen pt-24 pb-16 animate-fade-in">
       <div className="container mx-auto px-3 md:px-6">
-        {/* Breadcrumbs - Ultra Compact */}
-        <nav className="flex items-center gap-1 text-[10px] text-slate-400 mb-3 md:mb-4 animate-slide-up">
+        {/* Breadcrumbs */}
+        <nav className="flex items-center gap-1.5 text-xs text-slate-400 mb-4 md:mb-6 animate-slide-up">
           <button
             onClick={() => window.history.back()}
             className="md:hidden flex items-center hover:text-slate-900 transition-colors -ml-1 shrink-0"
           >
-            <ArrowLeft className="w-3 h-3" />
+            <ArrowLeft className="w-3.5 h-3.5" />
           </button>
           <Link href="/" className="hover:text-slate-900 transition-colors">Inicio</Link>
-          <span>/</span>
+          <span className="text-slate-300">/</span>
           <Link href="/catalogo/moreltechnology" className="hover:text-slate-900 transition-colors">Catálogo</Link>
-          <span>/</span>
-          <span className="text-slate-600 font-medium truncate max-w-[120px]">{product.name}</span>
+          <span className="text-slate-300">/</span>
+          <span className="text-slate-600 font-medium truncate max-w-[150px]">{product.name}</span>
         </nav>
 
         <div className="grid lg:grid-cols-2 gap-4 lg:gap-8 items-start">
