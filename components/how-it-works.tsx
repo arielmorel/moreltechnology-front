@@ -42,27 +42,27 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section className="py-16 md:py-24 relative overflow-hidden">
+    <section className="py-10 md:py-24 relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 blur-[120px] rounded-full" />
       </div>
 
       <div className="container mx-auto px-4 md:px-6">
-        <div className="text-center mb-16">
-          <div className="animate-slide-up inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest mb-6">
-            <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+        <div className="text-center mb-8 md:mb-16">
+          <div className="animate-slide-up inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-primary/10 text-primary text-[10px] md:text-xs font-bold uppercase tracking-widest mb-4 md:mb-6">
+            <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-primary animate-pulse" />
             Proceso Simple
           </div>
-          <h2 className="animate-slide-up-delay-1 text-4xl md:text-5xl font-black tracking-tight mb-4">
+          <h2 className="animate-slide-up-delay-1 text-2xl md:text-5xl font-black tracking-tight mb-3 md:mb-4">
             ¿Cómo funciona?
           </h2>
-          <p className="animate-slide-up-delay-2 text-muted-foreground text-lg max-w-2xl mx-auto">
+          <p className="animate-slide-up-delay-2 text-muted-foreground text-sm md:text-lg max-w-2xl mx-auto">
             Comprar tu laptop ideal es fácil. Solo 3 pasos.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto relative">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 max-w-5xl mx-auto relative">
           {/* Connection line */}
           <div className="hidden md:block absolute top-24 left-[20%] right-[20%] h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
@@ -72,20 +72,20 @@ export function HowItWorks() {
               className={`animate-slide-up relative`}
               style={{ animationDelay: `${0.1 + index * 0.15}s` }}
             >
-              <div className="bg-card border border-border/50 rounded-3xl p-6 sm:p-8 text-center hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 group h-full flex flex-col">
+              <div className="bg-card border border-border/50 rounded-2xl md:rounded-3xl p-5 md:p-8 text-center hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 group h-full flex flex-col">
                 {/* Step number */}
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-background border-2 border-border flex items-center justify-center text-xs font-black text-muted-foreground">
+                <div className="absolute -top-3 md:-top-4 left-1/2 -translate-x-1/2 w-7 h-7 md:w-8 md:h-8 rounded-full bg-background border-2 border-border flex items-center justify-center text-[10px] md:text-xs font-black text-muted-foreground">
                   {step.number}
                 </div>
 
                 {/* Icon */}
-                <div className={`w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-6 rounded-2xl ${step.bgColor} flex items-center justify-center transition-transform group-hover:scale-110 group-hover:rotate-3`}>
-                  <step.icon className={`w-8 h-8 ${step.textColor}`} />
+                <div className={`w-11 h-11 sm:w-16 sm:h-16 mx-auto mb-4 md:mb-6 rounded-xl md:rounded-2xl ${step.bgColor} flex items-center justify-center transition-transform group-hover:scale-110 group-hover:rotate-3`}>
+                  <step.icon className={`w-6 h-6 sm:w-8 sm:h-8 ${step.textColor}`} />
                 </div>
 
                 {/* Content */}
-                <h3 className="text-xl font-bold mb-3">{step.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed mb-6 flex-1">
+                <h3 className="text-lg md:text-xl font-bold mb-2 md:mb-3">{step.title}</h3>
+                <p className="text-muted-foreground text-xs md:text-sm leading-relaxed mb-4 md:mb-6 flex-1">
                   {step.description}
                 </p>
 
@@ -95,14 +95,14 @@ export function HowItWorks() {
                     href={step.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all hover:scale-105 ${step.bgColor} ${step.textColor}`}
+                    className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 md:px-6 md:py-3 rounded-xl font-bold text-xs md:text-sm transition-all hover:scale-105 ${step.bgColor} ${step.textColor}`}
                   >
                     {step.linkText}
                   </a>
                 ) : (
                   <Link
                     href={step.link}
-                    className={`inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all hover:scale-105 ${step.bgColor} ${step.textColor}`}
+                    className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 md:px-6 md:py-3 rounded-xl font-bold text-xs md:text-sm transition-all hover:scale-105 ${step.bgColor} ${step.textColor}`}
                   >
                     {step.linkText}
                   </Link>
@@ -113,17 +113,17 @@ export function HowItWorks() {
         </div>
 
         {/* Bottom trust indicators */}
-        <div className="animate-slide-up-delay-4 flex flex-col sm:flex-row flex-wrap justify-center gap-4 sm:gap-8 mt-16 pt-8 border-t border-border/50">
-          <div className="flex items-center gap-3 text-sm text-muted-foreground">
-            <CreditCard className="w-5 h-5 text-primary" />
+        <div className="animate-slide-up-delay-4 flex flex-col sm:flex-row flex-wrap justify-center gap-3 sm:gap-8 mt-8 md:mt-16 pt-6 md:pt-8 border-t border-border/50">
+          <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-muted-foreground">
+            <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
             <span><strong className="text-foreground">Aceptamos</strong> todas las tarjetas</span>
           </div>
-          <div className="flex items-center gap-3 text-sm text-muted-foreground">
-            <Truck className="w-5 h-5 text-primary" />
+          <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-muted-foreground">
+            <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
             <span><strong className="text-foreground">Envío</strong> a todo el país</span>
           </div>
-          <div className="flex items-center gap-3 text-sm text-muted-foreground">
-            <Shield className="w-5 h-5 text-primary" />
+          <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-muted-foreground">
+            <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
             <span><strong className="text-foreground">Garantía</strong> certificada</span>
           </div>
         </div>
