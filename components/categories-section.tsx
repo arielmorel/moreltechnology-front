@@ -36,7 +36,33 @@ export function CategoriesSection() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        {/* Mobile: Horizontal scroll carousel */}
+        <div className="md:hidden flex gap-3 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4">
+          {homeCategories.map((category, index) => {
+            const Icon = iconMap[category.icon];
+            return (
+              <Link key={category.id} href={category.href} className="shrink-0 w-[60%] snap-center">
+                <div
+                  className="animate-scale-in group relative overflow-hidden rounded-2xl bg-card border border-border/50 p-5 hover:shadow-xl hover:shadow-primary/5 hover:border-primary/20 transition-all duration-300 hover:-translate-y-1 h-full"
+                  style={{ animationDelay: `${index * 0.05}s` }}
+                >
+                  <div className={`w-10 h-10 rounded-xl ${category.bgColor} flex items-center justify-center mb-3 transition-transform group-hover:scale-110 group-hover:rotate-3`}>
+                    {Icon && <Icon className={`w-5 h-5 ${category.textColor}`} />}
+                  </div>
+                  <h3 className="font-bold text-base mb-1 group-hover:text-primary transition-colors">
+                    {category.name}
+                  </h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
+                    {category.description}
+                  </p>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* Desktop: Grid */}
+        <div className="hidden md:grid grid-cols-3 lg:grid-cols-4 gap-4">
           {homeCategories.map((category, index) => {
             const Icon = iconMap[category.icon];
             return (

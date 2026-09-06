@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type ComponentType } from "react";
 import Link from "next/link";
-import { ArrowRight, BadgePercent, Star, Sparkles, Gamepad2, Cable } from "lucide-react";
+import { ArrowRight, BadgePercent, Star, Sparkles, Gamepad2, Cable, Clock } from "lucide-react";
 import { Product } from "@/lib/data";
 import { ProductCardCarousel } from "@/components/product-card-carousel";
 import {
@@ -13,7 +13,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 
-export type ProductCarouselType = "offers" | "featured" | "related" | "gaming" | "accessories";
+export type ProductCarouselType = "offers" | "featured" | "related" | "gaming" | "accessories" | "new-arrivals";
 
 interface ProductCarouselProps {
   type: ProductCarouselType;
@@ -64,6 +64,13 @@ const carouselConfig: Record<ProductCarouselType, {
     icon: Cable,
     iconColor: "text-teal-600",
     accentColor: "text-teal-600",
+  },
+  "new-arrivals": {
+    title: "Recién Llegados",
+    subtitle: "Los últimos equipos que agregamos a nuestro inventario.",
+    icon: Clock,
+    iconColor: "text-blue-500",
+    accentColor: "text-blue-600",
   },
 };
 
@@ -130,12 +137,19 @@ export function ProductCarousel({
               title: "text-teal-600",
               glow: "bg-teal-500/5",
             }
-          : {
-              badge: "bg-primary/10 border-primary/20",
-              icon: "text-primary",
-              title: "text-primary",
-              glow: "bg-primary/5",
-            };
+          : type === "new-arrivals"
+            ? {
+                badge: "bg-blue-500/10 border-blue-500/20",
+                icon: "text-blue-500",
+                title: "text-blue-600",
+                glow: "bg-blue-500/5",
+              }
+            : {
+                badge: "bg-primary/10 border-primary/20",
+                icon: "text-primary",
+                title: "text-primary",
+                glow: "bg-primary/5",
+              };
 
   return (
     <section className="relative overflow-hidden py-6 md:py-16">
@@ -165,6 +179,8 @@ export function ProductCarousel({
                   <>Laptops <span className={accentStyles.title}>Gaming</span></>
                 ) : type === "accessories" ? (
                   <>Accesorios <span className={accentStyles.title}>recomendados</span></>
+                ) : type === "new-arrivals" ? (
+                  <>Recién <span className={accentStyles.title}>Llegados</span></>
                 ) : (
                   config.title
                 )}
@@ -185,12 +201,12 @@ export function ProductCarousel({
           </div>
         </div>
 
-        {/* Mobile: Horizontal Scroll */}
+        {/* Mobile: Horizontal Scroll with Peek */}
         <div className="md:hidden flex gap-3 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4">
           {products.slice(0, 8).map((product) => (
             <div
               key={product.id}
-              className="shrink-0 w-[70%] snap-start"
+              className="shrink-0 w-[75%] snap-center"
             >
               <ProductCardCarousel product={product} />
             </div>

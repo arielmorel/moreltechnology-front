@@ -153,17 +153,6 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
   return (
     <div className="min-h-screen pt-24 md:pt-28 pb-20 md:pb-16 animate-fade-in">
       <div className="container mx-auto px-3 md:px-6">
-        {/* Mobile Back Button */}
-        <div className="md:hidden mb-4">
-          <button
-            onClick={() => window.history.back()}
-            className="flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900 transition-colors min-h-[44px]"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Volver
-          </button>
-        </div>
-
         {/* Desktop Breadcrumbs */}
         <nav className="hidden md:flex items-center gap-1.5 text-xs text-slate-400 mb-6 md:mb-8 animate-slide-up">
           <Link href="/" className="hover:text-slate-900 transition-colors">Inicio</Link>
