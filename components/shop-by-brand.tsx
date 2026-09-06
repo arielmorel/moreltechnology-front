@@ -21,7 +21,31 @@ export function ShopByBrand() {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
+        {/* Mobile: Horizontal scroll carousel */}
+        <div className="md:hidden flex gap-3 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4">
+          {brands.map((brand, index) => (
+            <Link key={brand.slug} href={`/laptops/${brand.slug}`} className="shrink-0 w-[45%] snap-center">
+              <div
+                className="animate-scale-in group relative overflow-hidden rounded-2xl bg-card border border-border/50 p-5 text-center hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 hover:-translate-y-1 h-full"
+                style={{ animationDelay: `${index * 0.05}s` }}
+              >
+                <div
+                  className="text-xl font-black tracking-tighter mb-2 transition-transform group-hover:scale-110"
+                  style={{ color: brand.color }}
+                >
+                  {brand.name}
+                </div>
+                <div className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
+                  Ver laptops
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        {/* Desktop: Grid */}
+        <div className="hidden md:grid grid-cols-3 lg:grid-cols-4 gap-4">
           {brands.map((brand, index) => (
             <Link key={brand.slug} href={`/laptops/${brand.slug}`}>
               <div
