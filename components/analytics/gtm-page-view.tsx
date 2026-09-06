@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 
 const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID;
@@ -16,7 +16,7 @@ function pushToDataLayer(data: Record<string, unknown>) {
   window.dataLayer.push(data);
 }
 
-export function GtmPageView() {
+function GtmPageViewInner() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -33,4 +33,12 @@ export function GtmPageView() {
   }, [pathname, searchParams]);
 
   return null;
+}
+
+export function GtmPageView() {
+  return (
+    <Suspense fallback={null}>
+      <GtmPageViewInner />
+    </Suspense>
+  );
 }
