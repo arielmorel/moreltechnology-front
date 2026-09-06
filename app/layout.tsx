@@ -5,6 +5,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { ClientProviders } from "@/components/client-providers";
+import { GtmScript, GtmNoscript } from "@/components/analytics/gtm-script";
+import { GtmPageView } from "@/components/analytics/gtm-page-view";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -67,11 +69,14 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <head>
+        <GtmScript />
         {/* Preconnect to external origins */}
         <link rel="preconnect" href="https://minio.sm.novuswise.com" />
         <link rel="preconnect" href="https://images.unsplash.com" />
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-primary/30">
+        <GtmNoscript />
+        <GtmPageView />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
