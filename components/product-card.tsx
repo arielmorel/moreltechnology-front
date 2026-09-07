@@ -33,16 +33,15 @@ export function ProductCard({ product }: ProductCardProps) {
       className={cn(
         "group relative flex flex-col bg-white rounded-2xl border-2 border-slate-200 overflow-hidden transition-all duration-300",
         "hover:shadow-[0_0_0_2px_#e11d48,0_8px_25px_-5px_rgba(225,29,72,0.3)] hover:border-rose-500 hover:-translate-y-1",
-        "lg:flex-row lg:rounded-2xl",
         isOutOfStock && "opacity-70"
       )}
     >
       {/* Image Container */}
       <div className={cn(
         "relative shrink-0 overflow-hidden bg-slate-100",
-        "w-full h-[180px]",
-        "sm:h-[200px]",
-        "lg:w-[260px] lg:h-[260px] lg:rounded-l-2xl lg:rounded-tr-none"
+        "w-full h-[160px]",
+        "sm:h-[180px]",
+        "lg:h-[200px] lg:rounded-t-2xl"
       )}>
         <Image
           src={product.images[0]}
@@ -91,7 +90,7 @@ export function ProductCard({ product }: ProductCardProps) {
       </div>
 
       {/* Content */}
-      <div className="flex-1 flex flex-col justify-between p-4 lg:p-5">
+      <div className="flex-1 flex flex-col justify-between p-4">
         {/* Top section */}
         <div>
           {/* Brand */}
