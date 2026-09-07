@@ -94,7 +94,7 @@ export function ProductCard({ product }: ProductCardProps) {
         <button
           type="button"
           onClick={handleShare}
-          className="absolute top-3 right-3 z-20 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md hover:bg-white hover:shadow-lg transition-all duration-200 hover:scale-110 active:scale-95"
+          className="absolute top-3 right-3 z-30 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md hover:bg-white hover:shadow-lg transition-all duration-200 hover:scale-110 active:scale-95"
           aria-label="Compartir producto"
         >
           <Share2 className="w-3.5 h-3.5 text-slate-600" />
