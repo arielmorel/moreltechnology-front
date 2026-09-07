@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Laptop, Monitor, Tv, Smartphone, Cable, Cpu, LayoutGrid } from "lucide-react";
+import { Laptop, Monitor, Tv, Smartphone, Cable, Cpu, LayoutGrid, Gamepad2, Hand } from "lucide-react";
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Laptop,
@@ -21,6 +21,11 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Smartphone,
   Cable,
   Cpu,
+};
+
+const tagIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  gamer: Gamepad2,
+  touch: Hand,
 };
 
 interface ProductFiltersProps {
@@ -105,6 +110,42 @@ export function ProductFilters({
               >
                 {Icon && <Icon className="w-3.5 h-3.5" />}
                 {cat.name}
+              </Button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Especialidad / Uso */}
+      <div className="space-y-3 border-t border-border/60 pt-6">
+        <label className="text-[13px] font-semibold text-foreground">Especialidad / Uso</label>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant={selectedTag === "todas" ? "secondary" : "outline"}
+            size="sm"
+            onClick={() => setSelectedTag("todas")}
+            className={cn(
+              "rounded-full h-8 px-4 text-xs font-medium transition-all",
+              selectedTag === "todas" ? "bg-primary text-primary-foreground shadow-sm" : "border-border/60 text-muted-foreground"
+            )}
+          >
+            Todos los usos
+          </Button>
+          {tags.map((tag) => {
+            const TagIcon = tagIconMap[tag];
+            return (
+              <Button
+                key={tag}
+                variant={selectedTag === tag ? "secondary" : "outline"}
+                size="sm"
+                onClick={() => setSelectedTag(tag)}
+                className={cn(
+                  "rounded-full h-8 px-4 text-xs font-medium transition-all gap-1.5",
+                  selectedTag === tag ? "bg-primary text-primary-foreground shadow-sm" : "border-border/60 text-muted-foreground"
+                )}
+              >
+                {TagIcon && <TagIcon className="w-3.5 h-3.5" />}
+                {tag}
               </Button>
             );
           })}
@@ -228,52 +269,19 @@ export function ProductFilters({
         </div>
       </div>
 
-      {/* Condition & Tags */}
-      <div className="grid grid-cols-1 gap-6 border-t border-border/60 pt-6">
-        <div className="space-y-3">
-          <label className="text-[13px] font-semibold text-foreground">Estado</label>
-          <Select value={selectedCondition} onValueChange={(val) => setSelectedCondition(val || "todas")}>
-            <SelectTrigger className="h-11 rounded-lg border-border/60 bg-background hover:border-primary/30 transition-all font-medium">
-              <SelectValue placeholder="Cualquier estado" />
-            </SelectTrigger>
-            <SelectContent className="rounded-xl shadow-xl">
-              <SelectItem value="todas">Cualquier estado</SelectItem>
-              <SelectItem value="Nuevo">Equipos Nuevos</SelectItem>
-              <SelectItem value="Usado">Equipos Usados (A+/A/B)</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="space-y-3">
-          <label className="text-sm font-semibold text-foreground">Especialidad / Uso</label>
-          <div className="flex flex-wrap gap-2">
-            <Button
-              variant={selectedTag === "todas" ? "secondary" : "outline"}
-              size="sm"
-              onClick={() => setSelectedTag("todas")}
-              className={cn(
-                  "rounded-full h-8 px-4 text-xs font-medium transition-all",
-                  selectedTag === "todas" ? "bg-primary text-primary-foreground shadow-sm" : "border-border/60 text-muted-foreground"
-              )}
-            >
-              Todos los usos
-            </Button>
-            {tags.map((tag) => (
-              <Button
-                key={tag}
-                variant={selectedTag === tag ? "secondary" : "outline"}
-                size="sm"
-                onClick={() => setSelectedTag(tag)}
-                className={cn(
-                  "rounded-full h-8 px-4 text-xs font-medium transition-all",
-                  selectedTag === tag ? "bg-primary text-primary-foreground shadow-sm" : "border-border/60 text-muted-foreground"
-                )}
-              >
-                {tag}
-              </Button>
-            ))}
-          </div>
-        </div>
+      {/* Condition */}
+      <div className="space-y-3 border-t border-border/60 pt-6">
+        <label className="text-[13px] font-semibold text-foreground">Estado</label>
+        <Select value={selectedCondition} onValueChange={(val) => setSelectedCondition(val || "todas")}>
+          <SelectTrigger className="h-11 rounded-lg border-border/60 bg-background hover:border-primary/30 transition-all font-medium">
+            <SelectValue placeholder="Cualquier estado" />
+          </SelectTrigger>
+          <SelectContent className="rounded-xl shadow-xl">
+            <SelectItem value="todas">Cualquier estado</SelectItem>
+            <SelectItem value="Nuevo">Equipos Nuevos</SelectItem>
+            <SelectItem value="Usado">Equipos Usados (A+/A/B)</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );

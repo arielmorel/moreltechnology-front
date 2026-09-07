@@ -30,6 +30,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 const PAGE_SIZE = 6;
 
+const TAG_OPTIONS = ["gamer", "touch"];
+
 function getBranchLabel(branchId: string): string {
   const branch = branches.find(b => b.id === branchId);
   return branch ? branch.name.replace("Sucursal ", "") : branchId;
@@ -51,7 +53,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
   const [selectedStorage, setSelectedStorage] = useState<string>(() => searchParams.get("storage") || "todas");
   const [showOnlyOffers, setShowOnlyOffers] = useState(() => searchParams.get("offers") === "true");
   const [selectedCondition, setSelectedCondition] = useState<string>(() => searchParams.get("condition") || "todas");
-  const [selectedTag, setSelectedTag] = useState<string>(() => searchParams.get("tag") || "todas");
+  const [selectedTag, setSelectedTag] = useState<string>(() => searchParams.get("tags") || "todas");
   const [priceRange, setPriceRange] = useState<number[]>(() => {
     const min = parseInt(searchParams.get("priceMin") || "0", 10);
     const max = parseInt(searchParams.get("priceMax") || "200000", 10);
@@ -75,7 +77,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
     if (selectedStorage !== "todas") params.set("storage", selectedStorage);
     if (showOnlyOffers) params.set("offers", "true");
     if (selectedCondition !== "todas") params.set("condition", selectedCondition);
-    if (selectedTag !== "todas") params.set("tag", selectedTag);
+    if (selectedTag !== "todas") params.set("tags", selectedTag);
     if (priceRange[0] > 0 || priceRange[1] < 200000) {
       params.set("priceMin", priceRange[0].toString());
       params.set("priceMax", priceRange[1].toString());
@@ -114,7 +116,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
     if (selectedStorage !== "todas") params.set("storage", selectedStorage);
     if (showOnlyOffers) params.set("offers", "true");
     if (selectedCondition !== "todas") params.set("condition", selectedCondition);
-    if (selectedTag !== "todas") params.set("tag", selectedTag);
+    if (selectedTag !== "todas") params.set("tags", selectedTag);
     if (priceRange[0] > 0 || priceRange[1] < 200000) {
       params.set("priceMin", priceRange[0].toString());
       params.set("priceMax", priceRange[1].toString());
@@ -218,12 +220,6 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
     observer.observe(sentinelRef.current);
     return () => observer.disconnect();
   }, [hasMore, isLoadingMore, debouncedSearch, selectedCategory, branch, products.length, stockFilter]);
-
-  const allTags = useMemo(() => {
-    const tags = new Set<string>();
-    products.forEach(p => p.tags?.forEach(t => tags.add(t)));
-    return Array.from(tags);
-  }, [products]);
 
   const brands = useMemo(() => {
     const uniqueBrands = new Set(products.map(p => p.brand));
@@ -375,7 +371,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
           </div>
 
           {/* Mobile Filter Trigger */}
-          <div className="lg:hidden ml-auto">
+          <div className="xl:hidden ml-auto">
             <Sheet>
               <SheetTrigger
                 render={
@@ -426,7 +422,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
                     processors={processors}
                     rams={rams}
                     storages={storages}
-                    tags={allTags}
+                    tags={TAG_OPTIONS}
                   />
                 </div>
               </SheetContent>
@@ -546,9 +542,9 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
           </div>
         )}
 
-        <div className="flex flex-col lg:flex-row gap-4 md:gap-6 lg:gap-8">
+        <div className="flex flex-col xl:flex-row gap-4 md:gap-6 xl:gap-8">
           {/* Sidebar Filters (Desktop) */}
-          <aside className="hidden lg:block w-72 xl:w-80 shrink-0">
+          <aside className="hidden xl:block w-72 shrink-0">
             <div className="sticky top-28 bg-card/80 border border-border/60 rounded-2xl p-5 shadow-sm">
               <ProductFilters
                 selectedCategory={selectedCategory}
@@ -572,7 +568,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
                 processors={processors}
                 rams={rams}
                 storages={storages}
-                tags={allTags}
+                tags={TAG_OPTIONS}
               />
             </div>
           </aside>
@@ -608,14 +604,14 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
             </div>
 
             {isLoading && products.length === 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-4">
                 {[...Array(6)].map((_, i) => (
                   <ProductCardSkeleton key={i} />
                 ))}
               </div>
             ) : sortedProducts.length > 0 ? (
               <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" aria-busy={isLoading}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-4" aria-busy={isLoading}>
                   {sortedProducts.map(product => (
                     <ProductCard key={product.id} product={product} />
                   ))}
