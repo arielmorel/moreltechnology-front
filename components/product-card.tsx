@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Product } from "@/lib/data";
-import { ShoppingCart, Star } from "lucide-react";
+import { ShoppingCart, Eye } from "lucide-react";
 import { useCart } from "@/lib/store";
 import { toast } from "sonner";
 import { cn, isMinioImage, productUrl } from "@/lib/utils";
@@ -31,99 +31,113 @@ export function ProductCard({ product }: ProductCardProps) {
     <Link
       href={productUrl(product.slug)}
       className={cn(
-        "relative flex bg-white rounded-xl border border-slate-200 transition-all duration-200",
-        "hover:shadow-lg hover:border-slate-300 hover:-translate-y-0.5",
-        "p-3 gap-3",
-        "lg:p-0 lg:gap-0",
+        "group relative flex flex-col bg-white rounded-2xl border border-slate-200 overflow-hidden transition-all duration-300",
+        "hover:shadow-xl hover:border-slate-300 hover:-translate-y-1",
+        "lg:flex-row lg:rounded-2xl",
         isOutOfStock && "opacity-70"
       )}
     >
-      {/* Image - Left side */}
+      {/* Image Container */}
       <div className={cn(
-        "relative shrink-0 overflow-hidden bg-slate-50",
-        "w-[110px] h-[110px] rounded-lg",
-        "sm:w-[130px] sm:h-[130px]",
-        "lg:w-[240px] lg:h-[240px] lg:rounded-l-xl lg:rounded-tr-none",
-        isOutOfStock && "grayscale"
+        "relative shrink-0 overflow-hidden bg-slate-100",
+        "w-full h-[180px]",
+        "sm:h-[200px]",
+        "lg:w-[260px] lg:h-[260px] lg:rounded-l-2xl lg:rounded-tr-none"
       )}>
         <Image
           src={product.images[0]}
           alt={product.name}
           fill
           unoptimized={isMinioImage(product.images[0])}
-          className="object-contain p-[6%]"
-          sizes="(max-width: 640px) 110px, (max-width: 1024px) 130px, 170px"
+          className="object-contain p-4 transition-transform duration-500 group-hover:scale-110"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 260px"
         />
+
         {/* Discount badge */}
         {hasDiscount && (
-          <span className="absolute top-1.5 left-1.5 bg-rose-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow-sm">
+          <span className="absolute top-3 left-3 bg-rose-500 text-white text-[10px] font-bold px-2 py-1 rounded-lg shadow-md z-10">
             -{discountPercent}%
+          </span>
+        )}
+
+        {/* Tags badges - top right */}
+        {product.tags && product.tags.length > 0 && (
+          <div className="absolute top-3 right-3 flex flex-col gap-1 z-10">
+            {product.tags.slice(0, 2).map((tag) => (
+              <span
+                key={tag}
+                className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white text-[9px] font-bold px-2 py-1 rounded-md shadow-md uppercase tracking-wide"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Hover Overlay */}
+        <div className="absolute inset-0 bg-slate-900/80 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 gap-3">
+          <span className="text-white text-sm font-semibold flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm transform -translate-y-2 group-hover:translate-y-0 transition-transform duration-300 delay-75">
+            <Eye className="w-4 h-4" />
+            Ver detalle
+          </span>
+        </div>
+
+        {/* Stock indicator */}
+        {stockLabel && (
+          <span className="absolute bottom-3 left-3 bg-amber-400 text-black text-[9px] font-bold px-2 py-1 rounded-md shadow-sm z-10">
+            {stockLabel}
           </span>
         )}
       </div>
 
-      {/* Content - Right side */}
-      <div className="flex-1 min-w-0 flex flex-col justify-between lg:py-6 lg:pr-5 lg:pl-6">
+      {/* Content */}
+      <div className="flex-1 flex flex-col justify-between p-4 lg:p-5">
         {/* Top section */}
         <div>
           {/* Brand */}
-          <p className="text-[10px] text-slate-400 font-medium uppercase tracking-wide font-sans">
+          <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider font-sans mb-1">
             {product.brand}
           </p>
 
           {/* Title */}
-          <h3 className="text-sm font-medium text-slate-800 line-clamp-2 leading-tight mt-0.5 font-sans">
+          <h3 className="text-sm font-semibold text-slate-800 line-clamp-2 leading-snug font-sans group-hover:text-blue-600 transition-colors duration-200">
             {product.name}
           </h3>
 
-          {/* Specs as pills */}
+          {/* Specs pills */}
           <div className="flex flex-wrap gap-1 mt-2 font-sans">
             {product.processor && product.processor !== "N/A" && (
-              <span className="text-[10px] font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md">
+              <span className="text-[9px] font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">
                 {product.processor}
               </span>
             )}
             {product.ram && product.ram !== "N/A" && (
-              <span className="text-[10px] font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md">
+              <span className="text-[9px] font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">
                 {product.ram}
               </span>
             )}
             {product.ssd && product.ssd !== "N/A" && (
-              <span className="text-[10px] font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md">
+              <span className="text-[9px] font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">
                 {product.ssd}
               </span>
             )}
           </div>
-
-          {/* Badges row - only stock */}
-          {stockLabel && (
-            <div className="mt-2">
-              <span className="text-[9px] bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full font-medium border border-amber-200/50">
-                {stockLabel}
-              </span>
-            </div>
-          )}
         </div>
 
         {/* Bottom section - Price + CTA */}
-        <div className="mt-2">
-          {/* Price with shipping badge */}
-          <div className="flex items-center gap-2 flex-wrap">
-            <div className="flex items-baseline gap-2">
-              {hasDiscount && (
-                <span className="text-[11px] text-slate-400 line-through font-normal font-sans">
-                  RD$ {product.originalPrice!.toLocaleString("es-DO")}
-                </span>
-              )}
-              <span className={cn(
-                "font-bold font-sans",
-                hasDiscount ? "text-lg text-emerald-600" : "text-base text-slate-900"
-              )}>
-                RD$ {product.price.toLocaleString("es-DO")}
+        <div className="mt-3">
+          {/* Price */}
+          <div className="flex items-baseline gap-2 mb-2">
+            {hasDiscount && (
+              <span className="text-[11px] text-slate-400 line-through font-normal font-sans">
+                RD$ {product.originalPrice!.toLocaleString("es-DO")}
               </span>
-            </div>
-            <span className="text-[9px] text-emerald-600 font-medium font-sans hidden sm:inline">
-              Envío gratis
+            )}
+            <span className={cn(
+              "font-bold font-sans",
+              hasDiscount ? "text-lg text-emerald-600" : "text-base text-slate-900"
+            )}>
+              RD$ {product.price.toLocaleString("es-DO")}
             </span>
           </div>
 
@@ -139,14 +153,13 @@ export function ProductCard({ product }: ProductCardProps) {
                   description: product.name,
                 });
               }}
-              className="mt-2 w-full h-8 bg-amber-400 hover:bg-amber-500 text-black text-xs font-bold font-sans rounded-lg transition-colors flex items-center justify-center gap-1.5 shadow-none border-none outline-none"
-              style={{ textShadow: 'none', fontFamily: 'system-ui, -apple-system, sans-serif' }}
+              className="w-full h-10 bg-amber-400 hover:bg-amber-500 text-black text-xs font-bold font-sans rounded-xl transition-all duration-200 flex items-center justify-center gap-2 hover:shadow-lg active:scale-[0.98]"
             >
-              <ShoppingCart className="w-3.5 h-3.5 flex-shrink-0" />
-              <span className="leading-none">Agregar al carrito</span>
+              <ShoppingCart className="w-4 h-4 flex-shrink-0" />
+              <span>Agregar al carrito</span>
             </button>
           ) : (
-            <p className="mt-2 text-xs text-slate-400 font-medium font-sans">Agotado</p>
+            <p className="text-xs text-slate-400 font-medium font-sans text-center py-2">Agotado</p>
           )}
         </div>
       </div>
