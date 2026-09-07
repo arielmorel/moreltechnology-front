@@ -31,8 +31,8 @@ export function ProductCard({ product }: ProductCardProps) {
     <Link
       href={productUrl(product.slug)}
       className={cn(
-        "group relative flex flex-col bg-white rounded-2xl border border-slate-200 overflow-hidden transition-all duration-300",
-        "hover:shadow-xl hover:border-slate-300 hover:-translate-y-1",
+        "group relative flex flex-col bg-white rounded-2xl border-2 border-slate-200 overflow-hidden transition-all duration-300",
+        "hover:shadow-[0_0_0_2px_#e11d48,0_8px_25px_-5px_rgba(225,29,72,0.3)] hover:border-rose-500 hover:-translate-y-1",
         "lg:flex-row lg:rounded-2xl",
         isOutOfStock && "opacity-70"
       )}
