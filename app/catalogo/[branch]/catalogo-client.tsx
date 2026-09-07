@@ -30,6 +30,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 const PAGE_SIZE = 6;
 
+const TAG_OPTIONS = ["gamer", "touch"];
+
 function getBranchLabel(branchId: string): string {
   const branch = branches.find(b => b.id === branchId);
   return branch ? branch.name.replace("Sucursal ", "") : branchId;
@@ -51,7 +53,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
   const [selectedStorage, setSelectedStorage] = useState<string>(() => searchParams.get("storage") || "todas");
   const [showOnlyOffers, setShowOnlyOffers] = useState(() => searchParams.get("offers") === "true");
   const [selectedCondition, setSelectedCondition] = useState<string>(() => searchParams.get("condition") || "todas");
-  const [selectedTag, setSelectedTag] = useState<string>(() => searchParams.get("tag") || "todas");
+  const [selectedTag, setSelectedTag] = useState<string>(() => searchParams.get("tags") || "todas");
   const [priceRange, setPriceRange] = useState<number[]>(() => {
     const min = parseInt(searchParams.get("priceMin") || "0", 10);
     const max = parseInt(searchParams.get("priceMax") || "200000", 10);
@@ -75,7 +77,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
     if (selectedStorage !== "todas") params.set("storage", selectedStorage);
     if (showOnlyOffers) params.set("offers", "true");
     if (selectedCondition !== "todas") params.set("condition", selectedCondition);
-    if (selectedTag !== "todas") params.set("tag", selectedTag);
+    if (selectedTag !== "todas") params.set("tags", selectedTag);
     if (priceRange[0] > 0 || priceRange[1] < 200000) {
       params.set("priceMin", priceRange[0].toString());
       params.set("priceMax", priceRange[1].toString());
@@ -114,7 +116,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
     if (selectedStorage !== "todas") params.set("storage", selectedStorage);
     if (showOnlyOffers) params.set("offers", "true");
     if (selectedCondition !== "todas") params.set("condition", selectedCondition);
-    if (selectedTag !== "todas") params.set("tag", selectedTag);
+    if (selectedTag !== "todas") params.set("tags", selectedTag);
     if (priceRange[0] > 0 || priceRange[1] < 200000) {
       params.set("priceMin", priceRange[0].toString());
       params.set("priceMax", priceRange[1].toString());
@@ -218,12 +220,6 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
     observer.observe(sentinelRef.current);
     return () => observer.disconnect();
   }, [hasMore, isLoadingMore, debouncedSearch, selectedCategory, branch, products.length, stockFilter]);
-
-  const allTags = useMemo(() => {
-    const tags = new Set<string>();
-    products.forEach(p => p.tags?.forEach(t => tags.add(t)));
-    return Array.from(tags);
-  }, [products]);
 
   const brands = useMemo(() => {
     const uniqueBrands = new Set(products.map(p => p.brand));
@@ -426,7 +422,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
                     processors={processors}
                     rams={rams}
                     storages={storages}
-                    tags={allTags}
+                    tags={TAG_OPTIONS}
                   />
                 </div>
               </SheetContent>
