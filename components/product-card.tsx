@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Product } from "@/lib/data";
-import { ShoppingCart, Eye } from "lucide-react";
+import { ShoppingCart, Eye, Share2 } from "lucide-react";
 import { useCart } from "@/lib/store";
 import { toast } from "sonner";
 import { cn, isMinioImage, productUrl } from "@/lib/utils";
@@ -26,6 +26,28 @@ export function ProductCard({ product }: ProductCardProps) {
     : product.quantity > 5
       ? null
       : `Últimas ${product.quantity} unidades`;
+
+  const handleShare = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const url = `${typeof window !== "undefined" ? window.location.origin : ""}${productUrl(product.slug)}`;
+    const title = product.name;
+    const text = `Mira este producto: ${product.name} - RD$ ${product.price.toLocaleString("es-DO")}`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title, text, url });
+      } catch (err) {
+        if (err instanceof DOMException && err.name === "AbortError") return;
+        await navigator.clipboard.writeText(url);
+        toast.success("Enlace copiado al portapapeles");
+      }
+    } else {
+      await navigator.clipboard.writeText(url);
+      toast.success("Enlace copiado al portapapeles");
+    }
+  };
 
   return (
     <Link
@@ -56,7 +78,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
         {/* Tags badges - top right */}
         {product.tags && product.tags.length > 0 && (
-          <div className="absolute top-3 right-3 flex flex-col gap-1 z-10">
+          <div className="absolute top-3 right-10 flex flex-col gap-1 z-10">
             {product.tags.slice(0, 2).map((tag) => (
               <span
                 key={tag}
@@ -67,6 +89,16 @@ export function ProductCard({ product }: ProductCardProps) {
             ))}
           </div>
         )}
+
+        {/* Share button - top right */}
+        <button
+          type="button"
+          onClick={handleShare}
+          className="absolute top-3 right-3 z-20 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md hover:bg-white hover:shadow-lg transition-all duration-200 hover:scale-110 active:scale-95"
+          aria-label="Compartir producto"
+        >
+          <Share2 className="w-3.5 h-3.5 text-slate-600" />
+        </button>
 
         {/* Hover Overlay */}
         <div className="absolute inset-0 bg-slate-900/80 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 gap-3">
