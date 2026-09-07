@@ -31,25 +31,20 @@ export function ProductCard({ product }: ProductCardProps) {
     <Link
       href={productUrl(product.slug)}
       className={cn(
-        "group relative flex flex-col bg-white rounded-2xl border-2 border-slate-200 overflow-hidden transition-all duration-300",
+        "group relative flex flex-col bg-white rounded-3xl border-2 border-slate-200 overflow-hidden transition-all duration-300",
         "hover:shadow-[0_0_0_2px_#e11d48,0_8px_25px_-5px_rgba(225,29,72,0.3)] hover:border-rose-500 hover:-translate-y-1",
         isOutOfStock && "opacity-70"
       )}
     >
       {/* Image Container */}
-      <div className={cn(
-        "relative shrink-0 overflow-hidden bg-slate-100",
-        "w-full h-[160px]",
-        "sm:h-[180px]",
-        "lg:h-[200px] lg:rounded-t-2xl"
-      )}>
+      <div className="relative shrink-0 overflow-hidden bg-slate-100 w-full h-[200px] rounded-t-3xl">
         <Image
           src={product.images[0]}
           alt={product.name}
           fill
           unoptimized={isMinioImage(product.images[0])}
-          className="object-contain p-4 transition-transform duration-500 group-hover:scale-110"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 260px"
+          className="object-cover transition-transform duration-500 group-hover:scale-110"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 320px"
         />
 
         {/* Discount badge */}
