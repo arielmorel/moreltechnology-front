@@ -371,7 +371,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
           </div>
 
           {/* Mobile Filter Trigger */}
-          <div className="lg:hidden ml-auto">
+          <div className="xl:hidden ml-auto">
             <Sheet>
               <SheetTrigger
                 render={
@@ -542,9 +542,9 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
           </div>
         )}
 
-        <div className="flex flex-col lg:flex-row gap-4 md:gap-6 lg:gap-8">
+        <div className="flex flex-col xl:flex-row gap-4 md:gap-6 xl:gap-8">
           {/* Sidebar Filters (Desktop) */}
-          <aside className="hidden lg:block w-72 xl:w-80 shrink-0">
+          <aside className="hidden xl:block w-72 shrink-0">
             <div className="sticky top-28 bg-card/80 border border-border/60 rounded-2xl p-5 shadow-sm">
               <ProductFilters
                 selectedCategory={selectedCategory}
@@ -568,7 +568,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
                 processors={processors}
                 rams={rams}
                 storages={storages}
-                tags={allTags}
+                tags={TAG_OPTIONS}
               />
             </div>
           </aside>
@@ -604,14 +604,14 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
             </div>
 
             {isLoading && products.length === 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-4">
                 {[...Array(6)].map((_, i) => (
                   <ProductCardSkeleton key={i} />
                 ))}
               </div>
             ) : sortedProducts.length > 0 ? (
               <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" aria-busy={isLoading}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-4" aria-busy={isLoading}>
                   {sortedProducts.map(product => (
                     <ProductCard key={product.id} product={product} />
                   ))}
