@@ -61,10 +61,10 @@ export function ProductInfoCard({
             <button
               type="button"
               onClick={onShare}
-              className="p-2 border border-slate-200 hover:bg-slate-50 text-slate-500 rounded-lg transition-colors shrink-0"
+              className="p-2 border border-slate-200 hover:bg-slate-50 text-slate-500 rounded-lg transition-all duration-200 shrink-0 active:scale-90 hover:shadow-sm"
               aria-label="Compartir"
             >
-              <Share2 className="w-4 h-4" />
+              <Share2 className="w-4 h-4 transition-transform duration-300" />
             </button>
           </div>
           <h1 className="font-sans text-xl md:text-2xl font-bold text-slate-900 tracking-tight leading-tight">
@@ -113,27 +113,27 @@ export function ProductInfoCard({
               <div className="flex items-center justify-center w-8 h-8 bg-white rounded-lg shadow-sm">
                 <Cpu className="w-4 h-4 text-slate-600" />
               </div>
-              <div className="min-w-0">
+              <div className="min-w-0 flex-1">
                 <p className="text-[9px] text-slate-400 uppercase font-bold leading-none mb-0.5">CPU</p>
-                <p className="text-xs font-semibold text-slate-800 truncate">{product.processor}</p>
+                <p className="text-xs font-semibold text-slate-800 break-words">{product.processor}</p>
               </div>
             </div>
             <div className="flex items-center gap-2.5 bg-slate-50 rounded-xl p-3 border border-slate-100">
               <div className="flex items-center justify-center w-8 h-8 bg-white rounded-lg shadow-sm">
                 <MemoryStick className="w-4 h-4 text-slate-600" />
               </div>
-              <div className="min-w-0">
+              <div className="min-w-0 flex-1">
                 <p className="text-[9px] text-slate-400 uppercase font-bold leading-none mb-0.5">RAM</p>
-                <p className="text-xs font-semibold text-slate-800 truncate">{product.ram}</p>
+                <p className="text-xs font-semibold text-slate-800 break-words">{product.ram}</p>
               </div>
             </div>
             <div className="flex items-center gap-2.5 bg-slate-50 rounded-xl p-3 border border-slate-100">
               <div className="flex items-center justify-center w-8 h-8 bg-white rounded-lg shadow-sm">
                 <HardDrive className="w-4 h-4 text-slate-600" />
               </div>
-              <div className="min-w-0">
+              <div className="min-w-0 flex-1">
                 <p className="text-[9px] text-slate-400 uppercase font-bold leading-none mb-0.5">SSD</p>
-                <p className="text-xs font-semibold text-slate-800 truncate">{product.ssd}</p>
+                <p className="text-xs font-semibold text-slate-800 break-words">{product.ssd}</p>
               </div>
             </div>
             {product.gpu && (
@@ -141,9 +141,9 @@ export function ProductInfoCard({
                 <div className="flex items-center justify-center w-8 h-8 bg-white rounded-lg shadow-sm">
                   <Gamepad2 className="w-4 h-4 text-slate-600" />
                 </div>
-                <div className="min-w-0">
+                <div className="min-w-0 flex-1">
                   <p className="text-[9px] text-slate-400 uppercase font-bold leading-none mb-0.5">GPU</p>
-                  <p className="text-xs font-semibold text-slate-800 truncate">{product.gpu}</p>
+                  <p className="text-xs font-semibold text-slate-800 break-words">{product.gpu}</p>
                 </div>
               </div>
             )}
@@ -152,9 +152,9 @@ export function ProductInfoCard({
                 <div className="flex items-center justify-center w-8 h-8 bg-white rounded-lg shadow-sm">
                   <Monitor className="w-4 h-4 text-slate-600" />
                 </div>
-                <div className="min-w-0">
+                <div className="min-w-0 flex-1">
                   <p className="text-[9px] text-slate-400 uppercase font-bold leading-none mb-0.5">PANTALLA</p>
-                  <p className="text-xs font-semibold text-slate-800 truncate">{product.screenSize}</p>
+                  <p className="text-xs font-semibold text-slate-800 break-words">{product.screenSize}</p>
                 </div>
               </div>
             )}
@@ -189,7 +189,7 @@ export function ProductInfoCard({
             </div>
             <ChevronDown className="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-transform" />
           </button>
-          <div id="product-description" className="hidden mt-3">
+          <div id="product-description" className="mt-3">
             <p className="font-sans text-xs text-slate-600 leading-relaxed whitespace-pre-line">
               {product.description}
             </p>

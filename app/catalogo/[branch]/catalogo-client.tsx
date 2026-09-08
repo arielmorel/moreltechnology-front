@@ -27,7 +27,7 @@ import {
 import { ProductFilters } from "@/components/product-filters";
 import { branches } from "@/lib/data";
 import { useRouter, useSearchParams } from "next/navigation";
-import { CatalogTheme, themeConfigs, getThemeClasses } from "@/lib/themes";
+import { CatalogTheme, themeConfigs } from "@/lib/themes";
 
 const PAGE_SIZE = 6;
 
@@ -632,14 +632,14 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
             </div>
 
             {isLoading && products.length === 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-6">
                 {[...Array(6)].map((_, i) => (
                   <ProductCardSkeleton key={i} />
                 ))}
               </div>
             ) : sortedProducts.length > 0 ? (
               <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-4" aria-busy={isLoading}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-6" aria-busy={isLoading}>
                   {sortedProducts.map(product => (
                     <ProductCard key={product.id} product={product} />
                   ))}

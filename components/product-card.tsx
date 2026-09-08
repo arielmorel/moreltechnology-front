@@ -3,10 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Product } from "@/lib/data";
-import { ShoppingCart, Eye, Share2 } from "lucide-react";
+import { ShoppingCart, Eye, Heart, Share2 } from "lucide-react";
 import { useCart } from "@/lib/store";
 import { toast } from "sonner";
 import { cn, isMinioImage, productUrl } from "@/lib/utils";
+import { useState } from "react";
 
 interface ProductCardProps {
   product: Product;
@@ -15,6 +16,7 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
   const { addItem } = useCart();
   const isOutOfStock = product.quantity <= 0;
+  const [isWishlisted, setIsWishlisted] = useState(false);
 
   const hasDiscount = product.originalPrice && product.originalPrice > product.price;
   const discountPercent = hasDiscount
@@ -23,9 +25,18 @@ export function ProductCard({ product }: ProductCardProps) {
 
   const stockLabel = isOutOfStock
     ? null
-    : product.quantity > 5
+    : product.quantity > 10
       ? null
-      : `Últimas ${product.quantity} unidades`;
+      : product.quantity > 0
+        ? `Últimas ${product.quantity} unidades`
+        : null;
+
+  const handleWishlist = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsWishlisted(!isWishlisted);
+    toast.success(isWishlisted ? "Eliminado de favoritos" : "Agregado a favoritos");
+  };
 
   const handleShare = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -53,13 +64,14 @@ export function ProductCard({ product }: ProductCardProps) {
     <Link
       href={productUrl(product.slug)}
       className={cn(
-        "group relative flex flex-col bg-white rounded-3xl border-2 border-slate-200 overflow-hidden transition-all duration-300",
-        "hover:shadow-[0_0_0_2px_#e11d48,0_8px_25px_-5px_rgba(225,29,72,0.3)] hover:border-rose-500 hover:-translate-y-1",
+        "product-card group relative flex flex-col bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden",
+        "hover:shadow-[0_8px_30px_-5px_rgba(0,102,204,0.3)] hover:border-blue-600 cursor-pointer hover:scale-[1.02] hover:-translate-y-1",
+        "transition-all duration-500 ease-out transform-gpu min-h-[320px]",
         isOutOfStock && "opacity-70"
       )}
     >
       {/* Image Container */}
-      <div className="relative shrink-0 overflow-hidden bg-slate-100 w-full h-[200px] rounded-t-3xl">
+      <div className="relative shrink-0 overflow-hidden bg-gray-100 dark:bg-gray-700 w-full h-[200px] rounded-t-3xl">
         <Image
           src={product.images[0]}
           alt={product.name}
@@ -69,44 +81,60 @@ export function ProductCard({ product }: ProductCardProps) {
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 320px"
         />
 
-        {/* Discount badge */}
-        {hasDiscount && (
-          <span className="absolute top-3 left-3 bg-rose-500 text-white text-[10px] font-bold px-2 py-1 rounded-lg shadow-md z-10">
-            -{discountPercent}%
+        {/* Hover Overlay - Ver detalle */}
+        <div className="absolute inset-0 bg-blue-900/80 flex flex-col items-center justify-center opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-700 ease-out z-10 gap-3">
+          <span className="text-white text-lg font-semibold flex items-center gap-2 px-4 py-2 rounded-full bg-blue-600/90 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500 ease-out delay-100">
+            <Eye className="w-5 h-5 text-white" />
+            Ver detalle
           </span>
-        )}
+        </div>
 
-        {/* Tags badges - top right */}
-        {product.tags && product.tags.length > 0 && (
-          <div className="absolute top-3 right-10 flex flex-col gap-1 z-10">
-            {product.tags.slice(0, 2).map((tag) => (
-              <span
-                key={tag}
-                className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white text-[9px] font-bold px-2 py-1 rounded-md shadow-md uppercase tracking-wide"
-              >
-                {tag}
-              </span>
-            ))}
+        {/* Discount badge - top left */}
+        {hasDiscount && (
+          <div className="absolute top-4 left-4 z-20">
+            <span className="bg-red-500 text-white text-xs px-3 py-1 rounded-full shadow-lg font-semibold uppercase tracking-wide flex items-center gap-1 animate-pulse hover:animate-bounce">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="white" width="16" height="16">
+                <path d="M11.251 0a.5.5 0 0 1 .416.777L9.273 4H13.5a.5.5 0 0 1 .39.812l-7.5 9.5A.5.5 0 0 1 5 13.5V8H2.5a.5.5 0 0 1-.416-.777l5.5-7.5A.5.5 0 0 1 8.5 0h2.751z"/>
+              </svg>
+              -{discountPercent}%
+            </span>
           </div>
         )}
+
+        {/* New product badge */}
+        {!hasDiscount && product.createdAt && isNewProduct(product.createdAt) && (
+          <div className="absolute top-4 left-4 z-20">
+            <span className="bg-blue-600 text-white text-xs px-3 py-1 rounded-full shadow-lg font-semibold uppercase tracking-wide flex items-center gap-1">
+              <span className="text-xs">✨</span>
+              NUEVO
+            </span>
+          </div>
+        )}
+
+        {/* Wishlist button - top right */}
+        <button
+          type="button"
+          onClick={handleWishlist}
+          className={cn(
+            "absolute top-3 right-12 z-20 p-2 rounded-full shadow-lg transition-all duration-300",
+            isWishlisted
+              ? "bg-blue-600 text-white"
+              : "bg-white text-gray-700 hover:bg-blue-600 hover:text-white"
+          )}
+          aria-label={isWishlisted ? "Eliminar de favoritos" : "Agregar a favoritos"}
+        >
+          <Heart className={cn("w-4 h-4", isWishlisted && "fill-current")} />
+        </button>
 
         {/* Share button - top right */}
         <button
           type="button"
           onClick={handleShare}
-          className="absolute top-3 right-3 z-30 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md hover:bg-white hover:shadow-lg transition-all duration-200 hover:scale-110 active:scale-95"
+          className="absolute top-3 right-3 z-20 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md hover:bg-white hover:shadow-lg transition-all duration-200 hover:scale-110 active:scale-95"
           aria-label="Compartir producto"
         >
-          <Share2 className="w-3.5 h-3.5 text-slate-600" />
+          <Share2 className="w-4 h-4 text-gray-600" />
         </button>
-
-        {/* Hover Overlay */}
-        <div className="absolute inset-0 bg-slate-900/80 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 gap-3">
-          <span className="text-white text-sm font-semibold flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm transform -translate-y-2 group-hover:translate-y-0 transition-transform duration-300 delay-75">
-            <Eye className="w-4 h-4" />
-            Ver detalle
-          </span>
-        </div>
 
         {/* Stock indicator */}
         {stockLabel && (
@@ -117,57 +145,72 @@ export function ProductCard({ product }: ProductCardProps) {
       </div>
 
       {/* Content */}
-      <div className="flex-1 flex flex-col justify-between p-4">
+      <div className="flex-1 flex flex-col justify-between p-5">
         {/* Top section */}
         <div>
-          {/* Brand */}
-          <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider font-sans mb-1">
-            {product.brand}
-          </p>
-
-          {/* Title */}
-          <h3 className="text-sm font-semibold text-slate-800 line-clamp-2 leading-snug font-sans group-hover:text-blue-600 transition-colors duration-200">
-            {product.name}
-          </h3>
-
-          {/* Specs pills */}
-          <div className="flex flex-wrap gap-1 mt-2 font-sans">
-            {product.processor && product.processor !== "N/A" && (
-              <span className="text-[9px] font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">
-                {product.processor}
-              </span>
-            )}
-            {product.ram && product.ram !== "N/A" && (
-              <span className="text-[9px] font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">
-                {product.ram}
-              </span>
-            )}
-            {product.ssd && product.ssd !== "N/A" && (
-              <span className="text-[9px] font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">
-                {product.ssd}
-              </span>
+          {/* Title with quantity */}
+          <div className="flex items-start justify-between">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white leading-tight line-clamp-1 group-hover:text-blue-600 transition-colors duration-300">
+              {product.name}
+            </h3>
+            {product.quantity !== null && product.quantity !== undefined && (
+              <div className="flex items-center gap-1 text-xs">
+                <span className={cn(
+                  "px-2 py-0.5 rounded font-medium border",
+                  product.quantity > 10 && "bg-green-100 text-green-700 border-green-300",
+                  product.quantity > 0 && product.quantity <= 10 && "bg-yellow-100 text-yellow-700 border-yellow-300",
+                  product.quantity === 0 && "bg-red-100 text-red-700 border-red-300"
+                )}>
+                  {product.quantity.toLocaleString()}
+                </span>
+              </div>
             )}
           </div>
+
+          {/* Description */}
+          <p className="text-base text-gray-600 dark:text-gray-300 line-clamp-2 mt-1">
+            {product.description || `${product.brand} - ${product.processor}`}
+          </p>
+
+          {/* Tags */}
+          {product.tags && product.tags.length > 0 && (
+            <div className="flex flex-wrap gap-1 mt-2">
+              {product.tags.slice(0, 3).map((tag) => (
+                <span
+                  key={tag}
+                  className="inline-block px-2 py-1 text-xs font-semibold text-white bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full"
+                >
+                  {tag}
+                </span>
+              ))}
+              {product.tags.length > 3 && (
+                <span className="inline-block px-2 py-1 text-xs font-semibold text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-full">
+                  +{product.tags.length - 3}
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
-        {/* Bottom section - Price + CTA */}
-        <div className="mt-3">
-          {/* Price */}
-          <div className="flex items-baseline gap-2 mb-2">
+        {/* Price */}
+        <div className="flex items-center justify-between pt-2">
+          <div className="flex items-baseline gap-2">
             {hasDiscount && (
-              <span className="text-[11px] text-slate-400 line-through font-normal font-sans">
+              <span className="text-sm text-gray-400 line-through font-normal">
                 RD$ {product.originalPrice!.toLocaleString("es-DO")}
               </span>
             )}
             <span className={cn(
-              "font-bold font-sans",
-              hasDiscount ? "text-lg text-emerald-600" : "text-base text-slate-900"
+              "font-bold",
+              hasDiscount ? "text-xl text-emerald-600" : "text-lg text-gray-900 dark:text-white"
             )}>
               RD$ {product.price.toLocaleString("es-DO")}
             </span>
           </div>
+        </div>
 
-          {/* Add to cart button */}
+        {/* Action Button */}
+        <div className="mt-4 opacity-90 hover:opacity-100 transition-opacity duration-300">
           {!isOutOfStock ? (
             <button
               type="button"
@@ -179,16 +222,24 @@ export function ProductCard({ product }: ProductCardProps) {
                   description: product.name,
                 });
               }}
-              className="w-full h-10 bg-amber-400 hover:bg-amber-500 text-black text-xs font-bold font-sans rounded-xl transition-all duration-200 flex items-center justify-center gap-2 hover:shadow-lg active:scale-[0.98]"
+              className="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition-all duration-300 hover:scale-105 hover:-translate-y-0.5"
+              title="Agregar al carrito"
             >
-              <ShoppingCart className="w-4 h-4 flex-shrink-0" />
-              <span>Agregar al carrito</span>
+              <ShoppingCart className="w-5 h-5" />
             </button>
           ) : (
-            <p className="text-xs text-slate-400 font-medium font-sans text-center py-2">Agotado</p>
+            <p className="text-sm text-gray-400 font-medium text-center py-2">Agotado</p>
           )}
         </div>
       </div>
     </Link>
   );
+}
+
+function isNewProduct(createdAt: string | Date): boolean {
+  if (!createdAt) return false;
+  const date = new Date(createdAt);
+  const now = new Date();
+  const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+  return diffDays <= 30;
 }
