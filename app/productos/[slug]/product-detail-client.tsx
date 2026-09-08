@@ -151,7 +151,7 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
   }
 
   return (
-    <div className="min-h-screen pt-14 md:pt-20 pb-24 md:pb-16 animate-fade-in">
+    <div className="min-h-screen pt-16 md:pt-20 pb-24 md:pb-16 animate-fade-in">
       <div className="container mx-auto px-3 md:px-6">
         {/* Desktop Breadcrumbs */}
         <nav className="hidden md:flex items-center gap-1.5 text-xs text-slate-400 mb-4 md:mb-6 animate-slide-up">
