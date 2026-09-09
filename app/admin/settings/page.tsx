@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Settings } from "lucide-react";
+import { CatalogSettings } from "@/components/admin/catalog-settings";
 
 export default function AdminSettingsPage() {
   return (
@@ -7,16 +7,12 @@ export default function AdminSettingsPage() {
       <div>
         <h2 className="text-2xl font-bold tracking-tight">Configuración</h2>
         <p className="text-muted-foreground">
-          Ajustes generales del panel de administración.
+          Ajustes generales del catálogo y panel de administración.
         </p>
       </div>
       <Card>
-        <CardContent className="flex flex-col items-center justify-center py-16 text-center">
-          <Settings className="mb-3 h-10 w-10 text-muted-foreground/40" />
-          <h3 className="font-medium">Próximamente</h3>
-          <p className="mt-1 text-sm text-muted-foreground">
-            La configuración del panel se habilitará en futuras actualizaciones.
-          </p>
+        <CardContent className="p-6">
+          <CatalogSettings />
         </CardContent>
       </Card>
     </div>

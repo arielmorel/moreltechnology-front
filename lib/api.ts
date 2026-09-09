@@ -282,3 +282,45 @@ export const createFinancingRequest = async (request: FinancingRequest): Promise
     return { success: false, message: "Error al enviar la solicitud" };
   }
 };
+
+// Settings API (uses Next.js API routes)
+export interface Setting {
+  id: string;
+  key: string;
+  value: string | null;
+  type: "STRING" | "INTEGER" | "DECIMAL" | "BOOLEAN" | "JSON";
+  category: "APPEARANCE" | "SEO" | "ANALYTICS" | "CATALOG" | "COMMERCE" | "SYSTEM" | "GENERAL";
+  description: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+const SETTINGS_BASE = "/api/settings";
+
+export const getSettingByKey = async (key: string): Promise<Setting | null> => {
+  try {
+    const response = await axios.get(`${SETTINGS_BASE}/${key}`);
+    return response.data;
+  } catch {
+    return null;
+  }
+};
+
+export const getSettingWithDefault = async (key: string, defaultValue: string): Promise<string> => {
+  const setting = await getSettingByKey(key);
+  return setting?.value ?? defaultValue;
+};
+
+export const getSettingsByCategory = async (category: Setting["category"]): Promise<Setting[]> => {
+  try {
+    const response = await axios.get(`${SETTINGS_BASE}/category/${category}`);
+    return response.data;
+  } catch {
+    return [];
+  }
+};
+
+export const saveSetting = async (key: string, value: string, type: Setting["type"] = "STRING", category: Setting["category"] = "GENERAL"): Promise<Setting> => {
+  const response = await axios.patch(`${SETTINGS_BASE}/${key}`, { value, type, category });
+  return response.data;
+};

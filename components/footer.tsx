@@ -49,6 +49,7 @@ export function Footer() {
               </summary>
               <ul className="px-4 pb-3 space-y-2 text-xs text-slate-500 bg-white">
                 <li><Link href="/catalogo/moreltechnology" className="hover:text-slate-900 transition-colors block py-1.5">Catálogo</Link></li>
+                <li><Link href="/servicios" className="hover:text-slate-900 transition-colors block py-1.5">Servicios</Link></li>
                 <li><Link href="/ofertas" className="hover:text-slate-900 transition-colors block py-1.5">Ofertas</Link></li>
                 <li><Link href="/apps" className="hover:text-slate-900 transition-colors block py-1.5">Apps</Link></li>
                 <li><Link href="/blog" className="hover:text-slate-900 transition-colors block py-1.5">Blog</Link></li>
@@ -101,6 +102,7 @@ export function Footer() {
             <h2 className="font-semibold text-sm md:text-lg tracking-tight">Enlaces</h2>
             <ul className="space-y-1.5 md:space-y-2 text-xs md:text-sm text-slate-500">
               <li><Link href="/catalogo/moreltechnology" className="hover:text-slate-900 transition-colors">Catálogo</Link></li>
+              <li><Link href="/servicios" className="hover:text-slate-900 transition-colors">Servicios</Link></li>
               <li><Link href="/ofertas" className="hover:text-slate-900 transition-colors">Ofertas</Link></li>
               <li><Link href="/apps" className="hover:text-slate-900 transition-colors">Apps</Link></li>
               <li><Link href="/blog" className="hover:text-slate-900 transition-colors">Blog</Link></li>

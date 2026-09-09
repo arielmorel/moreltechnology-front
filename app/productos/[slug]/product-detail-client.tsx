@@ -151,10 +151,10 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
   }
 
   return (
-    <div className="min-h-screen pt-24 md:pt-28 pb-20 md:pb-16 animate-fade-in">
+    <div className="min-h-screen pt-16 md:pt-20 pb-24 md:pb-16 animate-fade-in">
       <div className="container mx-auto px-3 md:px-6">
         {/* Desktop Breadcrumbs */}
-        <nav className="hidden md:flex items-center gap-1.5 text-xs text-slate-400 mb-6 md:mb-8 animate-slide-up">
+        <nav className="hidden md:flex items-center gap-1.5 text-xs text-slate-400 mb-4 md:mb-6 animate-slide-up">
           <Link href="/" className="hover:text-slate-900 transition-colors">Inicio</Link>
           <span className="text-slate-300">/</span>
           <Link href="/catalogo/moreltechnology" className="hover:text-slate-900 transition-colors">Catálogo</Link>
@@ -224,7 +224,7 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
       </div>
 
       {/* Mobile Sticky CTA Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-100 py-3 px-4 shadow-lg flex items-center gap-3 md:hidden safe-area-pb">
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-100 py-3 px-4 shadow-lg flex items-center gap-3 md:hidden">
         {product.quantity === 0 ? (
           <div className="w-full">
             <NotifyWhenAvailable productId={product.id} productName={product.name} />

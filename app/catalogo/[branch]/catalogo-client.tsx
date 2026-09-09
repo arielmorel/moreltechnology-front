@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import { categories, Product } from "@/lib/data";
-import { getProducts, searchProducts, AvailabilityFilter, SortFilter } from "@/lib/api";
+import { getProducts, searchProducts, AvailabilityFilter, SortFilter, getSettingWithDefault } from "@/lib/api";
 import { useDebounce } from "@/hooks/use-debounce";
 import { ProductCard } from "@/components/product-card";
 import { ProductCardSkeleton } from "@/components/product-card-skeleton";
@@ -27,6 +27,7 @@ import {
 import { ProductFilters } from "@/components/product-filters";
 import { branches } from "@/lib/data";
 import { useRouter, useSearchParams } from "next/navigation";
+import { CatalogTheme, themeConfigs } from "@/lib/themes";
 
 const PAGE_SIZE = 6;
 
@@ -43,6 +44,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
   const sentinelRef = useRef<HTMLDivElement>(null);
 
   const [branch] = useState<string>(initialBranch);
+  const [currentTheme, setCurrentTheme] = useState<CatalogTheme>("theme-novus");
 
   const [search, setSearch] = useState(() => searchParams.get("q") || "");
   const debouncedSearch = useDebounce(search, 300);
@@ -65,6 +67,19 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
   const [sortBy, setSortBy] = useState<SortFilter>(
     () => (searchParams.get("sort") as SortFilter) || "newest"
   );
+
+  // Load theme from settings
+  useEffect(() => {
+    const loadTheme = async () => {
+      try {
+        const theme = await getSettingWithDefault("appearance.theme", "theme-novus");
+        setCurrentTheme(theme as CatalogTheme);
+      } catch {
+        // Use default theme
+      }
+    };
+    loadTheme();
+  }, []);
 
   const buildShareUrl = useCallback(() => {
     const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
@@ -314,15 +329,28 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
   }, [router]);
 
   return (
-    <div className="min-h-screen pt-16 pb-6 bg-muted/20">
+    <div 
+      className="min-h-screen pt-16 pb-6"
+      style={{ 
+        backgroundColor: themeConfigs[currentTheme].colors.background,
+        color: themeConfigs[currentTheme].colors.text,
+        ...Object.fromEntries(
+          Object.entries(themeConfigs[currentTheme].colors).map(([key, value]) => [`--theme-${key}`, value])
+        )
+      }}
+    >
       <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10">
         {/* Header */}
         <div className="flex justify-between items-center w-full mb-4">
-          <h1 className="font-sans text-xl font-bold text-slate-900 tracking-tight">Laptops disponibles</h1>
+          <h1 className="font-sans text-xl font-bold tracking-tight" style={{ color: themeConfigs[currentTheme].colors.text }}>Laptops disponibles</h1>
           <button
             type="button"
             onClick={handleShare}
-            className="p-2 border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg transition-colors"
+            className="p-2 border rounded-lg transition-colors"
+            style={{ 
+              borderColor: themeConfigs[currentTheme].colors.border,
+              color: themeConfigs[currentTheme].colors.textSecondary
+            }}
             aria-label="Compartir catálogo"
           >
             <Share2 className="h-4 w-4" />
@@ -604,14 +632,14 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
             </div>
 
             {isLoading && products.length === 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-6">
                 {[...Array(6)].map((_, i) => (
                   <ProductCardSkeleton key={i} />
                 ))}
               </div>
             ) : sortedProducts.length > 0 ? (
               <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-4" aria-busy={isLoading}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-6" aria-busy={isLoading}>
                   {sortedProducts.map(product => (
                     <ProductCard key={product.id} product={product} />
                   ))}

@@ -96,3 +96,34 @@ model ProductReview {
   @@index([productId, status])
   @@index([customerEmail])
 }
+
+enum SettingType {
+  STRING
+  INTEGER
+  DECIMAL
+  BOOLEAN
+  JSON
+}
+
+enum SettingCategory {
+  APPEARANCE
+  SEO
+  ANALYTICS
+  CATALOG
+  COMMERCE
+  SYSTEM
+  GENERAL
+}
+
+model SiteSetting {
+  id          String          @id @default(uuid())
+  key         String          @unique @db.VarChar(150)
+  value       String?         @db.Text
+  type        SettingType     @default(STRING)
+  category    SettingCategory @default(GENERAL)
+  description String?         @db.VarChar(255)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@map("site_setting")
+}
