@@ -16,7 +16,7 @@ import {
   ChevronDown,
   FileText,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, parseSpecsFromString } from "@/lib/utils";
 import { ConditionGuide } from "@/components/condition-guide";
 import { NotifyWhenAvailable } from "@/components/notify-when-available";
 
@@ -33,6 +33,22 @@ export function ProductInfoCard({
   onAddToCart,
   onShare,
 }: ProductInfoCardProps) {
+  // Parse specs from name/description if individual fields are empty
+  const parsedSpecs = React.useMemo(() => {
+    const hasAllSpecs = product.processor && product.ram && product.ssd;
+    if (hasAllSpecs) return null;
+    
+    // Try parsing from name first, then description
+    const textToParse = product.name || product.description || "";
+    return parseSpecsFromString(textToParse);
+  }, [product.name, product.description, product.processor, product.ram, product.ssd]);
+
+  const displayProcessor = product.processor || parsedSpecs?.processor;
+  const displayRam = product.ram || parsedSpecs?.ram;
+  const displaySsd = product.ssd || parsedSpecs?.ssd;
+  const displayGpu = product.gpu || parsedSpecs?.gpu;
+  const displayScreenSize = product.screenSize || parsedSpecs?.screenSize;
+
   return (
     <div className="px-3 md:px-0 mt-3 md:mt-0">
       <div className="bg-white rounded-2xl p-4 md:p-6 shadow-sm space-y-6">
@@ -109,52 +125,58 @@ export function ProductInfoCard({
         <div className="space-y-2">
           <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Especificaciones</h3>
           <div className="grid grid-cols-2 gap-2.5">
-            <div className="flex items-center gap-2.5 bg-slate-50 rounded-xl p-3 border border-slate-100">
-              <div className="flex items-center justify-center w-8 h-8 bg-white rounded-lg shadow-sm">
-                <Cpu className="w-4 h-4 text-slate-600" />
+            {displayProcessor && (
+              <div className="flex items-center gap-2.5 bg-slate-50 rounded-xl p-3 border border-slate-100">
+                <div className="flex items-center justify-center w-8 h-8 bg-white rounded-lg shadow-sm">
+                  <Cpu className="w-4 h-4 text-slate-600" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[9px] text-slate-400 uppercase font-bold leading-none mb-0.5">CPU</p>
+                  <p className="text-xs font-semibold text-slate-800 break-words">{displayProcessor}</p>
+                </div>
               </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-[9px] text-slate-400 uppercase font-bold leading-none mb-0.5">CPU</p>
-                <p className="text-xs font-semibold text-slate-800 break-words">{product.processor}</p>
+            )}
+            {displayRam && (
+              <div className="flex items-center gap-2.5 bg-slate-50 rounded-xl p-3 border border-slate-100">
+                <div className="flex items-center justify-center w-8 h-8 bg-white rounded-lg shadow-sm">
+                  <MemoryStick className="w-4 h-4 text-slate-600" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[9px] text-slate-400 uppercase font-bold leading-none mb-0.5">RAM</p>
+                  <p className="text-xs font-semibold text-slate-800 break-words">{displayRam}</p>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center gap-2.5 bg-slate-50 rounded-xl p-3 border border-slate-100">
-              <div className="flex items-center justify-center w-8 h-8 bg-white rounded-lg shadow-sm">
-                <MemoryStick className="w-4 h-4 text-slate-600" />
+            )}
+            {displaySsd && (
+              <div className="flex items-center gap-2.5 bg-slate-50 rounded-xl p-3 border border-slate-100">
+                <div className="flex items-center justify-center w-8 h-8 bg-white rounded-lg shadow-sm">
+                  <HardDrive className="w-4 h-4 text-slate-600" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[9px] text-slate-400 uppercase font-bold leading-none mb-0.5">SSD</p>
+                  <p className="text-xs font-semibold text-slate-800 break-words">{displaySsd}</p>
+                </div>
               </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-[9px] text-slate-400 uppercase font-bold leading-none mb-0.5">RAM</p>
-                <p className="text-xs font-semibold text-slate-800 break-words">{product.ram}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2.5 bg-slate-50 rounded-xl p-3 border border-slate-100">
-              <div className="flex items-center justify-center w-8 h-8 bg-white rounded-lg shadow-sm">
-                <HardDrive className="w-4 h-4 text-slate-600" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-[9px] text-slate-400 uppercase font-bold leading-none mb-0.5">SSD</p>
-                <p className="text-xs font-semibold text-slate-800 break-words">{product.ssd}</p>
-              </div>
-            </div>
-            {product.gpu && (
+            )}
+            {displayGpu && (
               <div className="flex items-center gap-2.5 bg-slate-50 rounded-xl p-3 border border-slate-100">
                 <div className="flex items-center justify-center w-8 h-8 bg-white rounded-lg shadow-sm">
                   <Gamepad2 className="w-4 h-4 text-slate-600" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-[9px] text-slate-400 uppercase font-bold leading-none mb-0.5">GPU</p>
-                  <p className="text-xs font-semibold text-slate-800 break-words">{product.gpu}</p>
+                  <p className="text-xs font-semibold text-slate-800 break-words">{displayGpu}</p>
                 </div>
               </div>
             )}
-            {product.screenSize && (
+            {displayScreenSize && (
               <div className="flex items-center gap-2.5 bg-slate-50 rounded-xl p-3 border border-slate-100">
                 <div className="flex items-center justify-center w-8 h-8 bg-white rounded-lg shadow-sm">
                   <Monitor className="w-4 h-4 text-slate-600" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-[9px] text-slate-400 uppercase font-bold leading-none mb-0.5">PANTALLA</p>
-                  <p className="text-xs font-semibold text-slate-800 break-words">{product.screenSize}</p>
+                  <p className="text-xs font-semibold text-slate-800 break-words">{displayScreenSize}</p>
                 </div>
               </div>
             )}
