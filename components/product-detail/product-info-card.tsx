@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Product } from "@/lib/data";
+import { Product, ProductVariant, ProductPrice } from "@/lib/data";
 import {
   Cpu,
   HardDrive,
@@ -25,6 +25,8 @@ interface ProductInfoCardProps {
   warrantyLabel: string;
   onAddToCart: () => void;
   onShare: () => void;
+  selectedVariant?: ProductVariant;
+  onVariantChange?: (variant: ProductVariant | undefined) => void;
 }
 
 export function ProductInfoCard({
@@ -32,6 +34,8 @@ export function ProductInfoCard({
   warrantyLabel,
   onAddToCart,
   onShare,
+  selectedVariant,
+  onVariantChange,
 }: ProductInfoCardProps) {
   // Parse specs from name/description if individual fields are empty
   const parsedSpecs = React.useMemo(() => {
@@ -48,6 +52,28 @@ export function ProductInfoCard({
   const displaySsd = product.ssd || parsedSpecs?.ssd;
   const displayGpu = product.gpu || parsedSpecs?.gpu;
   const displayScreenSize = product.screenSize || parsedSpecs?.screenSize;
+
+  const activeVariants = React.useMemo(() => {
+    return product.variants?.filter(v => v.active) ?? [];
+  }, [product.variants]);
+
+  // Build the full list of options: primary (from product) + additional variants
+  const variantOptions = React.useMemo(() => {
+    const primaryLabel = (product.description || product.name || "").split("|").map(s => s.trim()).filter(Boolean).join(" | ");
+    const options: { id: string; label: string; prices: ProductPrice[] }[] = [
+      { id: "__primary__", label: primaryLabel, prices: product.prices },
+    ];
+    for (const v of activeVariants) {
+      options.push({ id: v.id, label: v.name, prices: v.prices });
+    }
+    return options;
+  }, [product.description, product.name, product.prices, activeVariants]);
+
+  const hasVariants = variantOptions.length > 1;
+  const isPrimarySelected = !selectedVariant;
+  const displayPrices: ProductPrice[] = selectedVariant?.prices && selectedVariant.prices.length > 0
+    ? selectedVariant.prices
+    : product.prices;
 
   return (
     <div className="px-3 md:px-0 mt-3 md:mt-0">
@@ -88,9 +114,56 @@ export function ProductInfoCard({
           </h1>
         </div>
 
+        {/* Variant Selector */}
+        {hasVariants && (
+          <div className="space-y-2">
+            <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Configuración</h3>
+            <div className="flex flex-col gap-2">
+              {variantOptions.map((option) => {
+                const isSelected = option.id === "__primary__" ? isPrimarySelected : selectedVariant?.id === option.id;
+                const dopPrice = option.prices?.find(p => p.currency === "DOP");
+                const price = dopPrice
+                  ? (dopPrice.offerPrice && dopPrice.offerPrice > 0 ? dopPrice.offerPrice : dopPrice.priceOut)
+                  : option.prices?.[0]?.priceOut ?? 0;
+                return (
+                  <button
+                    key={option.id}
+                    type="button"
+                    onClick={() => {
+                      if (option.id === "__primary__") {
+                        onVariantChange?.(undefined);
+                      } else {
+                        const variant = activeVariants.find(v => v.id === option.id);
+                        if (variant) onVariantChange?.(variant);
+                      }
+                    }}
+                    className={cn(
+                      "flex items-center justify-between px-3 py-2.5 rounded-xl text-left text-xs font-medium border transition-all duration-200",
+                      isSelected
+                        ? "bg-slate-900 text-white border-slate-900 shadow-md"
+                        : "bg-white text-slate-600 border-slate-200 hover:border-slate-400 hover:bg-slate-50"
+                    )}
+                  >
+                    <span className="truncate flex-1">{option.label}</span>
+                    <span className={cn(
+                      "ml-2 whitespace-nowrap font-semibold",
+                      isSelected ? "text-white/80" : "text-slate-500"
+                    )}>
+                      RD$ {price.toLocaleString("es-DO")}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Divider */}
+        <div className="border-t border-slate-100" />
+
         {/* Price Block */}
         <div className="space-y-1">
-          {(product.prices || []).filter(p => p.priceOut > 0).map((p) => {
+          {(displayPrices || []).filter(p => p.priceOut > 0).map((p) => {
             const symbol = p.currency === "USD" ? "US$" : "RD$";
             const hasDiscount = p.offerPrice != null && p.offerPrice > 0;
             const displayPrice = hasDiscount ? p.offerPrice! : p.priceOut;

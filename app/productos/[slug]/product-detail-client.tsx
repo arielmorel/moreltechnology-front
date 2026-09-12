@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Product } from "@/lib/data";
+import { Product, ProductVariant } from "@/lib/data";
 import { getProductBySlug, getProducts } from "@/lib/api";
 import { ArrowLeft, MessageCircle, ShoppingCart, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -30,6 +30,7 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [activeImage, setActiveImage] = useState(0);
   const [isImageViewerOpen, setIsImageViewerOpen] = useState(false);
+  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | undefined>(undefined);
   const [reviewsData, setReviewsData] = useState({
     reviews: [] as Array<{
       id: string;
@@ -48,6 +49,24 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
   const warrantyLabel = product?.warranty
     ? `${Math.round(product.warranty / 30)} ${Math.round(product.warranty / 30) === 1 ? "mes" : "meses"}`
     : "Certificada";
+
+  // Reset variant when product changes — start with primary (undefined = main product)
+  useEffect(() => {
+    setSelectedVariant(undefined);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product?.id]);
+
+  const getDisplayPrice = (prices: Product["prices"]) => {
+    const dop = prices?.find(p => p.currency === "DOP");
+    if (dop) {
+      return dop.offerPrice && dop.offerPrice > 0 ? dop.offerPrice : dop.priceOut;
+    }
+    return prices?.[0]?.offerPrice || prices?.[0]?.priceOut || 0;
+  };
+
+  const currentDisplayPrice = selectedVariant?.prices?.length
+    ? getDisplayPrice(selectedVariant.prices)
+    : product ? getDisplayPrice(product.prices) : 0;
 
   const handleShare = async () => {
     if (!product) return;
@@ -179,6 +198,8 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
               warrantyLabel={warrantyLabel}
               onAddToCart={handleAddToCart}
               onShare={handleShare}
+              selectedVariant={selectedVariant}
+              onVariantChange={setSelectedVariant}
             />
           </div>
         </div>
@@ -233,7 +254,7 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
           <>
             <div className="flex flex-col items-start shrink-0">
               <span className="text-lg font-extrabold text-slate-900 leading-tight">
-                RD$ {(product.prices?.[0]?.offerPrice || product.prices?.[0]?.priceOut || product.price).toLocaleString("es-DO")}
+                RD$ {currentDisplayPrice.toLocaleString("es-DO")}
               </span>
               <span className="text-[9px] font-medium text-emerald-600 leading-none mt-0.5">
                 Envío gratis
