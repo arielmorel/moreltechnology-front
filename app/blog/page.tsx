@@ -7,6 +7,8 @@ import { BlogFilters } from "@/components/blog-filters";
 import { BookOpen, Gamepad2, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Blog - Morel Technology República Dominicana",
   description: "Guías de compra, comparativas, gaming y tecnología en República Dominicana. Expertos ayudándote a elegir la laptop ideal.",

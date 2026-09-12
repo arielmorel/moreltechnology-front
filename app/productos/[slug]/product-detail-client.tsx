@@ -11,6 +11,7 @@ import { useCart } from "@/lib/store";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { ProductCarousel } from "@/components/product-carousel";
+import { ModelCarousel } from "@/components/model-carousel";
 import { AccessoriesCarousel } from "@/components/accessories-carousel";
 import { ProductReviewForm } from "@/components/product-review-form";
 import { getApprovedReviews } from "@/app/actions/reviews";
@@ -67,6 +68,11 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
   const currentDisplayPrice = selectedVariant?.prices?.length
     ? getDisplayPrice(selectedVariant.prices)
     : product ? getDisplayPrice(product.prices) : 0;
+
+  // Derive model search query: "Dell Latitude 7420" → "Latitude 7420"
+  const modelQuery = product?.name
+    ?.replace(new RegExp(`^${product.brand}\\s+`, "i"), "")
+    .trim() ?? "";
 
   const handleShare = async () => {
     if (!product) return;
@@ -204,8 +210,13 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
           </div>
         </div>
 
+        {/* Same Model Carousel */}
+        <div className="animate-slide-up-delay-3">
+          <ModelCarousel query={modelQuery} excludeSlug={product.slug} />
+        </div>
+
         {/* Accessories Carousel */}
-        <div className="mt-8 md:mt-12 animate-slide-up-delay-3">
+        <div className="mt-4 md:mt-8 animate-slide-up-delay-3">
           <AccessoriesCarousel currentProductId={product.slug} />
         </div>
 
