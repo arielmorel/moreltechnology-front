@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type ComponentType } from "react";
 import Link from "next/link";
-import { ArrowRight, BadgePercent, Star, Sparkles, Gamepad2, Cable, Clock } from "lucide-react";
+import { ArrowRight, BadgePercent, Star, Sparkles, Gamepad2, Cable, Clock, Laptop } from "lucide-react";
 import { Product } from "@/lib/data";
 import { ProductCardCarousel } from "@/components/product-card-carousel";
 import {
@@ -13,7 +13,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 
-export type ProductCarouselType = "offers" | "featured" | "related" | "gaming" | "accessories" | "new-arrivals";
+export type ProductCarouselType = "offers" | "featured" | "related" | "gaming" | "accessories" | "new-arrivals" | "same-model";
 
 interface ProductCarouselProps {
   type: ProductCarouselType;
@@ -71,6 +71,13 @@ const carouselConfig: Record<ProductCarouselType, {
     icon: Clock,
     iconColor: "text-blue-500",
     accentColor: "text-blue-600",
+  },
+  "same-model": {
+    title: "Mismo modelo",
+    subtitle: "Otras unidades disponibles de este modelo.",
+    icon: Laptop,
+    iconColor: "text-slate-600",
+    accentColor: "text-slate-700",
   },
 };
 
@@ -144,7 +151,14 @@ export function ProductCarousel({
                 title: "text-blue-600",
                 glow: "bg-blue-500/5",
               }
-            : {
+            : type === "same-model"
+              ? {
+                  badge: "bg-slate-500/10 border-slate-500/20",
+                  icon: "text-slate-600",
+                  title: "text-slate-700",
+                  glow: "bg-slate-500/5",
+                }
+              : {
                 badge: "bg-primary/10 border-primary/20",
                 icon: "text-primary",
                 title: "text-primary",
@@ -181,6 +195,8 @@ export function ProductCarousel({
                   <>Accesorios <span className={accentStyles.title}>recomendados</span></>
                 ) : type === "new-arrivals" ? (
                   <>Recién <span className={accentStyles.title}>Llegados</span></>
+                ) : type === "same-model" ? (
+                  <>Otras <span className={accentStyles.title}>unidades</span></>
                 ) : (
                   config.title
                 )}
