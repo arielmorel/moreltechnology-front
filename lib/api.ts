@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Product, ProductCondition, ProductPrice } from "./data";
+import { Product, ProductCondition, ProductPrice, ProductVariant } from "./data";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8282";
 const DEFAULT_BRANCH = "moreltechnology";
@@ -42,6 +42,23 @@ export interface ApiProduct {
     offerPrice: number | null;
     isPrimary: boolean;
     active: boolean;
+  }[];
+  variants?: {
+    id: string;
+    name: string;
+    sku: string;
+    priceOut: number;
+    offerPrice: number | null;
+    defaultVariant: boolean;
+    active: boolean;
+    prices: {
+      id: string;
+      currency: string;
+      priceOut: number;
+      offerPrice: number | null;
+      isPrimary: boolean;
+      active: boolean;
+    }[];
   }[];
 }
 
@@ -93,6 +110,23 @@ export const mapApiProductToProduct = (apiProduct: ApiProduct): Product => {
     condition = "Usado - Como Nuevo";
   }
 
+  const mappedVariants: ProductVariant[] | undefined = apiProduct.variants
+    ?.filter(v => v.active)
+    .map(v => ({
+      id: v.id,
+      name: v.name,
+      sku: v.sku,
+      prices: (v.prices || [])
+        .filter(p => p.active)
+        .map(p => ({
+          currency: p.currency,
+          priceOut: p.priceOut,
+          offerPrice: p.offerPrice,
+        })),
+      defaultVariant: v.defaultVariant,
+      active: v.active,
+    }));
+
   return {
     id: apiProduct.id.toString(),
     slug: apiProduct.slug,
@@ -118,6 +152,7 @@ export const mapApiProductToProduct = (apiProduct: ApiProduct): Product => {
     quantity: apiProduct.quantity || 0,
     warranty: apiProduct.warranty,
     createdAt: apiProduct.createdAt,
+    variants: mappedVariants && mappedVariants.length > 0 ? mappedVariants : undefined,
   };
 };
 

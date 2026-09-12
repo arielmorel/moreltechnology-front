@@ -6,6 +6,15 @@ export interface ProductPrice {
   offerPrice: number | null;
 }
 
+export interface ProductVariant {
+  id: string;
+  name: string;
+  sku: string;
+  prices: ProductPrice[];
+  defaultVariant: boolean;
+  active: boolean;
+}
+
 export interface Product {
   id: string;
   slug: string;
@@ -29,6 +38,7 @@ export interface Product {
   tags: string[];
   quantity: number;
   createdAt?: string;
+  variants?: ProductVariant[];
 }
 
 export type AppCondition = "Gratis" | "Pago";
