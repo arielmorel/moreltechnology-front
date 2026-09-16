@@ -87,8 +87,8 @@ export function CatalogSettings() {
     try {
       const value = await getSettingWithDefault("appearance.theme", "theme-novus");
       setSelectedTheme(value as CatalogTheme);
-    } catch {
-      console.error("Error loading catalog theme");
+    } catch (error) {
+      console.error("Error loading catalog theme:", error);
     } finally {
       setIsLoading(false);
     }
@@ -97,15 +97,16 @@ export function CatalogSettings() {
   const handleSetTheme = async (theme: CatalogTheme) => {
     if (theme === selectedTheme) return;
     
+    const previousTheme = selectedTheme;
     setSelectedTheme(theme);
     setIsSaving(true);
 
     try {
       await saveSetting("appearance.theme", theme, "STRING", "APPEARANCE");
       toast.success("Apariencia del catálogo actualizada");
-    } catch {
-      console.error("Error saving catalog theme");
-      setSelectedTheme(selectedTheme);
+    } catch (error) {
+      console.error("Error saving catalog theme:", error);
+      setSelectedTheme(previousTheme);
       toast.error("Error al actualizar la apariencia");
     } finally {
       setIsSaving(false);
