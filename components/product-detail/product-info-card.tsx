@@ -77,13 +77,13 @@ export function ProductInfoCard({
 
   return (
     <div className="px-3 md:px-0 mt-3 md:mt-0">
-      <div className="bg-white rounded-2xl p-4 md:p-6 shadow-sm space-y-6">
+      <div className="bg-card rounded-2xl p-4 md:p-6 shadow-sm space-y-6">
         {/* Title, Condition, Tags & Share */}
         <div className="space-y-3">
           <div className="flex items-start justify-between gap-3">
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <span className="inline-flex items-center text-[10px] font-semibold bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full uppercase tracking-wider border border-slate-200/50">
+                <span className="inline-flex items-center text-[10px] font-semibold bg-muted text-muted-foreground px-2.5 py-1 rounded-full uppercase tracking-wider border border-border/50">
                   {product.condition}
                 </span>
                 <span className="hidden sm:inline-flex">
@@ -93,7 +93,7 @@ export function ProductInfoCard({
               {product.tags.length > 0 && (
                 <div className="flex flex-wrap gap-1.5">
                   {product.tags.map((tag) => (
-                    <span key={tag} className="text-[9px] font-medium bg-slate-50 text-slate-500 px-2 py-0.5 rounded-full">
+                    <span key={tag} className="text-[9px] font-medium bg-muted text-muted-foreground px-2 py-0.5 rounded-full">
                       {tag}
                     </span>
                   ))}
@@ -103,13 +103,13 @@ export function ProductInfoCard({
             <button
               type="button"
               onClick={onShare}
-              className="p-2 border border-slate-200 hover:bg-slate-50 text-slate-500 rounded-lg transition-all duration-200 shrink-0 active:scale-90 hover:shadow-sm"
+              className="p-2 border border-border hover:bg-muted text-muted-foreground rounded-lg transition-all duration-200 shrink-0 active:scale-90 hover:shadow-sm"
               aria-label="Compartir"
             >
               <Share2 className="w-4 h-4 transition-transform duration-300" />
             </button>
           </div>
-          <h1 className="font-sans text-xl md:text-2xl font-bold text-slate-900 tracking-tight leading-tight">
+          <h1 className="font-sans text-xl md:text-2xl font-bold text-foreground tracking-tight leading-tight">
             {product.name}
           </h1>
         </div>
@@ -117,7 +117,7 @@ export function ProductInfoCard({
         {/* Variant Selector */}
         {hasVariants && (
           <div className="space-y-2">
-            <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Configuración</h3>
+            <h3 className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Configuración</h3>
             <div className="flex flex-col gap-2">
               {variantOptions.map((option) => {
                 const isSelected = option.id === "__primary__" ? isPrimarySelected : selectedVariant?.id === option.id;
@@ -141,13 +141,13 @@ export function ProductInfoCard({
                       "flex items-center justify-between px-3 py-2.5 rounded-xl text-left text-xs font-medium border transition-all duration-200",
                       isSelected
                         ? "bg-slate-900 text-white border-slate-900 shadow-md"
-                        : "bg-white text-slate-600 border-slate-200 hover:border-slate-400 hover:bg-slate-50"
+                        : "bg-card text-muted-foreground border-border hover:border-border hover:bg-muted"
                     )}
                   >
                     <span className="truncate flex-1">{option.label}</span>
                     <span className={cn(
                       "ml-2 whitespace-nowrap font-semibold",
-                      isSelected ? "text-white/80" : "text-slate-500"
+                      isSelected ? "text-white/80" : "text-muted-foreground"
                     )}>
                       RD$ {price.toLocaleString("es-DO")}
                     </span>
@@ -159,7 +159,7 @@ export function ProductInfoCard({
         )}
 
         {/* Divider */}
-        <div className="border-t border-slate-100" />
+        <div className="border-t border-border" />
 
         {/* Price Block */}
         <div className="space-y-1">
@@ -172,12 +172,12 @@ export function ProductInfoCard({
               <div key={p.currency} className="flex items-center gap-3 flex-wrap">
                 <span className={cn(
                   "font-extrabold whitespace-nowrap",
-                  p.currency === "USD" ? "text-lg text-slate-600" : "text-3xl text-slate-900",
+                  p.currency === "USD" ? "text-lg text-muted-foreground" : "text-3xl text-foreground",
                 )}>
                   {symbol} {displayPrice.toLocaleString("es-DO")}
                 </span>
                 {hasDiscount && (
-                  <span className="text-sm text-slate-400 line-through font-normal">
+                  <span className="text-sm text-muted-foreground line-through font-normal">
                     {symbol} {p.priceOut.toLocaleString("es-DO")}
                   </span>
                 )}
@@ -192,64 +192,64 @@ export function ProductInfoCard({
         </div>
 
         {/* Divider */}
-        <div className="border-t border-slate-100" />
+        <div className="border-t border-border" />
 
         {/* Specs Grid */}
         <div className="space-y-2">
-          <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Especificaciones</h3>
+          <h3 className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Especificaciones</h3>
           <div className="grid grid-cols-2 gap-2.5">
             {displayProcessor && (
-              <div className="flex items-center gap-2.5 bg-slate-50 rounded-xl p-3 border border-slate-100">
-                <div className="flex items-center justify-center w-8 h-8 bg-white rounded-lg shadow-sm">
-                  <Cpu className="w-4 h-4 text-slate-600" />
+              <div className="flex items-center gap-2.5 bg-muted rounded-xl p-3 border border-border">
+                <div className="flex items-center justify-center w-8 h-8 bg-card rounded-lg shadow-sm">
+                  <Cpu className="w-4 h-4 text-muted-foreground" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-[9px] text-slate-400 uppercase font-bold leading-none mb-0.5">CPU</p>
-                  <p className="text-xs font-semibold text-slate-800 break-words">{displayProcessor}</p>
+                  <p className="text-[9px] text-muted-foreground uppercase font-bold leading-none mb-0.5">CPU</p>
+                  <p className="text-xs font-semibold text-foreground break-words">{displayProcessor}</p>
                 </div>
               </div>
             )}
             {displayRam && (
-              <div className="flex items-center gap-2.5 bg-slate-50 rounded-xl p-3 border border-slate-100">
-                <div className="flex items-center justify-center w-8 h-8 bg-white rounded-lg shadow-sm">
-                  <MemoryStick className="w-4 h-4 text-slate-600" />
+              <div className="flex items-center gap-2.5 bg-muted rounded-xl p-3 border border-border">
+                <div className="flex items-center justify-center w-8 h-8 bg-card rounded-lg shadow-sm">
+                  <MemoryStick className="w-4 h-4 text-muted-foreground" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-[9px] text-slate-400 uppercase font-bold leading-none mb-0.5">RAM</p>
-                  <p className="text-xs font-semibold text-slate-800 break-words">{displayRam}</p>
+                  <p className="text-[9px] text-muted-foreground uppercase font-bold leading-none mb-0.5">RAM</p>
+                  <p className="text-xs font-semibold text-foreground break-words">{displayRam}</p>
                 </div>
               </div>
             )}
             {displaySsd && (
-              <div className="flex items-center gap-2.5 bg-slate-50 rounded-xl p-3 border border-slate-100">
-                <div className="flex items-center justify-center w-8 h-8 bg-white rounded-lg shadow-sm">
-                  <HardDrive className="w-4 h-4 text-slate-600" />
+              <div className="flex items-center gap-2.5 bg-muted rounded-xl p-3 border border-border">
+                <div className="flex items-center justify-center w-8 h-8 bg-card rounded-lg shadow-sm">
+                  <HardDrive className="w-4 h-4 text-muted-foreground" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-[9px] text-slate-400 uppercase font-bold leading-none mb-0.5">SSD</p>
-                  <p className="text-xs font-semibold text-slate-800 break-words">{displaySsd}</p>
+                  <p className="text-[9px] text-muted-foreground uppercase font-bold leading-none mb-0.5">SSD</p>
+                  <p className="text-xs font-semibold text-foreground break-words">{displaySsd}</p>
                 </div>
               </div>
             )}
             {displayGpu && (
-              <div className="flex items-center gap-2.5 bg-slate-50 rounded-xl p-3 border border-slate-100">
-                <div className="flex items-center justify-center w-8 h-8 bg-white rounded-lg shadow-sm">
-                  <Gamepad2 className="w-4 h-4 text-slate-600" />
+              <div className="flex items-center gap-2.5 bg-muted rounded-xl p-3 border border-border">
+                <div className="flex items-center justify-center w-8 h-8 bg-card rounded-lg shadow-sm">
+                  <Gamepad2 className="w-4 h-4 text-muted-foreground" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-[9px] text-slate-400 uppercase font-bold leading-none mb-0.5">GPU</p>
-                  <p className="text-xs font-semibold text-slate-800 break-words">{displayGpu}</p>
+                  <p className="text-[9px] text-muted-foreground uppercase font-bold leading-none mb-0.5">GPU</p>
+                  <p className="text-xs font-semibold text-foreground break-words">{displayGpu}</p>
                 </div>
               </div>
             )}
             {displayScreenSize && (
-              <div className="flex items-center gap-2.5 bg-slate-50 rounded-xl p-3 border border-slate-100">
-                <div className="flex items-center justify-center w-8 h-8 bg-white rounded-lg shadow-sm">
-                  <Monitor className="w-4 h-4 text-slate-600" />
+              <div className="flex items-center gap-2.5 bg-muted rounded-xl p-3 border border-border">
+                <div className="flex items-center justify-center w-8 h-8 bg-card rounded-lg shadow-sm">
+                  <Monitor className="w-4 h-4 text-muted-foreground" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-[9px] text-slate-400 uppercase font-bold leading-none mb-0.5">PANTALLA</p>
-                  <p className="text-xs font-semibold text-slate-800 break-words">{displayScreenSize}</p>
+                  <p className="text-[9px] text-muted-foreground uppercase font-bold leading-none mb-0.5">PANTALLA</p>
+                  <p className="text-xs font-semibold text-foreground break-words">{displayScreenSize}</p>
                 </div>
               </div>
             )}
@@ -269,7 +269,7 @@ export function ProductInfoCard({
         </div>
 
         {/* Description Accordion */}
-        <div className="border-t border-slate-100 pt-4">
+        <div className="border-t border-border pt-4">
           <button
             type="button"
             onClick={() => {
@@ -279,13 +279,13 @@ export function ProductInfoCard({
             className="flex items-center justify-between w-full group"
           >
             <div className="flex items-center gap-2">
-              <FileText className="w-4 h-4 text-slate-400" />
-              <span className="text-xs font-semibold text-slate-900 uppercase tracking-wider">Descripción</span>
+              <FileText className="w-4 h-4 text-muted-foreground" />
+              <span className="text-xs font-semibold text-foreground uppercase tracking-wider">Descripción</span>
             </div>
-            <ChevronDown className="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-transform" />
+            <ChevronDown className="w-4 h-4 text-muted-foreground group-hover:text-muted-foreground transition-transform" />
           </button>
           <div id="product-description" className="mt-3">
-            <p className="font-sans text-xs text-slate-600 leading-relaxed whitespace-pre-line">
+            <p className="font-sans text-xs text-muted-foreground leading-relaxed whitespace-pre-line">
               {product.description}
             </p>
           </div>

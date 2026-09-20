@@ -37,7 +37,7 @@ export function ProductCarouselSkeleton({ type }: ProductCarouselSkeletonProps) 
 
         <div className="hidden md:grid grid-cols-4 gap-5">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="rounded-xl border border-slate-200 bg-white p-3">
+            <div key={i} className="rounded-xl border border-border bg-card p-3">
               <Skeleton className="w-full aspect-square rounded-lg" />
               <Skeleton className="mt-3 h-2.5 w-16" />
               <Skeleton className="mt-2 h-3.5 w-full" />
@@ -50,7 +50,7 @@ export function ProductCarouselSkeleton({ type }: ProductCarouselSkeletonProps) 
 
         <div className="md:hidden flex gap-3 overflow-hidden pb-4 -mx-4 px-4">
           {Array.from({ length: 2 }).map((_, i) => (
-            <div key={i} className="shrink-0 w-[75%] rounded-xl border border-slate-200 bg-white p-3">
+            <div key={i} className="shrink-0 w-[75%] rounded-xl border border-border bg-card p-3">
               <Skeleton className="w-full aspect-square rounded-lg" />
               <Skeleton className="mt-3 h-2.5 w-16" />
               <Skeleton className="mt-2 h-3.5 w-full" />

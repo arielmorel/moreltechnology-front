@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { Flame, ArrowRight } from "lucide-react";
+
+const EMPTY = { hours: 0, minutes: 0, seconds: 0 };
 
 function getTimeLeft() {
   const now = new Date();
@@ -19,13 +21,27 @@ function pad(n: number) {
   return n.toString().padStart(2, "0");
 }
 
+function useMounted() {
+  return useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
+}
+
 export function FlashAnnouncement() {
-  const [timeLeft, setTimeLeft] = useState(getTimeLeft);
+  const mounted = useMounted();
+  const [timeLeft, setTimeLeft] = useState(EMPTY);
 
   useEffect(() => {
+    if (!mounted) return;
+    const timeout = setTimeout(() => setTimeLeft(getTimeLeft()), 0);
     const interval = setInterval(() => setTimeLeft(getTimeLeft()), 1000);
-    return () => clearInterval(interval);
-  }, []);
+    return () => {
+      clearTimeout(timeout);
+      clearInterval(interval);
+    };
+  }, [mounted]);
 
   return (
     <div className="relative z-20 pt-14 md:pt-16 bg-gradient-to-r from-red-600 via-rose-600 to-orange-500 text-white">

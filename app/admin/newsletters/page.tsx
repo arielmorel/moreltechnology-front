@@ -63,7 +63,8 @@ export default function AdminNewslettersPage() {
   }, []);
 
   React.useEffect(() => {
-    loadSubscribers(activeFilter);
+    const timeout = setTimeout(() => loadSubscribers(activeFilter), 0);
+    return () => clearTimeout(timeout);
   }, [activeFilter, loadSubscribers]);
 
   const formatDate = (date: Date) => {

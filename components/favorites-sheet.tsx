@@ -63,7 +63,7 @@ export function FavoritesSheet() {
           ) : (
             items.map((item) => (
               <div key={item.id} className="flex gap-4 group">
-                <Link href={productUrl(item.slug)} className="w-16 h-16 rounded-xl bg-slate-100 border border-slate-200/80 overflow-hidden shrink-0 relative">
+                <Link href={productUrl(item.slug)} className="w-16 h-16 rounded-xl bg-muted border border-border/80 overflow-hidden shrink-0 relative">
                   <Image
                     src={item.images?.[0] || '/images/placeholder-laptop.png'}
                     alt={item.name}
@@ -77,19 +77,19 @@ export function FavoritesSheet() {
                   <div className="flex justify-between items-start gap-2">
                     <Link
                       href={productUrl(item.slug)}
-                      className="font-sans text-sm font-semibold text-slate-900 truncate hover:text-primary transition-colors"
+                      className="font-sans text-sm font-semibold text-foreground truncate hover:text-primary transition-colors"
                     >
                       {item.name}
                     </Link>
                     <button
                       onClick={() => removeFavorite(item.id)}
-                      className="text-slate-400 hover:text-red-500 transition-colors p-1"
+                      className="text-muted-foreground hover:text-red-500 transition-colors p-1"
                       aria-label="Quitar de favoritos"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
-                  <p className="text-xs font-bold text-slate-700 mt-1">RD${item.price.toLocaleString("es-DO")}</p>
+                  <p className="text-xs font-bold text-foreground mt-1">RD${item.price.toLocaleString("es-DO")}</p>
                 </div>
               </div>
             ))

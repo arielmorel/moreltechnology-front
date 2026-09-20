@@ -112,7 +112,7 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
         "p-2 rounded-full shadow-lg transition-all duration-300",
         isWishlisted
           ? "bg-blue-600 text-white"
-          : "bg-white text-gray-700 hover:bg-blue-600 hover:text-white"
+          : "bg-card text-foreground hover:bg-blue-600 hover:text-white"
       )}
       aria-label={isWishlisted ? "Eliminar de favoritos" : "Agregar a favoritos"}
     >
@@ -124,10 +124,10 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
     <button
       type="button"
       onClick={handleShare}
-      className="p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md hover:bg-white hover:shadow-lg transition-all duration-200 hover:scale-110 active:scale-95"
+      className="p-2 bg-card/90 backdrop-blur-sm rounded-full shadow-md hover:bg-card hover:shadow-lg transition-all duration-200 hover:scale-110 active:scale-95"
       aria-label="Compartir producto"
     >
-      <Share2 className="w-4 h-4 text-gray-600" />
+      <Share2 className="w-4 h-4 text-muted-foreground" />
     </button>
   );
 
@@ -139,7 +139,7 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
         "p-2 rounded-full shadow-lg transition-all duration-300",
         isComparing
           ? "bg-violet-600 text-white"
-          : "bg-white text-gray-700 hover:bg-violet-600 hover:text-white"
+          : "bg-card text-foreground hover:bg-violet-600 hover:text-white"
       )}
       aria-label={isComparing ? "Quitar de comparación" : "Agregar a comparación"}
       title={isComparing ? "Quitar de comparación" : "Agregar a comparación"}
@@ -155,11 +155,11 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
         e.preventDefault();
         e.stopPropagation();
       }}
-      className="p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md hover:bg-white hover:shadow-lg transition-all duration-200 hover:scale-110 active:scale-95"
+      className="p-2 bg-card/90 backdrop-blur-sm rounded-full shadow-md hover:bg-card hover:shadow-lg transition-all duration-200 hover:scale-110 active:scale-95"
       aria-label="Vista rápida"
       title="Vista rápida"
     >
-      <Eye className="w-4 h-4 text-gray-600" />
+      <Eye className="w-4 h-4 text-muted-foreground" />
     </button>
   );
 
@@ -186,23 +186,23 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
       <ShoppingCart className="w-5 h-5" />
     </button>
   ) : (
-    <p className="text-sm text-gray-400 font-medium text-center py-2">Agotado</p>
+    <p className="text-sm text-muted-foreground font-medium text-center py-2">Agotado</p>
   );
 
   const specsChips = (
     <div className="flex flex-wrap gap-1.5">
       {product.processor && product.processor !== "N/A" && (
-        <span className="inline-block px-2 py-0.5 text-[10px] font-semibold text-slate-700 bg-slate-100 rounded-full">
+        <span className="inline-block px-2 py-0.5 text-[10px] font-semibold text-foreground bg-muted rounded-full">
           {product.processor}
         </span>
       )}
       {product.ram && product.ram !== "N/A" && (
-        <span className="inline-block px-2 py-0.5 text-[10px] font-semibold text-slate-700 bg-slate-100 rounded-full">
+        <span className="inline-block px-2 py-0.5 text-[10px] font-semibold text-foreground bg-muted rounded-full">
           {product.ram}
         </span>
       )}
       {product.ssd && product.ssd !== "N/A" && (
-        <span className="inline-block px-2 py-0.5 text-[10px] font-semibold text-slate-700 bg-slate-100 rounded-full">
+        <span className="inline-block px-2 py-0.5 text-[10px] font-semibold text-foreground bg-muted rounded-full">
           {product.ssd}
         </span>
       )}
@@ -214,14 +214,14 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
       <Link
         href={productUrl(product.slug)}
         className={cn(
-          "product-card group relative flex flex-col sm:flex-row bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden",
+          "product-card group relative flex flex-col sm:flex-row bg-card dark:bg-card rounded-3xl shadow-sm border border-border dark:border-border overflow-hidden",
           "hover:shadow-[0_8px_30px_-5px_rgba(0,102,204,0.3)] hover:border-blue-600 cursor-pointer hover:scale-[1.01]",
           "transition-all duration-500 ease-out transform-gpu",
           isOutOfStock && "opacity-70"
         )}
       >
         {/* Image Container */}
-        <div className="relative shrink-0 w-full sm:w-[220px] md:w-[260px] h-[200px] sm:h-auto bg-gray-100 dark:bg-gray-700 overflow-hidden rounded-t-3xl sm:rounded-t-3xl sm:rounded-l-3xl">
+        <div className="relative shrink-0 w-full sm:w-[220px] md:w-[260px] h-[200px] sm:h-auto bg-muted dark:bg-muted overflow-hidden rounded-t-3xl sm:rounded-t-3xl sm:rounded-l-3xl">
           <Image
             src={product.images[0]}
             alt={product.name}
@@ -256,29 +256,29 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
                   {product.brand}
                 </span>
                 {product.condition && (
-                  <span className="text-[10px] font-semibold text-slate-500">{product.condition}</span>
+                  <span className="text-[10px] font-semibold text-muted-foreground">{product.condition}</span>
                 )}
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white leading-tight line-clamp-2 group-hover:text-blue-600 transition-colors duration-300">
+              <h3 className="text-lg font-semibold text-foreground dark:text-foreground leading-tight line-clamp-2 group-hover:text-blue-600 transition-colors duration-300">
                 {product.name}
               </h3>
             </div>
             <div className="flex items-baseline gap-2 shrink-0">
               {hasDiscount && (
-                <span className="text-sm text-gray-400 line-through font-normal">
+                <span className="text-sm text-muted-foreground line-through font-normal">
                   RD$ {product.originalPrice!.toLocaleString("es-DO")}
                 </span>
               )}
               <span className={cn(
                 "font-bold",
-                hasDiscount ? "text-xl text-emerald-600" : "text-lg text-gray-900 dark:text-white"
+                hasDiscount ? "text-xl text-emerald-600" : "text-lg text-foreground dark:text-foreground"
               )}>
                 RD$ {product.price.toLocaleString("es-DO")}
               </span>
             </div>
           </div>
 
-          <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2 mt-2">
+          <p className="text-sm text-muted-foreground dark:text-gray-300 line-clamp-2 mt-2">
             {product.description || `${product.brand} - ${product.processor}`}
           </p>
 
@@ -323,14 +323,14 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
     <Link
       href={productUrl(product.slug)}
       className={cn(
-        "product-card group relative flex flex-col bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden h-full",
+        "product-card group relative flex flex-col bg-card dark:bg-card rounded-3xl shadow-sm border border-border dark:border-border overflow-hidden h-full",
         "hover:shadow-[0_8px_30px_-5px_rgba(0,102,204,0.3)] hover:border-blue-600 cursor-pointer hover:scale-[1.02] hover:-translate-y-1",
         "transition-all duration-500 ease-out transform-gpu min-h-[320px]",
         isOutOfStock && "opacity-70"
       )}
     >
       {/* Image Container */}
-      <div className="relative shrink-0 overflow-hidden bg-gray-100 dark:bg-gray-700 w-full h-[200px] rounded-t-3xl">
+      <div className="relative shrink-0 overflow-hidden bg-muted dark:bg-muted w-full h-[200px] rounded-t-3xl">
         <Image
           src={product.images[0]}
           alt={product.name}
@@ -378,7 +378,7 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
             "absolute top-3 right-12 z-20 p-2 rounded-full shadow-lg transition-all duration-300",
             isWishlisted
               ? "bg-blue-600 text-white"
-              : "bg-white text-gray-700 hover:bg-blue-600 hover:text-white"
+              : "bg-card text-foreground hover:bg-blue-600 hover:text-white"
           )}
           aria-label={isWishlisted ? "Eliminar de favoritos" : "Agregar a favoritos"}
         >
@@ -389,10 +389,10 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
         <button
           type="button"
           onClick={handleShare}
-          className="absolute top-3 right-3 z-20 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md hover:bg-white hover:shadow-lg transition-all duration-200 hover:scale-110 active:scale-95"
+          className="absolute top-3 right-3 z-20 p-2 bg-card/90 backdrop-blur-sm rounded-full shadow-md hover:bg-card hover:shadow-lg transition-all duration-200 hover:scale-110 active:scale-95"
           aria-label="Compartir producto"
         >
-          <Share2 className="w-4 h-4 text-gray-600" />
+          <Share2 className="w-4 h-4 text-muted-foreground" />
         </button>
 
         {/* Stock indicator */}
@@ -409,7 +409,7 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
         <div>
           {/* Title with quantity */}
           <div className="flex items-start justify-between">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white leading-tight line-clamp-1 group-hover:text-blue-600 transition-colors duration-300">
+            <h3 className="text-lg font-semibold text-foreground dark:text-foreground leading-tight line-clamp-1 group-hover:text-blue-600 transition-colors duration-300">
               {product.name}
             </h3>
             {product.quantity !== null && product.quantity !== undefined && (
@@ -427,7 +427,7 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
           </div>
 
           {/* Description */}
-          <p className="text-base text-gray-600 dark:text-gray-300 line-clamp-2 mt-1">
+          <p className="text-base text-muted-foreground dark:text-gray-300 line-clamp-2 mt-1">
             {product.description || `${product.brand} - ${product.processor}`}
           </p>
 
@@ -443,7 +443,7 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
                 </span>
               ))}
               {product.tags.length > 3 && (
-                <span className="inline-block px-2 py-1 text-xs font-semibold text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-full">
+                <span className="inline-block px-2 py-1 text-xs font-semibold text-muted-foreground dark:text-gray-300 bg-muted dark:bg-muted rounded-full">
                   +{product.tags.length - 3}
                 </span>
               )}
@@ -455,13 +455,13 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
         <div className="flex items-center justify-between pt-2">
           <div className="flex items-baseline gap-2">
             {hasDiscount && (
-              <span className="text-sm text-gray-400 line-through font-normal">
+              <span className="text-sm text-muted-foreground line-through font-normal">
                 RD$ {product.originalPrice!.toLocaleString("es-DO")}
               </span>
             )}
             <span className={cn(
               "font-bold",
-              hasDiscount ? "text-xl text-emerald-600" : "text-lg text-gray-900 dark:text-white"
+              hasDiscount ? "text-xl text-emerald-600" : "text-lg text-foreground dark:text-foreground"
             )}>
               RD$ {product.price.toLocaleString("es-DO")}
             </span>
@@ -492,7 +492,7 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
                 <ShoppingCart className="w-5 h-5" />
               </button>
             ) : (
-              <p className="text-sm text-gray-400 font-medium py-2">Agotado</p>
+              <p className="text-sm text-muted-foreground font-medium py-2">Agotado</p>
             )}
           </div>
         </div>

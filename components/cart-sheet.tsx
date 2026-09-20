@@ -15,16 +15,12 @@ import { ShoppingCart, Trash2, Plus, Minus, MessageCircle, ArrowRight } from "lu
 import Image from "next/image";
 import { cn, isMinioImage } from "@/lib/utils";
 import { WhatsAppDropdown } from "./whatsapp-dropdown";
-import { useState, useEffect } from "react";
+import { useMounted } from "@/lib/use-mounted";
 import Link from "next/link";
 
 export function CartSheet() {
   const { items, removeItem, updateQuantity, totalPrice, totalItems } = useCart();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useMounted();
 
   if (!mounted) return null;
 
@@ -71,7 +67,7 @@ export function CartSheet() {
           ) : (
             items.map((item) => (
               <div key={item.id} className="flex gap-4 group">
-                <div className="w-16 h-16 rounded-xl bg-slate-100 border border-slate-200/80 overflow-hidden shrink-0 relative">
+                <div className="w-16 h-16 rounded-xl bg-muted border border-border/80 overflow-hidden shrink-0 relative">
                   <Image
                     src={item.images?.[0] || '/images/placeholder-laptop.png'}
                     alt={item.name}
@@ -83,28 +79,28 @@ export function CartSheet() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-start gap-2">
-                    <h4 className="font-sans text-sm font-semibold text-slate-900 truncate">{item.name}</h4>
+                    <h4 className="font-sans text-sm font-semibold text-foreground truncate">{item.name}</h4>
                     <button
                       onClick={() => removeItem(item.id)}
-                      className="text-slate-400 hover:text-red-500 transition-colors p-1"
+                      className="text-muted-foreground hover:text-red-500 transition-colors p-1"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
-                  <p className="text-xs font-bold text-slate-700 mt-1">RD${item.price.toLocaleString("es-DO")}</p>
+                  <p className="text-xs font-bold text-foreground mt-1">RD${item.price.toLocaleString("es-DO")}</p>
 
                   <div className="flex items-center gap-3 mt-3">
-                    <div className="flex items-center border border-slate-200 rounded-lg overflow-hidden bg-slate-50">
+                    <div className="flex items-center border border-border rounded-lg overflow-hidden bg-muted">
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        className="px-2 py-0.5 text-xs font-semibold text-slate-600 hover:bg-slate-200 transition-colors"
+                        className="px-2 py-0.5 text-xs font-semibold text-muted-foreground hover:bg-muted transition-colors"
                       >
                         <Minus className="w-3 h-3" />
                       </button>
-                      <span className="px-2 text-xs font-bold text-slate-800">{item.quantity}</span>
+                      <span className="px-2 text-xs font-bold text-foreground">{item.quantity}</span>
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="px-2 py-0.5 text-xs font-semibold text-slate-600 hover:bg-slate-200 transition-colors"
+                        className="px-2 py-0.5 text-xs font-semibold text-muted-foreground hover:bg-muted transition-colors"
                       >
                         <Plus className="w-3 h-3" />
                       </button>

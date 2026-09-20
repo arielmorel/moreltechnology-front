@@ -9,7 +9,7 @@ export function CTASection() {
       
       <div className="container mx-auto px-4 md:px-6 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="animate-slide-up inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-white/80 text-xs font-bold uppercase tracking-widest mb-8 backdrop-blur-sm">
+          <div className="animate-slide-up inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card/10 text-white/80 text-xs font-bold uppercase tracking-widest mb-8 backdrop-blur-sm">
             <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
             Atención inmediata
           </div>
@@ -36,7 +36,7 @@ export function CTASection() {
               href="https://wa.me/18094215517"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-white/10 text-white font-bold text-lg hover:bg-white/20 transition-all hover:scale-105 backdrop-blur-sm border border-white/20"
+              className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-card/10 text-white font-bold text-lg hover:bg-card/20 transition-all hover:scale-105 backdrop-blur-sm border border-white/20"
             >
               <MessageCircle className="w-6 h-6" />
               WhatsApp Santiago

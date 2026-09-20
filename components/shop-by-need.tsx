@@ -17,7 +17,7 @@ const colorMap: Record<string, { bg: string; text: string; border: string }> = {
   programacion: { bg: "bg-orange-500/10", text: "text-orange-600", border: "border-orange-500/20" },
   gaming: { bg: "bg-purple-500/10", text: "text-purple-600", border: "border-purple-500/20" },
   diseno: { bg: "bg-rose-500/10", text: "text-rose-600", border: "border-rose-500/20" },
-  oficina: { bg: "bg-slate-500/10", text: "text-slate-600", border: "border-slate-500/20" },
+  oficina: { bg: "bg-slate-500/10", text: "text-muted-foreground", border: "border-slate-500/20" },
 };
 
 export function ShopByNeed() {

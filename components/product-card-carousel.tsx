@@ -28,15 +28,15 @@ export function ProductCardCarousel({ product }: ProductCardCarouselProps) {
     <Link
       href={productUrl(product.slug)}
       className={cn(
-        "relative flex flex-col bg-white rounded-xl border border-slate-200 transition-all duration-200",
-        "hover:shadow-lg hover:border-slate-300 hover:-translate-y-0.5",
+        "relative flex flex-col bg-card rounded-xl border border-border transition-all duration-200",
+        "hover:shadow-lg hover:border-border hover:-translate-y-0.5",
         "p-3 gap-3",
         isOutOfStock && "opacity-70"
       )}
     >
       {/* Image */}
       <div className={cn(
-        "relative shrink-0 overflow-hidden bg-slate-50 rounded-lg w-full aspect-square",
+        "relative shrink-0 overflow-hidden bg-muted rounded-lg w-full aspect-square",
         isOutOfStock && "grayscale"
       )}>
         <Image
@@ -64,7 +64,7 @@ export function ProductCardCarousel({ product }: ProductCardCarouselProps) {
             "absolute top-2 right-2 z-10 p-1.5 rounded-full shadow-md transition-all duration-200",
             isWishlisted
               ? "bg-rose-500 text-white"
-              : "bg-white text-slate-500 hover:bg-rose-500 hover:text-white"
+              : "bg-card text-muted-foreground hover:bg-rose-500 hover:text-white"
           )}
           aria-label={isWishlisted ? "Eliminar de favoritos" : "Agregar a favoritos"}
         >
@@ -74,27 +74,27 @@ export function ProductCardCarousel({ product }: ProductCardCarouselProps) {
 
       {/* Content */}
       <div className="flex-1 min-w-0 flex flex-col gap-2">
-        <p className="text-[10px] text-slate-400 font-medium uppercase tracking-wide font-sans">
+        <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide font-sans">
           {product.brand}
         </p>
 
-        <h3 className="text-sm font-medium text-slate-800 line-clamp-2 leading-tight font-sans">
+        <h3 className="text-sm font-medium text-foreground line-clamp-2 leading-tight font-sans">
           {product.name}
         </h3>
 
         <div className="flex flex-wrap gap-1 font-sans">
           {product.processor && product.processor !== "N/A" && (
-            <span className="text-[9px] font-medium text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded">
+            <span className="text-[9px] font-medium text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
               {product.processor}
             </span>
           )}
           {product.ram && product.ram !== "N/A" && (
-            <span className="text-[9px] font-medium text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded">
+            <span className="text-[9px] font-medium text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
               {product.ram}
             </span>
           )}
           {product.ssd && product.ssd !== "N/A" && (
-            <span className="text-[9px] font-medium text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded">
+            <span className="text-[9px] font-medium text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
               {product.ssd}
             </span>
           )}
@@ -103,13 +103,13 @@ export function ProductCardCarousel({ product }: ProductCardCarouselProps) {
         <div className="mt-auto pt-2">
           <div className="flex items-baseline gap-2">
             {hasDiscount && (
-              <span className="text-[11px] text-slate-400 line-through font-sans">
+              <span className="text-[11px] text-muted-foreground line-through font-sans">
                 RD$ {product.originalPrice!.toLocaleString("es-DO")}
               </span>
             )}
             <span className={cn(
               "font-bold font-sans",
-              hasDiscount ? "text-base text-emerald-600" : "text-sm text-slate-900"
+              hasDiscount ? "text-base text-emerald-600" : "text-sm text-foreground"
             )}>
               RD$ {product.price.toLocaleString("es-DO")}
             </span>
@@ -132,7 +132,7 @@ export function ProductCardCarousel({ product }: ProductCardCarouselProps) {
               <span className="leading-none">Agregar</span>
             </button>
           ) : (
-            <p className="mt-2 text-xs text-slate-400 font-medium font-sans">Agotado</p>
+            <p className="mt-2 text-xs text-muted-foreground font-medium font-sans">Agotado</p>
           )}
         </div>
       </div>

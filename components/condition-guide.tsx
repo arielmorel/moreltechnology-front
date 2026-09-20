@@ -55,7 +55,7 @@ export function ConditionGuide() {
       </DialogTrigger>
       <DialogContent className="max-w-2xl rounded-[2rem] p-0 overflow-hidden border-none shadow-2xl">
         <div className="bg-primary p-8 text-white relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-card/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
           <DialogHeader className="relative z-10">
             <DialogTitle className="text-3xl font-black tracking-tight">Guía de Condiciones</DialogTitle>
             <DialogDescription className="text-primary-foreground/80 text-lg">
@@ -89,7 +89,7 @@ export function ConditionGuide() {
         </div>
 
         <div className="p-6 bg-muted/30 border-t border-border/50 flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-primary">
+          <div className="w-12 h-12 rounded-2xl bg-card shadow-sm flex items-center justify-center text-primary">
             <ShieldCheck className="w-6 h-6" />
           </div>
           <div className="flex-1">

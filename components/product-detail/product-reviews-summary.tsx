@@ -30,20 +30,20 @@ export function ProductReviewsSummary({
   if (totalReviews === 0) return null;
 
   return (
-    <div className="bg-white rounded-2xl p-4 mt-4 md:mt-6 shadow-sm">
+    <div className="bg-card rounded-2xl p-4 mt-4 md:mt-6 shadow-sm">
       {/* Mobile: Compact Header */}
       <div className="md:hidden">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="text-center">
-              <p className="text-3xl font-extrabold text-slate-900 leading-none">{averageRating.toFixed(1)}</p>
+              <p className="text-3xl font-extrabold text-foreground leading-none">{averageRating.toFixed(1)}</p>
               <div className="flex gap-0.5 mt-1">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <Star
                     key={star}
                     className={cn(
                       "w-3 h-3",
-                      star <= Math.round(averageRating) ? "text-amber-400" : "text-slate-200"
+                      star <= Math.round(averageRating) ? "text-amber-400" : "text-muted-foreground"
                     )}
                     style={star <= Math.round(averageRating) ? { fill: "#fbbf24" } : { fill: "none" }}
                   />
@@ -51,7 +51,7 @@ export function ProductReviewsSummary({
               </div>
             </div>
             <div className="text-left">
-              <p className="text-xs text-slate-500">{totalReviews} reseñas</p>
+              <p className="text-xs text-muted-foreground">{totalReviews} reseñas</p>
             </div>
           </div>
 
@@ -67,7 +67,7 @@ export function ProductReviewsSummary({
         {/* Collapsible Breakdown */}
         <button
           onClick={() => setShowBreakdown(!showBreakdown)}
-          className="flex items-center gap-1.5 mt-3 text-[10px] font-medium text-slate-500 hover:text-slate-700 transition-colors"
+          className="flex items-center gap-1.5 mt-3 text-[10px] font-medium text-muted-foreground hover:text-foreground transition-colors"
         >
           <ChevronDown className={cn("w-3 h-3 transition-transform", showBreakdown && "rotate-180")} />
           {showBreakdown ? "Ocultar desglose" : "Ver desglose de estrellas"}
@@ -80,11 +80,11 @@ export function ProductReviewsSummary({
               const percentage = (count / totalReviews) * 100;
               return (
                 <div key={rating} className="flex items-center gap-2">
-                  <span className="text-[10px] text-slate-400 w-2">{rating}</span>
-                  <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                  <span className="text-[10px] text-muted-foreground w-2">{rating}</span>
+                  <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
                     <div className="h-full bg-amber-400 rounded-full" style={{ width: `${percentage}%` }} />
                   </div>
-                  <span className="text-[9px] text-slate-400 w-4 text-right">{count}</span>
+                  <span className="text-[9px] text-muted-foreground w-4 text-right">{count}</span>
                 </div>
               );
             })}
@@ -93,26 +93,26 @@ export function ProductReviewsSummary({
 
         {/* First Review Preview */}
         {reviews.length > 0 && (
-          <div className="mt-3 pt-3 border-t border-slate-100">
+          <div className="mt-3 pt-3 border-t border-border">
             <div className="flex items-center gap-2 mb-1">
-              <div className="w-5 h-5 rounded-full bg-slate-200 flex items-center justify-center text-[8px] font-bold text-slate-600">
+              <div className="w-5 h-5 rounded-full bg-muted flex items-center justify-center text-[8px] font-bold text-muted-foreground">
                 {reviews[0].customerName?.charAt(0) || "?"}
               </div>
-              <span className="text-[10px] font-semibold text-slate-700">{reviews[0].customerName || "Anónimo"}</span>
+              <span className="text-[10px] font-semibold text-foreground">{reviews[0].customerName || "Anónimo"}</span>
               <div className="flex gap-0.5 ml-auto">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <Star
                     key={star}
                     className={cn(
                       "w-2.5 h-2.5",
-                      star <= reviews[0].rating ? "text-amber-400" : "text-slate-200"
+                      star <= reviews[0].rating ? "text-amber-400" : "text-muted-foreground"
                     )}
                     style={star <= reviews[0].rating ? { fill: "#fbbf24" } : { fill: "none" }}
                   />
                 ))}
               </div>
             </div>
-            <p className="text-[10px] text-slate-600 line-clamp-2">{reviews[0].comment}</p>
+            <p className="text-[10px] text-muted-foreground line-clamp-2">{reviews[0].comment}</p>
           </div>
         )}
       </div>
@@ -120,20 +120,20 @@ export function ProductReviewsSummary({
       {/* Desktop: Full Layout */}
       <div className="hidden md:block">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Reseñas</h3>
-          <span className="text-[10px] text-slate-500">{totalReviews} opiniones</span>
+          <h3 className="text-xs font-bold text-foreground uppercase tracking-wider">Reseñas</h3>
+          <span className="text-[10px] text-muted-foreground">{totalReviews} opiniones</span>
         </div>
 
         <div className="flex items-center gap-4 mb-4">
           <div className="text-center">
-            <p className="text-3xl font-bold text-slate-900">{averageRating.toFixed(1)}</p>
+            <p className="text-3xl font-bold text-foreground">{averageRating.toFixed(1)}</p>
             <div className="flex gap-0.5">
               {[1, 2, 3, 4, 5].map((star) => (
                 <Star
                   key={star}
                   className={cn(
                     "w-3.5 h-3.5",
-                    star <= Math.round(averageRating) ? "text-amber-400" : "text-slate-200"
+                    star <= Math.round(averageRating) ? "text-amber-400" : "text-muted-foreground"
                   )}
                   style={star <= Math.round(averageRating) ? { fill: "#fbbf24" } : { fill: "none" }}
                 />
@@ -146,11 +146,11 @@ export function ProductReviewsSummary({
               const percentage = (count / totalReviews) * 100;
               return (
                 <div key={rating} className="flex items-center gap-2">
-                  <span className="text-[10px] text-slate-400 w-2">{rating}</span>
-                  <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
+                  <span className="text-[10px] text-muted-foreground w-2">{rating}</span>
+                  <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
                     <div className="h-full bg-amber-400 rounded-full" style={{ width: `${percentage}%` }} />
                   </div>
-                  <span className="text-[9px] text-slate-400 w-4 text-right">{count}</span>
+                  <span className="text-[9px] text-muted-foreground w-4 text-right">{count}</span>
                 </div>
               );
             })}
@@ -162,7 +162,7 @@ export function ProductReviewsSummary({
           {["Pantalla", "Batería", "Rápido", "Calidad", "precio"].map((keyword) => (
             <button
               key={keyword}
-              className="text-[9px] font-medium bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full hover:bg-slate-200 transition-colors capitalize"
+              className="text-[9px] font-medium bg-muted text-muted-foreground px-2.5 py-1 rounded-full hover:bg-muted transition-colors capitalize"
             >
               {keyword}
             </button>
@@ -172,33 +172,33 @@ export function ProductReviewsSummary({
         {/* Key Reviews Preview */}
         <div className="space-y-3">
           {reviews.slice(0, 2).map((review) => (
-            <div key={review.id} className="border-t border-slate-100 pt-3">
+            <div key={review.id} className="border-t border-border pt-3">
               <div className="flex items-center gap-2 mb-1">
-                <div className="w-5 h-5 rounded-full bg-slate-200 flex items-center justify-center text-[8px] font-bold text-slate-600">
+                <div className="w-5 h-5 rounded-full bg-muted flex items-center justify-center text-[8px] font-bold text-muted-foreground">
                   {review.customerName?.charAt(0) || "?"}
                 </div>
-                <span className="text-[10px] font-semibold text-slate-700">{review.customerName || "Anónimo"}</span>
+                <span className="text-[10px] font-semibold text-foreground">{review.customerName || "Anónimo"}</span>
                 <div className="flex gap-0.5 ml-auto">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <Star
                       key={star}
                       className={cn(
                         "w-2.5 h-2.5",
-                        star <= review.rating ? "text-amber-400" : "text-slate-200"
+                        star <= review.rating ? "text-amber-400" : "text-muted-foreground"
                       )}
                       style={star <= review.rating ? { fill: "#fbbf24" } : { fill: "none" }}
                     />
                   ))}
                 </div>
               </div>
-              <p className="text-[10px] text-slate-600 line-clamp-2">{review.comment}</p>
+              <p className="text-[10px] text-muted-foreground line-clamp-2">{review.comment}</p>
             </div>
           ))}
         </div>
 
         <button
           onClick={() => document.getElementById('review-form')?.scrollIntoView({ behavior: 'smooth' })}
-          className="w-full mt-4 py-2.5 border border-slate-200 rounded-xl text-[11px] font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
+          className="w-full mt-4 py-2.5 border border-border rounded-xl text-[11px] font-semibold text-foreground hover:bg-muted transition-colors"
         >
           Escribir una reseña
         </button>

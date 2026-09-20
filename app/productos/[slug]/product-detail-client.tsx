@@ -32,6 +32,7 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
   const [activeImage, setActiveImage] = useState(0);
   const [isImageViewerOpen, setIsImageViewerOpen] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | undefined>(undefined);
+  const [prevProductId, setPrevProductId] = useState(product?.id);
   const [reviewsData, setReviewsData] = useState({
     reviews: [] as Array<{
       id: string;
@@ -52,10 +53,10 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
     : "Certificada";
 
   // Reset variant when product changes — start with primary (undefined = main product)
-  useEffect(() => {
+  if (prevProductId !== product?.id) {
+    setPrevProductId(product?.id);
     setSelectedVariant(undefined);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [product?.id]);
+  }
 
   const getDisplayPrice = (prices: Product["prices"]) => {
     const dop = prices?.find(p => p.currency === "DOP");
@@ -179,12 +180,12 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
     <div className="min-h-screen pt-16 md:pt-20 pb-24 md:pb-16 animate-fade-in">
       <div className="container mx-auto px-3 md:px-6">
         {/* Desktop Breadcrumbs */}
-        <nav className="hidden md:flex items-center gap-1.5 text-xs text-slate-400 mb-4 md:mb-6 animate-slide-up">
-          <Link href="/" className="hover:text-slate-900 transition-colors">Inicio</Link>
-          <span className="text-slate-300">/</span>
-          <Link href="/catalogo/moreltechnology" className="hover:text-slate-900 transition-colors">Catálogo</Link>
-          <span className="text-slate-300">/</span>
-          <span className="text-slate-600 font-medium truncate max-w-[150px]">{product.name}</span>
+        <nav className="hidden md:flex items-center gap-1.5 text-xs text-muted-foreground mb-4 md:mb-6 animate-slide-up">
+          <Link href="/" className="hover:text-foreground transition-colors">Inicio</Link>
+          <span className="text-muted-foreground">/</span>
+          <Link href="/catalogo/moreltechnology" className="hover:text-foreground transition-colors">Catálogo</Link>
+          <span className="text-muted-foreground">/</span>
+          <span className="text-muted-foreground font-medium truncate max-w-[150px]">{product.name}</span>
         </nav>
 
         <div className="grid lg:grid-cols-2 gap-4 lg:gap-8 items-start">
@@ -232,11 +233,11 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
         {/* Review Form - Collapsible on mobile */}
         <div id="review-form" className="mt-4 md:mt-6 scroll-mt-20 animate-slide-up-delay-5">
           <details className="group">
-            <summary className="flex items-center justify-between cursor-pointer list-none bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
-              <span className="text-sm font-semibold text-slate-900">Dejar una reseña</span>
-              <ChevronDown className="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" />
+            <summary className="flex items-center justify-between cursor-pointer list-none bg-card rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
+              <span className="text-sm font-semibold text-foreground">Dejar una reseña</span>
+              <ChevronDown className="w-4 h-4 text-muted-foreground group-open:rotate-180 transition-transform" />
             </summary>
-            <div className="bg-white rounded-2xl border border-slate-100 p-4 mt-2 shadow-sm">
+            <div className="bg-card rounded-2xl border border-border p-4 mt-2 shadow-sm">
               <ProductReviewForm productId={parseInt(product.id, 10)} />
             </div>
           </details>
@@ -256,7 +257,7 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
       </div>
 
       {/* Mobile Sticky CTA Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-100 py-3 px-4 shadow-lg flex items-center gap-3 md:hidden">
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-md border-t border-border py-3 px-4 shadow-lg flex items-center gap-3 md:hidden">
         {product.quantity === 0 ? (
           <div className="w-full">
             <NotifyWhenAvailable productId={product.id} productName={product.name} />
@@ -264,7 +265,7 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
         ) : (
           <>
             <div className="flex flex-col items-start shrink-0">
-              <span className="text-lg font-extrabold text-slate-900 leading-tight">
+              <span className="text-lg font-extrabold text-foreground leading-tight">
                 RD$ {currentDisplayPrice.toLocaleString("es-DO")}
               </span>
               <span className="text-[9px] font-medium text-emerald-600 leading-none mt-0.5">

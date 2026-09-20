@@ -367,7 +367,7 @@ export default async function LaptopSlugPage({ params }: PageProps) {
           </p>
           <WhatsAppDropdown
             message={whatsappMessage}
-            className="h-14 px-8 rounded-2xl text-lg font-bold bg-white text-primary hover:bg-white/90 shadow-xl"
+            className="h-14 px-8 rounded-2xl text-lg font-bold bg-card text-primary hover:bg-card/90 shadow-xl"
           >
             Hablar con un asesor
           </WhatsAppDropdown>

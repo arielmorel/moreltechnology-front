@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -44,10 +44,11 @@ export function FinancingForm({ initialBranch }: { initialBranch?: string }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [requestNumber, setRequestNumber] = useState("");
-  const [branchValue, setBranchValue] = useState<string>("");
+  const [branchValue, setBranchValue] = useState<string>(initialBranch ?? "");
+  const [prevInitialBranch, setPrevInitialBranch] = useState(initialBranch);
 
   const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema as any),
+    resolver: zodResolver(formSchema),
     defaultValues: {
       fullName: "",
       cedula: "",
@@ -62,16 +63,17 @@ export function FinancingForm({ initialBranch }: { initialBranch?: string }) {
       workTime: "",
       company: "",
       equipment: "",
-      branch: "",
+      branch: initialBranch ?? "",
     },
   });
 
-  useEffect(() => {
+  if (prevInitialBranch !== initialBranch) {
+    setPrevInitialBranch(initialBranch);
     if (initialBranch) {
       setBranchValue(initialBranch);
       form.setValue("branch", initialBranch);
     }
-  }, [initialBranch]);
+  }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);

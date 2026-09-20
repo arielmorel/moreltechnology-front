@@ -32,7 +32,7 @@ import {
 
 interface ProductQuickViewProps {
   product: Product;
-  children: React.ReactNode;
+  children: React.ReactElement;
 }
 
 export function ProductQuickView({ product, children }: ProductQuickViewProps) {
@@ -41,7 +41,7 @@ export function ProductQuickView({ product, children }: ProductQuickViewProps) {
 
   return (
     <Dialog>
-      <DialogTrigger render={children as any} />
+      <DialogTrigger render={children} />
       <DialogContent className="max-w-5xl w-[95vw] max-h-[85vh] overflow-hidden rounded-2xl p-0 border-none shadow-2xl bg-card">
         <div className="flex flex-col md:flex-row h-full">
           {/* Gallery Section */}
