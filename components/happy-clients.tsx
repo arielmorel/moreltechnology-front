@@ -1,17 +1,8 @@
 "use client";
 
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 import { Heart } from "lucide-react";
-
-function shuffle<T>(array: T[]): T[] {
-  const shuffled = [...array];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
-}
 
 const allClientImages = Array.from({ length: 15 }, (_, i) => ({
   src: `/images/happy-clients/client-${i + 1}.jpg`,
@@ -21,7 +12,7 @@ const allClientImages = Array.from({ length: 15 }, (_, i) => ({
 export function HappyClients() {
   const [isPaused, setIsPaused] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const clientImages = useMemo(() => shuffle(allClientImages), []);
+  const clientImages = allClientImages;
 
   if (clientImages.length === 0) return null;
 

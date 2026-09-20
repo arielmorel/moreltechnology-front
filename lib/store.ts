@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { useSyncExternalStore } from 'react';
 import { Product } from './data';
 
 interface CartItem extends Product {
@@ -65,7 +66,6 @@ export const useCart = create<CartStore>()(
         const currentCompare = get().compareItems;
         if (currentCompare.find(item => item.id === product.id)) return;
         if (currentCompare.length >= 3) {
-          // Replace last one or just return? Let's limit to 3.
           return;
         }
         set({ compareItems: [...currentCompare, product] });
@@ -82,3 +82,16 @@ export const useCart = create<CartStore>()(
     }
   )
 );
+
+function subscribeToHydration(callback: () => void) {
+  const unsubscribe = useCart.persist.onFinishHydration(callback);
+  return unsubscribe;
+}
+
+export function useCartHydrated(): boolean {
+  return useSyncExternalStore(
+    subscribeToHydration,
+    () => useCart.persist.hasHydrated(),
+    () => false
+  );
+}
