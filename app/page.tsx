@@ -11,10 +11,11 @@ const HomeFAQ = dynamic(() => import("@/components/home-faq").then(m => m.HomeFA
 const BranchesSection = dynamic(() => import("@/components/branches-section").then(m => m.BranchesSection));
 const ReviewsSection = dynamic(() => import("@/components/reviews-section").then(m => m.ReviewsSection));
 const HomeProductSections = dynamic(() => import("@/components/home-product-sections").then(m => m.HomeProductSections));
-// const ShopByNeed = dynamic(() => import("@/components/shop-by-need").then(m => m.ShopByNeed));
+const ShopByNeed = dynamic(() => import("@/components/shop-by-need").then(m => m.ShopByNeed));
 const ShopByBrand = dynamic(() => import("@/components/shop-by-brand").then(m => m.ShopByBrand));
 const OffersCarousel = dynamic(() => import("@/components/offers-carousel").then(m => m.OffersCarousel));
 const GamingCarousel = dynamic(() => import("@/components/gaming-carousel").then(m => m.GamingCarousel));
+const FlashAnnouncement = dynamic(() => import("@/components/flash-announcement").then(m => m.FlashAnnouncement));
 
 const organizationSchema = {
   "@context": "https://schema.org",
@@ -151,6 +152,7 @@ export default async function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
 
+      <FlashAnnouncement />
       <HeroSection />
       <OffersCarousel />
       <GamingCarousel />
@@ -159,7 +161,7 @@ export default async function Home() {
         featured={homeProducts.featured}
       />
       <CategoriesSection />
-      {/* <ShopByNeed /> */}
+      <ShopByNeed />
       <ShopByBrand />
       <HowItWorks />
       <TrustSection />
