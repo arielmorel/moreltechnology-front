@@ -3,8 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Product } from "@/lib/data";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Heart } from "lucide-react";
 import { useCart } from "@/lib/store";
+import { useFavorites } from "@/lib/favorites-store";
 import { toast } from "sonner";
 import { cn, isMinioImage, productUrl } from "@/lib/utils";
 
@@ -14,7 +15,9 @@ interface ProductCardCarouselProps {
 
 export function ProductCardCarousel({ product }: ProductCardCarouselProps) {
   const { addItem } = useCart();
+  const { isFavorite, toggleFavorite } = useFavorites();
   const isOutOfStock = product.quantity <= 0;
+  const isWishlisted = isFavorite(product.id);
 
   const hasDiscount = product.originalPrice && product.originalPrice > product.price;
   const discountPercent = hasDiscount
@@ -49,6 +52,24 @@ export function ProductCardCarousel({ product }: ProductCardCarouselProps) {
             -{discountPercent}%
           </span>
         )}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleFavorite(product);
+            toast.success(isWishlisted ? "Eliminado de favoritos" : "Agregado a favoritos");
+          }}
+          className={cn(
+            "absolute top-2 right-2 z-10 p-1.5 rounded-full shadow-md transition-all duration-200",
+            isWishlisted
+              ? "bg-rose-500 text-white"
+              : "bg-white text-slate-500 hover:bg-rose-500 hover:text-white"
+          )}
+          aria-label={isWishlisted ? "Eliminar de favoritos" : "Agregar a favoritos"}
+        >
+          <Heart className={cn("w-3.5 h-3.5", isWishlisted && "fill-current")} />
+        </button>
       </div>
 
       {/* Content */}

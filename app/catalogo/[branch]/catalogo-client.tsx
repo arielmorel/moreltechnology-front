@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useMemo, useEffect, useCallback, useRef } from "react";
+import { useState, useMemo, useEffect, useCallback, useRef, useSyncExternalStore } from "react";
 import { categories, Product } from "@/lib/data";
 import { getProducts, searchProducts, AvailabilityFilter, SortFilter, getSettingWithDefault } from "@/lib/api";
 import { useDebounce } from "@/hooks/use-debounce";
-import { ProductCard } from "@/components/product-card";
+import { ProductCard, type ProductCardView } from "@/components/product-card";
 import { ProductCardSkeleton } from "@/components/product-card-skeleton";
-import { Search, SlidersHorizontal, MapPin, Share2, Loader2, X, BadgePercent, ChevronDown } from "lucide-react";
+import { Search, SlidersHorizontal, MapPin, Share2, X, BadgePercent, ChevronDown, ChevronRight, LayoutGrid, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { FilterChip } from "@/components/ui/filter-chip";
@@ -27,7 +27,9 @@ import {
 import { ProductFilters } from "@/components/product-filters";
 import { branches } from "@/lib/data";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { CatalogTheme, themeConfigs } from "@/lib/themes";
+import { motion, type Variants } from "framer-motion";
 
 const PAGE_SIZE = 6;
 
@@ -38,13 +40,68 @@ function getBranchLabel(branchId: string): string {
   return branch ? branch.name.replace("Sucursal ", "") : branchId;
 }
 
+const containerVariants: Variants = {
+  hidden: {},
+  show: {
+    transition: { staggerChildren: 0.08, delayChildren: 0.05 },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 18 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.45, ease: "easeOut" },
+  },
+};
+
+const productListVariants: Variants = {
+  hidden: {},
+  show: {
+    transition: { staggerChildren: 0.06 },
+  },
+};
+
+const productItemVariants: Variants = {
+  hidden: { opacity: 0, y: 14 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.35, ease: "easeOut" },
+  },
+};
+
+const VIEW_MODE_KEY = "catalog-view-mode";
+
+function viewModeGetServerSnapshot(): ProductCardView {
+  return "grid";
+}
+
+function viewModeGetSnapshot(): ProductCardView {
+  if (typeof window === "undefined") return "grid";
+  const stored = window.localStorage.getItem(VIEW_MODE_KEY);
+  return stored === "list" ? "list" : "grid";
+}
+
+function viewModeSubscribe(callback: () => void): () => void {
+  window.addEventListener("storage", callback);
+  return () => window.removeEventListener("storage", callback);
+}
+
+function setViewMode(next: ProductCardView): void {
+  window.localStorage.setItem(VIEW_MODE_KEY, next);
+  window.dispatchEvent(new Event("storage"));
+}
+
 export default function CatalogoBranchClient({ branch: initialBranch }: { branch: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const sentinelRef = useRef<HTMLDivElement>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   const [branch] = useState<string>(initialBranch);
   const [currentTheme, setCurrentTheme] = useState<CatalogTheme>("theme-novus");
+  const viewMode = useSyncExternalStore(viewModeSubscribe, viewModeGetSnapshot, viewModeGetServerSnapshot);
 
   const [search, setSearch] = useState(() => searchParams.get("q") || "");
   const debouncedSearch = useDebounce(search, 300);
@@ -145,25 +202,34 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
 
   const [products, setProducts] = useState<Product[]>([]);
   const [total, setTotal] = useState(0);
-  const pageRef = useRef(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [stockCounts, setStockCounts] = useState({ available: 0, outOfStock: 0, total: 0 });
   const filtersKey = `${debouncedSearch}-${selectedCategory}-${branch}-${stockFilter}`;
 
-  const hasMore = products.length < total;
+  const currentPage = Math.max(1, parseInt(searchParams.get("page") || "1", 10) || 1);
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+
+  const goToPage = (page: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (page <= 1) params.delete("page");
+    else params.set("page", String(page));
+    const queryString = params.toString();
+    const newUrl = `/catalogo/${branch}${queryString ? `?${queryString}` : ""}`;
+    router.push(newUrl, { scroll: false });
+    resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   useEffect(() => {
-    pageRef.current = 0;
     let cancelled = false;
     const loadInitial = async () => {
       if (!cancelled) setIsLoading(true);
       try {
+        const pageIndex = Math.min(currentPage - 1, Math.max(0, totalPages - 1));
         let result;
         if (debouncedSearch.trim() === "") {
-          result = await getProducts(0, PAGE_SIZE, selectedCategory, branch, undefined, stockFilter);
+          result = await getProducts(pageIndex, PAGE_SIZE, selectedCategory, branch, undefined, stockFilter);
         } else {
-          result = await searchProducts(debouncedSearch, 0, PAGE_SIZE, selectedCategory, branch, undefined, stockFilter);
+          result = await searchProducts(debouncedSearch, pageIndex, PAGE_SIZE, selectedCategory, branch, undefined, stockFilter);
         }
         if (!cancelled) {
           setProducts(result.products);
@@ -175,7 +241,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
     };
     loadInitial();
     return () => { cancelled = true; };
-  }, [filtersKey, debouncedSearch, selectedCategory, branch, stockFilter]);
+  }, [filtersKey, debouncedSearch, selectedCategory, branch, stockFilter, currentPage, totalPages]);
 
   // Fetch stock counts for all categories (IN_STOCK, OUT_OF_STOCK, ALL)
   useEffect(() => {
@@ -202,39 +268,6 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
     loadCounts();
     return () => { cancelled = true; };
   }, [selectedCategory, branch]);
-
-  useEffect(() => {
-    if (!sentinelRef.current || !hasMore || isLoadingMore) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && hasMore && !isLoadingMore) {
-          const nextPage = pageRef.current + 1;
-          pageRef.current = nextPage;
-          setIsLoadingMore(true);
-          const loadMore = async () => {
-            try {
-              let result;
-              if (debouncedSearch.trim() === "") {
-                result = await getProducts(nextPage, PAGE_SIZE, selectedCategory, branch, undefined, stockFilter);
-              } else {
-                result = await searchProducts(debouncedSearch, nextPage, PAGE_SIZE, selectedCategory, branch, undefined, stockFilter);
-              }
-              setProducts(prev => [...prev, ...result.products]);
-              setTotal(result.total);
-            } finally {
-              setIsLoadingMore(false);
-            }
-          };
-          loadMore();
-        }
-      },
-      { rootMargin: "200px" }
-    );
-
-    observer.observe(sentinelRef.current);
-    return () => observer.disconnect();
-  }, [hasMore, isLoadingMore, debouncedSearch, selectedCategory, branch, products.length, stockFilter]);
 
   const brands = useMemo(() => {
     const uniqueBrands = new Set(products.map(p => p.brand));
@@ -339,10 +372,34 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
         )
       }}
     >
-      <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10">
+      <motion.div
+        className="w-full px-4 md:px-6 lg:px-8 xl:px-10"
+        variants={containerVariants}
+        initial="hidden"
+        animate="show"
+      >
+        {/* Breadcrumb */}
+        <motion.nav
+          variants={itemVariants}
+          aria-label="Ruta de navegación"
+          className="flex items-center gap-1.5 text-xs text-slate-500 mb-8"
+        >
+          <Link href="/" className="hover:text-slate-900 transition-colors font-medium">
+            Inicio
+          </Link>
+          <ChevronRight className="w-3 h-3 shrink-0" />
+          <Link href="/catalogo" className="hover:text-slate-900 transition-colors font-medium">
+            Catálogo
+          </Link>
+          <ChevronRight className="w-3 h-3 shrink-0" />
+          <span className="text-slate-900 font-semibold">{getBranchLabel(branch)}</span>
+        </motion.nav>
+
         {/* Header */}
-        <div className="flex justify-between items-center w-full mb-4">
-          <h1 className="font-sans text-xl font-bold tracking-tight" style={{ color: themeConfigs[currentTheme].colors.text }}>Laptops disponibles</h1>
+        <motion.div variants={itemVariants} className="flex justify-between items-center w-full mb-4">
+          <h1 className="font-sans text-xl font-bold tracking-tight" style={{ color: themeConfigs[currentTheme].colors.text }}>
+            Laptops disponibles en {getBranchLabel(branch)}
+          </h1>
           <button
             type="button"
             onClick={handleShare}
@@ -355,10 +412,10 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
           >
             <Share2 className="h-4 w-4" />
           </button>
-        </div>
+        </motion.div>
 
         {/* Search Bar */}
-        <div className="relative mb-4">
+        <motion.div variants={itemVariants} className="relative mb-4">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
           <input
             type="text"
@@ -375,10 +432,10 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
               <X className="h-4 w-4" />
             </button>
           )}
-        </div>
+        </motion.div>
 
         {/* Branch Selector + Filter Trigger Row */}
-        <div className="flex items-center gap-2 mb-3">
+        <motion.div variants={itemVariants} className="flex items-center gap-2 mb-3">
           {/* Branch Selector */}
           <div className="flex h-9 shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5">
             <MapPin className="h-3.5 w-3.5 text-slate-400" />
@@ -456,10 +513,10 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
               </SheetContent>
             </Sheet>
           </div>
-        </div>
+        </motion.div>
 
         {/* Horizontal Scrollable Filter Chips */}
-        <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-hide -mx-4 px-4 mb-2">
+        <motion.div variants={itemVariants} className="flex gap-2 overflow-x-auto pb-3 scrollbar-hide -mx-4 px-4 mb-2">
           <FilterChip
             active={showOnlyOffers}
             onClick={() => setShowOnlyOffers(!showOnlyOffers)}
@@ -544,7 +601,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
             {selectedRam !== "todas" && `: ${selectedRam}`}
             <ChevronDown className="w-3 h-3" />
           </FilterChip>
-        </div>
+        </motion.div>
 
         {/* Active Filters */}
         {appliedFilters.length > 0 && (
@@ -570,7 +627,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
           </div>
         )}
 
-        <div className="flex flex-col xl:flex-row gap-4 md:gap-6 xl:gap-8">
+        <motion.div variants={itemVariants} className="flex flex-col xl:flex-row gap-4 md:gap-6 xl:gap-8">
           {/* Sidebar Filters (Desktop) */}
           <aside className="hidden xl:block w-72 shrink-0">
             <div className="sticky top-28 bg-card/80 border border-border/60 rounded-2xl p-5 shadow-sm">
@@ -604,61 +661,174 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
           {/* Main Content */}
           <div className="flex-1">
             {/* Results count */}
-            <div className="flex items-center justify-between mb-3">
-              <p className="text-xs text-slate-500">
+            <div ref={resultsRef} className="flex items-center justify-between mb-3 gap-3">
+              <p className="text-xs text-slate-500" aria-live="polite" role="status">
                 {sortedProducts.length} {sortedProducts.length === 1 ? "equipo" : "equipos"} encontrados
               </p>
-              <div className="bg-slate-100 p-0.5 rounded-lg flex items-center gap-0.5">
-                {[
-                  { value: "IN_STOCK" as const, label: "Disponibles" },
-                  { value: "OUT_OF_STOCK" as const, label: "Agotados" },
-                  { value: "ALL" as const, label: "Todos" },
-                ].map((tab) => (
+              <div className="flex items-center gap-2">
+                {/* View mode toggle */}
+                <div className="bg-slate-100 p-0.5 rounded-lg flex items-center gap-0.5 shrink-0" role="group" aria-label="Cambiar vista">
                   <button
-                    key={tab.value}
                     type="button"
-                    onClick={() => setStockFilter(tab.value)}
+                    onClick={() => setViewMode("grid")}
                     className={cn(
-                      "text-[10px] font-medium px-2.5 py-1 rounded-md transition-all",
-                      stockFilter === tab.value
+                      "p-1.5 rounded-md transition-all",
+                      viewMode === "grid"
                         ? "bg-white text-slate-900 shadow-sm"
                         : "text-slate-500 hover:text-slate-700"
                     )}
+                    aria-label="Vista de cuadrícula"
+                    aria-pressed={viewMode === "grid"}
                   >
-                    {tab.label}
+                    <LayoutGrid className="w-4 h-4" />
                   </button>
-                ))}
+                  <button
+                    type="button"
+                    onClick={() => setViewMode("list")}
+                    className={cn(
+                      "p-1.5 rounded-md transition-all",
+                      viewMode === "list"
+                        ? "bg-white text-slate-900 shadow-sm"
+                        : "text-slate-500 hover:text-slate-700"
+                    )}
+                    aria-label="Vista de lista"
+                    aria-pressed={viewMode === "list"}
+                  >
+                    <List className="w-4 h-4" />
+                  </button>
+                </div>
+
+                <div className="bg-slate-100 p-0.5 rounded-lg flex items-center gap-0.5">
+                  {[
+                    { value: "IN_STOCK" as const, label: "Disponibles" },
+                    { value: "OUT_OF_STOCK" as const, label: "Agotados" },
+                    { value: "ALL" as const, label: "Todos" },
+                  ].map((tab) => (
+                    <button
+                      key={tab.value}
+                      type="button"
+                      onClick={() => setStockFilter(tab.value)}
+                      className={cn(
+                        "text-[10px] font-medium px-2.5 py-1 rounded-md transition-all",
+                        stockFilter === tab.value
+                          ? "bg-white text-slate-900 shadow-sm"
+                          : "text-slate-500 hover:text-slate-700"
+                      )}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
 
             {isLoading && products.length === 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-6">
-                {[...Array(6)].map((_, i) => (
+              <div
+                key={`skeleton-${filtersKey}-${viewMode}`}
+                className={cn(
+                  "grid gap-6",
+                  viewMode === "list"
+                    ? "grid-cols-1"
+                    : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
+                )}
+              >
+                {[...Array(viewMode === "list" ? 3 : 6)].map((_, i) => (
                   <ProductCardSkeleton key={i} />
                 ))}
               </div>
             ) : sortedProducts.length > 0 ? (
               <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-6" aria-busy={isLoading}>
-                  {sortedProducts.map(product => (
-                    <ProductCard key={product.id} product={product} />
-                  ))}
-                </div>
+                {viewMode === "list" ? (
+                  <motion.div
+                    key={`list-${filtersKey}`}
+                    variants={productListVariants}
+                    initial="hidden"
+                    animate="show"
+                    aria-busy={isLoading}
+                    className="flex flex-col gap-5"
+                  >
+                    {sortedProducts.map(product => (
+                      <motion.div key={product.id} variants={productItemVariants}>
+                        <ProductCard key={product.id} product={product} view="list" />
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key={`grid-${filtersKey}`}
+                    variants={productListVariants}
+                    initial="hidden"
+                    animate="show"
+                    aria-busy={isLoading}
+                    className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6"
+                  >
+                    {sortedProducts.map(product => (
+                      <motion.div key={product.id} variants={productItemVariants} className="h-full">
+                        <ProductCard key={product.id} product={product} />
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                )}
 
-                {/* Infinite scroll sentinel */}
-                <div ref={sentinelRef} className="flex justify-center py-8">
-                  {isLoadingMore && (
-                    <div className="flex items-center gap-2 text-slate-500">
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      <span className="text-xs">Cargando más equipos...</span>
-                    </div>
-                  )}
-                  {!hasMore && sortedProducts.length > 0 && (
-                    <p className="text-slate-400 text-xs">
-                      Has visto todos los {sortedProducts.length} equipos
-                    </p>
-                  )}
-                </div>
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <nav
+                    aria-label="Paginación de resultados"
+                    className="flex items-center justify-center gap-1.5 pt-6"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => goToPage(currentPage - 1)}
+                      disabled={currentPage <= 1}
+                      className="px-3 py-2 rounded-lg text-sm font-medium bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none transition-colors"
+                    >
+                      Anterior
+                    </button>
+
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                      const isPageActive = page === currentPage;
+                      const isNearby =
+                        page === 1 ||
+                        page === totalPages ||
+                        Math.abs(page - currentPage) <= 1;
+
+                      if (!isNearby) {
+                        const isEllipsis = page === 2 || page === totalPages - 1;
+                        return isEllipsis ? (
+                          <span key={page} className="px-1 text-slate-400 select-none">
+                            …
+                          </span>
+                        ) : null;
+                      }
+
+                      return (
+                        <button
+                          key={page}
+                          type="button"
+                          aria-current={isPageActive ? "page" : undefined}
+                          onClick={() => goToPage(page)}
+                          className={cn(
+                            "min-w-9 h-9 px-2 rounded-lg text-sm font-medium transition-colors",
+                            isPageActive
+                              ? "bg-slate-900 text-white"
+                              : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50"
+                          )}
+                        >
+                          {page}
+                        </button>
+                      );
+                    })}
+
+                    <button
+                      type="button"
+                      onClick={() => goToPage(currentPage + 1)}
+                      disabled={currentPage >= totalPages}
+                      className="px-3 py-2 rounded-lg text-sm font-medium bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none transition-colors"
+                    >
+                      Siguiente
+                    </button>
+                  </nav>
+                )}
               </>
             ) : (
               <div className="text-center py-16 bg-white rounded-2xl border border-slate-200">
@@ -671,17 +841,40 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
                     ? `No hay resultados para "${search}". Intenta con otro término.`
                     : "No hay equipos disponibles con los filtros seleccionados."}
                 </p>
-                <Button
-                  onClick={clearFilters}
-                  className="bg-slate-900 text-white hover:bg-slate-800 px-4 py-2 rounded-lg text-sm"
-                >
-                  Limpiar filtros
-                </Button>
+                <div className="flex items-center justify-center gap-2 flex-wrap">
+                  <Button
+                    onClick={clearFilters}
+                    className="bg-slate-900 text-white hover:bg-slate-800 px-4 py-2 rounded-lg text-sm"
+                  >
+                    Limpiar filtros
+                  </Button>
+                  <Link
+                    href={`/catalogo/${branch}`}
+                    className="px-4 py-2 rounded-lg text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors"
+                  >
+                    Ver catálogo completo
+                  </Link>
+                </div>
+                <div className="mt-6">
+                  <p className="text-xs text-slate-400 mb-3">O explora por categoría:</p>
+                  <div className="flex items-center justify-center gap-2 flex-wrap">
+                    {categories.slice(0, 5).map(cat => (
+                      <button
+                        key={cat.name}
+                        type="button"
+                        onClick={() => setSelectedCategory(cat.name)}
+                        className="px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"
+                      >
+                        {cat.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 }

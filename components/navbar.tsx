@@ -13,6 +13,7 @@ import dynamic from "next/dynamic";
 
 const CartSheet = dynamic(() => import("./cart-sheet").then(m => m.CartSheet), { ssr: false });
 const SearchDialog = dynamic(() => import("./search-dialog").then(m => m.SearchDialog), { ssr: false });
+const FavoritesSheet = dynamic(() => import("./favorites-sheet").then(m => m.FavoritesSheet), { ssr: false });
 
 const navLinks = [
   { name: "Inicio", href: "/", icon: Home },
@@ -258,6 +259,7 @@ export function Navbar() {
             <span className="flex-1 text-left ml-2">Buscar laptops...</span>
             <kbd className="bg-white border border-slate-300 text-slate-500 rounded px-1.5 py-0.5 text-[10px] font-semibold">⌘K</kbd>
           </button>
+          <FavoritesSheet />
           <CartSheet />
           {mounted && (
             <Button
@@ -274,6 +276,7 @@ export function Navbar() {
 
         {/* Mobile Menu - Only Logo, Cart, Hamburger */}
         <div className="flex md:hidden items-center gap-1">
+          <FavoritesSheet />
           <CartSheet />
           <Button
             variant="ghost"

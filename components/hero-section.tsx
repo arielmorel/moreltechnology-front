@@ -1,8 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ShieldCheck, CreditCard, ChevronDown, CheckCircle } from "lucide-react";
-import Image from "next/image";
+import { ArrowRight, ShieldCheck, CreditCard, ChevronDown, CheckCircle, Laptop, Monitor, Cpu, HardDrive, MemoryStick, Wifi } from "lucide-react";
 import Link from "next/link";
 import { WhatsAppDropdown } from "./whatsapp-dropdown";
 
@@ -90,17 +89,19 @@ export function HeroSection() {
             {/* Glow effect */}
             <div className="absolute inset-0 bg-gradient-to-tr from-primary/30 via-blue-500/20 to-transparent rounded-full blur-[80px] mix-blend-multiply dark:mix-blend-overlay" />
 
-            {/* Image container with glassmorphism */}
-            <div className="relative w-full h-full">
+            {/* Animated tech icons */}
+            <div className="relative w-full h-full flex items-center justify-center">
               <div className="absolute inset-8 rounded-[3rem] bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl border border-white/20 shadow-2xl" />
-              <Image
-                src="/laptop.jpeg"
-                alt="Laptops Modernas"
-                fill
-                sizes="(max-width: 768px) 50vw, 249px"
-                className="object-contain drop-shadow-2xl z-0 hover:scale-105 transition-transform duration-700 p-6 sm:p-12 md:p-16"
-                priority
-              />
+              
+              {/* Main laptop icon */}
+              <Laptop className="w-28 h-28 sm:w-32 sm:h-32 text-primary animate-float z-10" strokeWidth={1.5} />
+              
+              {/* Floating secondary icons */}
+              <Monitor className="absolute top-1/4 left-1/4 w-14 h-14 sm:w-16 sm:h-16 text-blue-500/80 animate-float-delayed" strokeWidth={1.5} />
+              <Cpu className="absolute top-1/3 right-1/4 w-12 h-12 sm:w-14 sm:h-14 text-green-500/80 animate-float-delayed-2" strokeWidth={1.5} />
+              <HardDrive className="absolute bottom-1/3 left-1/3 w-10 h-10 sm:w-12 sm:h-12 text-purple-500/70 animate-float-slow" strokeWidth={1.5} />
+              <MemoryStick className="absolute bottom-1/4 right-1/3 w-10 h-10 sm:w-12 sm:h-12 text-orange-500/70 animate-float-delayed" strokeWidth={1.5} />
+              <Wifi className="absolute top-1/2 left-1/6 w-8 h-8 sm:w-10 sm:h-10 text-cyan-500/60 animate-float" strokeWidth={1.5} />
             </div>
 
             {/* Floating badges */}
