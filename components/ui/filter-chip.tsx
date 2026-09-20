@@ -15,7 +15,7 @@ export function FilterChip({ active, children, className, ...props }: FilterChip
       className={cn(
         "flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all border",
         active
-          ? "bg-slate-900 text-white border-slate-900"
+          ? "bg-primary text-primary-foreground border-primary"
           : "bg-card text-muted-foreground border-border hover:border-border hover:bg-muted",
         className
       )}

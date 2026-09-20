@@ -28,8 +28,9 @@ import { ProductFilters } from "@/components/product-filters";
 import { branches } from "@/lib/data";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { CatalogTheme, themeConfigs } from "@/lib/themes";
+import { CatalogTheme, getThemeColors } from "@/lib/themes";
 import { motion, type Variants } from "framer-motion";
+import { useTheme } from "next-themes";
 
 const PAGE_SIZE = 6;
 
@@ -101,6 +102,9 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
 
   const [branch] = useState<string>(initialBranch);
   const [currentTheme, setCurrentTheme] = useState<CatalogTheme>("theme-novus");
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+  const themeColors = getThemeColors(currentTheme, isDark);
   const viewMode = useSyncExternalStore(viewModeSubscribe, viewModeGetSnapshot, viewModeGetServerSnapshot);
 
   const [search, setSearch] = useState(() => searchParams.get("q") || "");
@@ -365,10 +369,10 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
     <div 
       className="min-h-screen pt-16 pb-6"
       style={{ 
-        backgroundColor: themeConfigs[currentTheme].colors.background,
-        color: themeConfigs[currentTheme].colors.text,
+        backgroundColor: themeColors.background,
+        color: themeColors.text,
         ...Object.fromEntries(
-          Object.entries(themeConfigs[currentTheme].colors).map(([key, value]) => [`--theme-${key}`, value])
+          Object.entries(themeColors).map(([key, value]) => [`--theme-${key}`, value])
         )
       }}
     >
@@ -397,7 +401,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
 
         {/* Header */}
         <motion.div variants={itemVariants} className="flex justify-between items-center w-full mb-4">
-          <h1 className="font-sans text-xl font-bold tracking-tight" style={{ color: themeConfigs[currentTheme].colors.text }}>
+          <h1 className="font-sans text-xl font-bold tracking-tight" style={{ color: themeColors.text }}>
             Laptops disponibles en {getBranchLabel(branch)}
           </h1>
           <button
@@ -405,8 +409,8 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
             onClick={handleShare}
             className="p-2 border rounded-lg transition-colors"
             style={{ 
-              borderColor: themeConfigs[currentTheme].colors.border,
-              color: themeConfigs[currentTheme].colors.textSecondary
+              borderColor: themeColors.border,
+              color: themeColors.textSecondary
             }}
             aria-label="Compartir catálogo"
           >
@@ -422,7 +426,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
             placeholder="Buscar laptops por nombre, marca o procesador..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full h-11 pl-10 pr-10 rounded-xl border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent placeholder:text-muted-foreground"
+            className="w-full h-11 pl-10 pr-10 rounded-xl border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent placeholder:text-muted-foreground"
           />
           {search && (
             <button
@@ -464,7 +468,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
                     variant="outline"
                     className={cn(
                       "h-9 px-3 gap-1.5 rounded-lg text-xs font-medium bg-card border-border shrink-0",
-                      activeFiltersCount > 0 && "border-slate-900 text-foreground"
+                      activeFiltersCount > 0 && "border-primary text-foreground"
                     )}
                   />
                 }
@@ -472,7 +476,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
                 <SlidersHorizontal className="w-3.5 h-3.5" />
                 Filtros
                 {activeFiltersCount > 0 && (
-                  <span className="h-4 w-4 bg-slate-900 text-white rounded-full flex items-center justify-center text-[9px] font-bold">
+                  <span className="h-4 w-4 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-[9px] font-bold">
                     {activeFiltersCount}
                   </span>
                 )}
@@ -810,7 +814,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
                           className={cn(
                             "min-w-9 h-9 px-2 rounded-lg text-sm font-medium transition-colors",
                             isPageActive
-                              ? "bg-slate-900 text-white"
+                              ? "bg-primary text-primary-foreground"
                               : "bg-card border border-border text-muted-foreground hover:bg-muted"
                           )}
                         >
@@ -844,7 +848,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
                 <div className="flex items-center justify-center gap-2 flex-wrap">
                   <Button
                     onClick={clearFilters}
-                    className="bg-slate-900 text-white hover:bg-slate-800 px-4 py-2 rounded-lg text-sm"
+                    className="bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-lg text-sm"
                   >
                     Limpiar filtros
                   </Button>

@@ -301,9 +301,9 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
             <div className="flex items-center gap-2 text-xs">
               <span className={cn(
                 "px-2 py-0.5 rounded font-medium border",
-                product.quantity > 10 && "bg-green-100 text-green-700 border-green-300",
-                product.quantity > 0 && product.quantity <= 10 && "bg-yellow-100 text-yellow-700 border-yellow-300",
-                product.quantity === 0 && "bg-red-100 text-red-700 border-red-300"
+                product.quantity > 10 && "bg-green-100 text-green-700 border-green-300 dark:bg-green-500/15 dark:text-green-400 dark:border-green-500/30",
+                product.quantity > 0 && product.quantity <= 10 && "bg-yellow-100 text-yellow-700 border-yellow-300 dark:bg-yellow-500/15 dark:text-yellow-400 dark:border-yellow-500/30",
+                product.quantity === 0 && "bg-red-100 text-red-700 border-red-300 dark:bg-red-500/15 dark:text-red-400 dark:border-red-500/30"
               )}>
                 {isOutOfStock ? "Agotado" : `${product.quantity.toLocaleString()} disponibles`}
               </span>
@@ -416,9 +416,9 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
               <div className="flex items-center gap-1 text-xs">
                 <span className={cn(
                   "px-2 py-0.5 rounded font-medium border",
-                  product.quantity > 10 && "bg-green-100 text-green-700 border-green-300",
-                  product.quantity > 0 && product.quantity <= 10 && "bg-yellow-100 text-yellow-700 border-yellow-300",
-                  product.quantity === 0 && "bg-red-100 text-red-700 border-red-300"
+                  product.quantity > 10 && "bg-green-100 text-green-700 border-green-300 dark:bg-green-500/15 dark:text-green-400 dark:border-green-500/30",
+                  product.quantity > 0 && product.quantity <= 10 && "bg-yellow-100 text-yellow-700 border-yellow-300 dark:bg-yellow-500/15 dark:text-yellow-400 dark:border-yellow-500/30",
+                  product.quantity === 0 && "bg-red-100 text-red-700 border-red-300 dark:bg-red-500/15 dark:text-red-400 dark:border-red-500/30"
                 )}>
                   {product.quantity.toLocaleString()}
                 </span>
