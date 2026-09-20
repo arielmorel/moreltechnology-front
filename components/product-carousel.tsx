@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type ComponentType } from "react";
 import Link from "next/link";
-import { ArrowRight, BadgePercent, Star, Sparkles, Gamepad2, Cable, Clock, Laptop } from "lucide-react";
+import { ArrowRight, BadgePercent, Star, Sparkles, Gamepad2, Cable, Clock, Laptop, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { Product } from "@/lib/data";
 import { ProductCardCarousel } from "@/components/product-card-carousel";
 import {
@@ -21,6 +21,7 @@ interface ProductCarouselProps {
   linkHref?: string;
   linkText?: string;
   autoRotate?: boolean | number;
+  fetchPage?: (page: number) => Promise<{ products: Product[]; total: number }>;
 }
 
 const carouselConfig: Record<ProductCarouselType, {
@@ -87,6 +88,7 @@ export function ProductCarousel({
   linkHref = "/catalogo",
   linkText = "Ver catálogo",
   autoRotate = false,
+  fetchPage,
 }: ProductCarouselProps) {
   const config = carouselConfig[type];
   const Icon = config.icon;
@@ -99,11 +101,34 @@ export function ProductCarousel({
 
   const [isPaused, setIsPaused] = useState(false);
 
+  const [items, setItems] = useState<Product[]>(products);
+  const [total, setTotal] = useState(products.length);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [exhausted, setExhausted] = useState(false);
+  const pageRef = useRef(0);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+
   const rotationInterval =
     typeof autoRotate === "number" ? autoRotate : 5000;
 
   useEffect(() => {
-    if (!autoRotate || products.length < 2 || isPaused) return;
+    if (!fetchPage) return;
+    let cancelled = false;
+    pageRef.current = 0;
+    fetchPage(0).then((res) => {
+      if (cancelled) return;
+      setItems(res.products);
+      setTotal(res.total);
+      setExhausted(res.products.length === 0);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [fetchPage]);
+
+  useEffect(() => {
+    if (fetchPage || !autoRotate || items.length < 2 || isPaused) return;
 
     const interval = window.setInterval(() => {
       const api = carouselApiRef.current;
@@ -118,9 +143,51 @@ export function ProductCarousel({
     }, rotationInterval);
 
     return () => window.clearInterval(interval);
-  }, [autoRotate, isPaused, products.length, rotationInterval]);
+  }, [fetchPage, autoRotate, isPaused, items.length, rotationInterval]);
 
-  if (products.length === 0) return null;
+  useEffect(() => {
+    if (!fetchPage) return;
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+
+    const load = async () => {
+      if (isLoadingMore || exhausted) return;
+      const page = pageRef.current + 1;
+      pageRef.current = page;
+      setIsLoadingMore(true);
+      try {
+        const res = await fetchPage(page);
+        setItems((prev) => {
+          const seen = new Set(prev.map((p) => p.id));
+          return [...prev, ...res.products.filter((p) => !seen.has(p.id))];
+        });
+        setTotal(res.total);
+        if (res.products.length === 0) {
+          setExhausted(true);
+        }
+      } finally {
+        setIsLoadingMore(false);
+      }
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          void load();
+        }
+      },
+      { rootMargin: "200px" }
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [fetchPage, isLoadingMore, exhausted, items.length]);
+
+  const displayProducts = fetchPage ? items : products;
+  if (!fetchPage && products.length === 0) return null;
+  if (fetchPage && items.length === 0 && exhausted) return null;
+
+  const hasMore = fetchPage ? !exhausted && items.length < total : false;
+  const showInitialLoader = Boolean(fetchPage) && items.length === 0 && !exhausted;
 
   const accentStyles =
     type === "offers"
@@ -217,60 +284,150 @@ export function ProductCarousel({
           </div>
         </div>
 
-        {/* Mobile: Horizontal Scroll with Peek */}
-        <div className="md:hidden flex gap-3 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4">
-          {products.slice(0, 8).map((product) => (
-            <div
-              key={product.id}
-              className="shrink-0 w-[75%] snap-center"
-            >
-              <ProductCardCarousel product={product} />
+        {/* Infinite edge-triggered rail */}
+        {fetchPage ? (
+          <>
+            {showInitialLoader ? (
+              <div className="flex gap-3 overflow-hidden pb-4 -mx-4 px-4 md:mx-0 md:px-0">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="shrink-0 w-[75%] sm:w-[45%] md:w-[31%] xl:w-[24%]"
+                  >
+                    <div className="rounded-xl border border-border bg-muted aspect-[4/5] animate-pulse" />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div
+                ref={scrollRef}
+                className="flex gap-3 overflow-x-auto overflow-y-hidden pb-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 md:snap-none"
+              >
+                {displayProducts.map((product) => (
+                  <div
+                    key={product.id}
+                    className="shrink-0 w-[75%] sm:w-[45%] md:w-[31%] xl:w-[24%] snap-center md:snap-start"
+                  >
+                    <ProductCardCarousel product={product} />
+                  </div>
+                ))}
+                {displayProducts.length > 0 && !hasMore && !isLoadingMore && (
+                  <div className="shrink-0 flex items-center px-3">
+                    <span className="text-[11px] font-semibold text-muted-foreground whitespace-nowrap">
+                      Has visto todos los resultados
+                    </span>
+                  </div>
+                )}
+                {hasMore && (
+                  <div
+                    ref={sentinelRef}
+                    className="shrink-0 flex items-center justify-center w-10"
+                  >
+                    {isLoadingMore && (
+                      <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+            {!showInitialLoader && (
+              <div className="hidden md:flex gap-2 justify-end mt-2">
+                <button
+                  type="button"
+                  onClick={() =>
+                    scrollRef.current?.scrollBy({
+                      left: -scrollRef.current.clientWidth * 0.8,
+                      behavior: "smooth",
+                    })
+                  }
+                  className="flex items-center justify-center h-10 w-10 rounded-full border border-border/50 bg-card text-foreground shadow-sm transition-colors hover:bg-primary hover:text-primary-foreground"
+                  aria-label="Anterior"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    scrollRef.current?.scrollBy({
+                      left: scrollRef.current.clientWidth * 0.8,
+                      behavior: "smooth",
+                    })
+                  }
+                  className="flex items-center justify-center h-10 w-10 rounded-full border border-border/50 bg-card text-foreground shadow-sm transition-colors hover:bg-primary hover:text-primary-foreground"
+                  aria-label="Siguiente"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
+            )}
+            <div className="md:hidden mt-4">
+              <Link
+                href={linkHref}
+                className="flex items-center justify-center gap-2 w-full py-2.5 border border-border rounded-xl text-xs font-semibold text-foreground hover:bg-muted transition-colors"
+              >
+                {linkText}
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
             </div>
-          ))}
-        </div>
-
-        {/* Desktop: Carousel */}
-        <div className="hidden md:block">
-          <Carousel
-            opts={{
-              align: "start",
-              dragFree: true,
-              loop: Boolean(autoRotate),
-            }}
-            setApi={(api) => {
-              carouselApiRef.current = api;
-            }}
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
-            onFocus={() => setIsPaused(true)}
-            onBlur={() => setIsPaused(false)}
-            className="relative"
-          >
-            <CarouselContent className="-ml-5">
-              {products.slice(0, 12).map((product) => (
-                <CarouselItem
+          </>
+        ) : (
+          <>
+            {/* Mobile: Horizontal Scroll with Peek */}
+            <div className="md:hidden flex gap-3 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4">
+              {displayProducts.slice(0, 8).map((product) => (
+                <div
                   key={product.id}
-                  className="pl-5 basis-[31%] xl:basis-[24%]"
+                  className="shrink-0 w-[75%] snap-center"
                 >
                   <ProductCardCarousel product={product} />
-                </CarouselItem>
+                </div>
               ))}
-            </CarouselContent>
-            <CarouselPrevious className="!static !translate-y-0 !-translate-x-0 h-10 w-10 border-border/50 bg-card hover:bg-primary hover:text-primary-foreground" />
-            <CarouselNext className="!static !translate-y-0 !-translate-x-0 h-10 w-10 border-border/50 bg-card hover:bg-primary hover:text-primary-foreground" />
-          </Carousel>
-        </div>
+            </div>
 
-        {/* Mobile: See all link */}
-        <div className="md:hidden mt-4">
-          <Link
-            href={linkHref}
-            className="flex items-center justify-center gap-2 w-full py-2.5 border border-border rounded-xl text-xs font-semibold text-foreground hover:bg-muted transition-colors"
-          >
-            {linkText}
-            <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
-        </div>
+            {/* Desktop: Carousel */}
+            <div className="hidden md:block">
+              <Carousel
+                opts={{
+                  align: "start",
+                  dragFree: true,
+                  loop: Boolean(autoRotate),
+                }}
+                setApi={(api) => {
+                  carouselApiRef.current = api;
+                }}
+                onMouseEnter={() => setIsPaused(true)}
+                onMouseLeave={() => setIsPaused(false)}
+                onFocus={() => setIsPaused(true)}
+                onBlur={() => setIsPaused(false)}
+                className="relative"
+              >
+                <CarouselContent className="-ml-5">
+                  {displayProducts.slice(0, 12).map((product) => (
+                    <CarouselItem
+                      key={product.id}
+                      className="pl-5 basis-[31%] xl:basis-[24%]"
+                    >
+                      <ProductCardCarousel product={product} />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="!static !translate-y-0 !-translate-x-0 h-10 w-10 border-border/50 bg-card hover:bg-primary hover:text-primary-foreground" />
+                <CarouselNext className="!static !translate-y-0 !-translate-x-0 h-10 w-10 border-border/50 bg-card hover:bg-primary hover:text-primary-foreground" />
+              </Carousel>
+            </div>
+
+            {/* Mobile: See all link */}
+            <div className="md:hidden mt-4">
+              <Link
+                href={linkHref}
+                className="flex items-center justify-center gap-2 w-full py-2.5 border border-border rounded-xl text-xs font-semibold text-foreground hover:bg-muted transition-colors"
+              >
+                {linkText}
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
+          </>
+        )}
       </div>
     </section>
   );

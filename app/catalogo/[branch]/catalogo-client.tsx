@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect, useCallback, useRef, useSyncExternalStore } from "react";
 import { categories, Product } from "@/lib/data";
-import { getProducts, searchProducts, AvailabilityFilter, SortFilter, getSettingWithDefault } from "@/lib/api";
+import { getProducts, searchProducts, getCachedProducts, getCachedSearch, AvailabilityFilter, SortFilter, getSettingWithDefault } from "@/lib/api";
 import { useDebounce } from "@/hooks/use-debounce";
 import { ProductCard, type ProductCardView } from "@/components/product-card";
 import { ProductCardSkeleton } from "@/components/product-card-skeleton";
@@ -32,7 +32,7 @@ import { CatalogTheme, getThemeColors } from "@/lib/themes";
 import { motion, type Variants } from "framer-motion";
 import { useTheme } from "next-themes";
 
-const PAGE_SIZE = 6;
+const PAGE_SIZE = 8;
 
 const TAG_OPTIONS = ["gamer", "touch"];
 
@@ -98,7 +98,7 @@ function setViewMode(next: ProductCardView): void {
 export default function CatalogoBranchClient({ branch: initialBranch }: { branch: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const resultsRef = useRef<HTMLDivElement>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null);
 
   const [branch] = useState<string>(initialBranch);
   const [currentTheme, setCurrentTheme] = useState<CatalogTheme>("theme-novus");
@@ -163,22 +163,29 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
     return `${baseUrl}/catalogo/${branch}?${params.toString()}`;
   }, [branch, debouncedSearch, selectedCategory, selectedBrand, selectedProcessor, selectedRam, selectedStorage, showOnlyOffers, selectedCondition, selectedTag, priceRange, stockFilter, sortBy]);
 
+  const [isSharing, setIsSharing] = useState(false);
+
   const handleShare = async () => {
+    setIsSharing(true);
     const url = buildShareUrl();
     const title = `Catálogo Morel Technology - ${getBranchLabel(branch)}`;
     const text = `Mira estos equipos disponibles en ${getBranchLabel(branch)}`;
 
-    if (navigator.share) {
-      try {
-        await navigator.share({ title, text, url });
-      } catch (err) {
-        if (err instanceof DOMException && err.name === "AbortError") return;
+    try {
+      if (navigator.share) {
+        try {
+          await navigator.share({ title, text, url });
+        } catch (err) {
+          if (err instanceof DOMException && err.name === "AbortError") return;
+          await navigator.clipboard.writeText(url);
+          alert("¡Enlace copiado al portapapeles!");
+        }
+      } else {
         await navigator.clipboard.writeText(url);
         alert("¡Enlace copiado al portapapeles!");
       }
-    } else {
-      await navigator.clipboard.writeText(url);
-      alert("¡Enlace copiado al portapapeles!");
+    } finally {
+      setTimeout(() => setIsSharing(false), 500);
     }
   };
 
@@ -201,39 +208,50 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
     if (sortBy !== "newest") params.set("sort", sortBy);
     const queryString = params.toString();
     const newUrl = `/catalogo/${branch}${queryString ? `?${queryString}` : ""}`;
-    router.push(newUrl, { scroll: false });
+    const currentUrl = `${window.location.pathname}${window.location.search}`;
+    if (newUrl !== currentUrl) {
+      router.push(newUrl, { scroll: false });
+    }
   }, [debouncedSearch, selectedCategory, selectedBrand, selectedProcessor, selectedRam, selectedStorage, showOnlyOffers, selectedCondition, selectedTag, priceRange, stockFilter, sortBy, branch, router]);
 
   const [products, setProducts] = useState<Product[]>([]);
   const [total, setTotal] = useState(0);
+  const pageRef = useRef(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [stockCounts, setStockCounts] = useState({ available: 0, outOfStock: 0, total: 0 });
   const filtersKey = `${debouncedSearch}-${selectedCategory}-${branch}-${stockFilter}`;
 
-  const currentPage = Math.max(1, parseInt(searchParams.get("page") || "1", 10) || 1);
-  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
-
-  const goToPage = (page: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (page <= 1) params.delete("page");
-    else params.set("page", String(page));
-    const queryString = params.toString();
-    const newUrl = `/catalogo/${branch}${queryString ? `?${queryString}` : ""}`;
-    router.push(newUrl, { scroll: false });
-    resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
+  const hasMore = products.length < total;
 
   useEffect(() => {
+    pageRef.current = 0;
     let cancelled = false;
     const loadInitial = async () => {
+      if (debouncedSearch.trim() === "") {
+        const cached = getCachedProducts(0, PAGE_SIZE, selectedCategory, branch, undefined, stockFilter);
+        if (!cancelled && cached) {
+          setProducts(cached.products);
+          setTotal(cached.total);
+          setIsLoading(false);
+          return;
+        }
+      } else {
+        const cached = getCachedSearch(debouncedSearch, 0, PAGE_SIZE, selectedCategory, branch, undefined, stockFilter);
+        if (!cancelled && cached) {
+          setProducts(cached.products);
+          setTotal(cached.total);
+          setIsLoading(false);
+          return;
+        }
+      }
       if (!cancelled) setIsLoading(true);
       try {
-        const pageIndex = Math.min(currentPage - 1, Math.max(0, totalPages - 1));
         let result;
         if (debouncedSearch.trim() === "") {
-          result = await getProducts(pageIndex, PAGE_SIZE, selectedCategory, branch, undefined, stockFilter);
+          result = await getProducts(0, PAGE_SIZE, selectedCategory, branch, undefined, stockFilter);
         } else {
-          result = await searchProducts(debouncedSearch, pageIndex, PAGE_SIZE, selectedCategory, branch, undefined, stockFilter);
+          result = await searchProducts(debouncedSearch, 0, PAGE_SIZE, selectedCategory, branch, undefined, stockFilter);
         }
         if (!cancelled) {
           setProducts(result.products);
@@ -245,7 +263,40 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
     };
     loadInitial();
     return () => { cancelled = true; };
-  }, [filtersKey, debouncedSearch, selectedCategory, branch, stockFilter, currentPage, totalPages]);
+  }, [filtersKey, debouncedSearch, selectedCategory, branch, stockFilter]);
+
+  useEffect(() => {
+    if (!sentinelRef.current || !hasMore || isLoadingMore) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && hasMore && !isLoadingMore) {
+          const nextPage = pageRef.current + 1;
+          pageRef.current = nextPage;
+          setIsLoadingMore(true);
+          const loadMore = async () => {
+            try {
+              let result;
+              if (debouncedSearch.trim() === "") {
+                result = await getProducts(nextPage, PAGE_SIZE, selectedCategory, branch, undefined, stockFilter);
+              } else {
+                result = await searchProducts(debouncedSearch, nextPage, PAGE_SIZE, selectedCategory, branch, undefined, stockFilter);
+              }
+              setProducts(prev => [...prev, ...result.products]);
+              setTotal(result.total);
+            } finally {
+              setIsLoadingMore(false);
+            }
+          };
+          loadMore();
+        }
+      },
+      { rootMargin: "300px" }
+    );
+
+    observer.observe(sentinelRef.current);
+    return () => observer.disconnect();
+  }, [hasMore, isLoadingMore, debouncedSearch, selectedCategory, branch, products.length, stockFilter]);
 
   // Fetch stock counts for all categories (IN_STOCK, OUT_OF_STOCK, ALL)
   useEffect(() => {
@@ -404,18 +455,25 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
           <h1 className="font-sans text-xl font-bold tracking-tight" style={{ color: themeColors.text }}>
             Laptops disponibles en {getBranchLabel(branch)}
           </h1>
-          <button
+          <motion.button
             type="button"
             onClick={handleShare}
-            className="p-2 border rounded-lg transition-colors"
+            whileTap={{ scale: 0.85 }}
+            className="p-2 border rounded-lg transition-colors active:scale-95"
             style={{ 
               borderColor: themeColors.border,
               color: themeColors.textSecondary
             }}
             aria-label="Compartir catálogo"
           >
-            <Share2 className="h-4 w-4" />
-          </button>
+            <motion.span
+              className="block"
+              animate={isSharing ? { rotate: [0, -20, 20, 0], scale: [1, 1.25, 1] } : { rotate: 0, scale: 1 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+            >
+              <Share2 className="h-4 w-4" />
+            </motion.span>
+          </motion.button>
         </motion.div>
 
         {/* Search Bar */}
@@ -459,8 +517,40 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
             </Select>
           </div>
 
+          {/* View mode toggle */}
+          <div className="bg-muted p-0.5 rounded-lg flex items-center gap-0.5 shrink-0 ml-auto xl:ml-auto" role="group" aria-label="Cambiar vista">
+            <button
+              type="button"
+              onClick={() => setViewMode("grid")}
+              className={cn(
+                "p-1.5 rounded-md transition-all",
+                viewMode === "grid"
+                  ? "bg-card text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+              aria-label="Vista de cuadrícula"
+              aria-pressed={viewMode === "grid"}
+            >
+              <LayoutGrid className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode("list")}
+              className={cn(
+                "p-1.5 rounded-md transition-all",
+                viewMode === "list"
+                  ? "bg-card text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+              aria-label="Vista de lista"
+              aria-pressed={viewMode === "list"}
+            >
+              <List className="w-4 h-4" />
+            </button>
+          </div>
+
           {/* Mobile Filter Trigger */}
-          <div className="xl:hidden ml-auto">
+          <div className="xl:hidden">
             <Sheet>
               <SheetTrigger
                 render={
@@ -664,79 +754,18 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
 
           {/* Main Content */}
           <div className="flex-1">
-            {/* Results count */}
-            <div ref={resultsRef} className="flex items-center justify-between mb-3 gap-3">
-              <p className="text-xs text-muted-foreground" aria-live="polite" role="status">
-                {sortedProducts.length} {sortedProducts.length === 1 ? "equipo" : "equipos"} encontrados
-              </p>
-              <div className="flex items-center gap-2">
-                {/* View mode toggle */}
-                <div className="bg-muted p-0.5 rounded-lg flex items-center gap-0.5 shrink-0" role="group" aria-label="Cambiar vista">
-                  <button
-                    type="button"
-                    onClick={() => setViewMode("grid")}
-                    className={cn(
-                      "p-1.5 rounded-md transition-all",
-                      viewMode === "grid"
-                        ? "bg-card text-foreground shadow-sm"
-                        : "text-muted-foreground hover:text-foreground"
-                    )}
-                    aria-label="Vista de cuadrícula"
-                    aria-pressed={viewMode === "grid"}
-                  >
-                    <LayoutGrid className="w-4 h-4" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setViewMode("list")}
-                    className={cn(
-                      "p-1.5 rounded-md transition-all",
-                      viewMode === "list"
-                        ? "bg-card text-foreground shadow-sm"
-                        : "text-muted-foreground hover:text-foreground"
-                    )}
-                    aria-label="Vista de lista"
-                    aria-pressed={viewMode === "list"}
-                  >
-                    <List className="w-4 h-4" />
-                  </button>
-                </div>
-
-                <div className="bg-muted p-0.5 rounded-lg flex items-center gap-0.5">
-                  {[
-                    { value: "IN_STOCK" as const, label: "Disponibles" },
-                    { value: "OUT_OF_STOCK" as const, label: "Agotados" },
-                    { value: "ALL" as const, label: "Todos" },
-                  ].map((tab) => (
-                    <button
-                      key={tab.value}
-                      type="button"
-                      onClick={() => setStockFilter(tab.value)}
-                      className={cn(
-                        "text-[10px] font-medium px-2.5 py-1 rounded-md transition-all",
-                        stockFilter === tab.value
-                          ? "bg-card text-foreground shadow-sm"
-                          : "text-muted-foreground hover:text-foreground"
-                      )}
-                    >
-                      {tab.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
 
             {isLoading && products.length === 0 ? (
               <div
                 key={`skeleton-${filtersKey}-${viewMode}`}
                 className={cn(
-                  "grid gap-6",
+                  "grid gap-3 sm:gap-6",
                   viewMode === "list"
                     ? "grid-cols-1"
-                    : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
+                    : "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
                 )}
               >
-                {[...Array(viewMode === "list" ? 3 : 6)].map((_, i) => (
+                {[...Array(viewMode === "list" ? 3 : 8)].map((_, i) => (
                   <ProductCardSkeleton key={i} />
                 ))}
               </div>
@@ -764,7 +793,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
                     initial="hidden"
                     animate="show"
                     aria-busy={isLoading}
-                    className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6"
+                    className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6"
                   >
                     {sortedProducts.map(product => (
                       <motion.div key={product.id} variants={productItemVariants} className="h-full">
@@ -774,65 +803,29 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
                   </motion.div>
                 )}
 
-                {/* Pagination */}
-                {totalPages > 1 && (
-                  <nav
-                    aria-label="Paginación de resultados"
-                    className="flex items-center justify-center gap-1.5 pt-6"
-                  >
-                    <button
-                      type="button"
-                      onClick={() => goToPage(currentPage - 1)}
-                      disabled={currentPage <= 1}
-                      className="px-3 py-2 rounded-lg text-sm font-medium bg-card border border-border text-muted-foreground hover:bg-muted disabled:opacity-40 disabled:pointer-events-none transition-colors"
+                {/* Infinite scroll sentinel */}
+                <div ref={sentinelRef} className="flex justify-center pt-6">
+                  {isLoadingMore && (
+                    <div
+                      key={`loading-more-${filtersKey}`}
+                      className={cn(
+                        "grid gap-3 sm:gap-6 w-full",
+                        viewMode === "list"
+                          ? "grid-cols-1"
+                          : "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
+                      )}
                     >
-                      Anterior
-                    </button>
-
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
-                      const isPageActive = page === currentPage;
-                      const isNearby =
-                        page === 1 ||
-                        page === totalPages ||
-                        Math.abs(page - currentPage) <= 1;
-
-                      if (!isNearby) {
-                        const isEllipsis = page === 2 || page === totalPages - 1;
-                        return isEllipsis ? (
-                          <span key={page} className="px-1 text-muted-foreground select-none">
-                            …
-                          </span>
-                        ) : null;
-                      }
-
-                      return (
-                        <button
-                          key={page}
-                          type="button"
-                          aria-current={isPageActive ? "page" : undefined}
-                          onClick={() => goToPage(page)}
-                          className={cn(
-                            "min-w-9 h-9 px-2 rounded-lg text-sm font-medium transition-colors",
-                            isPageActive
-                              ? "bg-primary text-primary-foreground"
-                              : "bg-card border border-border text-muted-foreground hover:bg-muted"
-                          )}
-                        >
-                          {page}
-                        </button>
-                      );
-                    })}
-
-                    <button
-                      type="button"
-                      onClick={() => goToPage(currentPage + 1)}
-                      disabled={currentPage >= totalPages}
-                      className="px-3 py-2 rounded-lg text-sm font-medium bg-card border border-border text-muted-foreground hover:bg-muted disabled:opacity-40 disabled:pointer-events-none transition-colors"
-                    >
-                      Siguiente
-                    </button>
-                  </nav>
-                )}
+                      {[...Array(viewMode === "list" ? 1 : 4)].map((_, i) => (
+                        <ProductCardSkeleton key={i} />
+                      ))}
+                    </div>
+                  )}
+                  {!hasMore && sortedProducts.length > 0 && (
+                    <p className="text-xs text-muted-foreground py-2">
+                      Has visto todos los equipos disponibles.
+                    </p>
+                  )}
+                </div>
               </>
             ) : (
               <div className="text-center py-16 bg-card rounded-2xl border border-border">

@@ -20,6 +20,20 @@ export function productUrl(slug: string): string {
   return `/productos/${slug}`
 }
 
+const RETURN_URL_KEY = "mt_return_url"
+
+export function rememberOrigin(): void {
+  if (typeof window === "undefined") return
+  sessionStorage.setItem(RETURN_URL_KEY, window.location.pathname + window.location.search)
+}
+
+export function consumeOrigin(): string | null {
+  if (typeof window === "undefined") return null
+  const url = sessionStorage.getItem(RETURN_URL_KEY)
+  sessionStorage.removeItem(RETURN_URL_KEY)
+  return url
+}
+
 export function isMinioImage(src: string): boolean {
   return src.includes("localhost:9000") || src.includes("minio");
 }
