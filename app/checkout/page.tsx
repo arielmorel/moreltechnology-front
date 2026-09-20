@@ -2,6 +2,7 @@
 
 import { Suspense, useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import { useMounted } from "@/lib/use-mounted";
 import { useCart } from "@/lib/store";
 import { bankAccounts, branches } from "@/lib/data";
 import { Button } from "@/components/ui/button";
@@ -68,18 +69,18 @@ export default function CheckoutPageWrapper() {
 function CheckoutPage() {
   const { items, totalPrice, clearCart } = useCart();
   const searchParams = useSearchParams();
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
   const [referralCode, setReferralCode] = useState<string | null>(null);
 
   useEffect(() => {
     const ref = searchParams.get("ref");
     if (ref) {
       localStorage.setItem("referralCode", ref);
-      setReferralCode(ref);
-    } else {
-      setReferralCode(localStorage.getItem("referralCode"));
+      const timeout = setTimeout(() => setReferralCode(ref), 0);
+      return () => clearTimeout(timeout);
     }
-    setMounted(true);
+    const timeout = setTimeout(() => setReferralCode(localStorage.getItem("referralCode")), 0);
+    return () => clearTimeout(timeout);
   }, [searchParams]);
   const [step, setStep] = useState<"info" | "payment" | "success">("info");
   const [orderId, setOrderId] = useState("");
@@ -101,10 +102,6 @@ function CheckoutPage() {
   const clearError = (field: keyof typeof errors) => {
     if (errors[field]) setErrors((prev) => ({ ...prev, [field]: undefined }));
   };
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   if (!mounted) return null;
 

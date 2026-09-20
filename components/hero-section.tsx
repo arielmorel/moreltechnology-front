@@ -1,13 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ShieldCheck, CreditCard, ChevronDown, CheckCircle, Laptop, Monitor, Cpu, HardDrive, MemoryStick, Wifi } from "lucide-react";
+import { ArrowRight, ShieldCheck, CreditCard, ChevronDown, CheckCircle, Laptop, Monitor, Cpu, HardDrive, MemoryStick, Wifi, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { WhatsAppDropdown } from "./whatsapp-dropdown";
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-background pt-16 md:pt-24 pb-10 md:pb-16">
+    <section className="relative overflow-hidden bg-background pt-10 md:pt-16 pb-10 md:pb-16">
       {/* Background Gradients */}
       <div className="absolute inset-0 z-0">
         <div className="absolute -top-40 -right-40 w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-primary/20 blur-[120px] rounded-full opacity-60" />
@@ -40,10 +40,23 @@ export function HeroSection() {
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-row gap-3 mt-4">
+            <div className="flex flex-col sm:flex-row gap-3 mt-4">
               <Button
                 size="lg"
                 className="rounded-xl font-bold h-12 flex-1 px-4 shadow-xl shadow-primary/20 hover:shadow-primary/30 transition-all text-sm group bg-primary text-primary-foreground hover:bg-primary/90"
+                nativeButton={false}
+                render={
+                  <Link href="/recomendador" className="flex items-center justify-center whitespace-nowrap" />
+                }
+                aria-label="Encuentra tu laptop ideal con nuestro asistente"
+              >
+                Encuentra tu laptop ideal
+                <Sparkles className="ml-2 w-4 h-4 group-hover:scale-110 transition-transform" />
+              </Button>
+              <Button
+                size="lg"
+                className="rounded-xl font-bold h-12 flex-1 px-4 border-2 border-border/50 hover:border-primary/40 hover:bg-primary/5 transition-all text-sm"
+                variant="outline"
                 nativeButton={false}
                 render={
                   <Link href="/catalogo/moreltechnology" className="flex items-center justify-center whitespace-nowrap" />

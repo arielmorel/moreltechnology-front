@@ -17,9 +17,9 @@ interface StoreGalleryProps {
 }
 
 export function StoreGallery({ media, title }: StoreGalleryProps) {
-  if (!media || media.length === 0) return null;
-
   const [selectedMedia, setSelectedMedia] = useState<number | null>(null);
+
+  if (!media || media.length === 0) return null;
 
   const openLightbox = (index: number) => setSelectedMedia(index);
   const closeLightbox = () => setSelectedMedia(null);

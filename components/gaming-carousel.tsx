@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Product } from "@/lib/data";
 import { getProducts, PAGE_SIZE_ALL } from "@/lib/api";
 import { ProductCarousel } from "@/components/product-carousel";
+import { ProductCarouselSkeleton } from "@/components/product-carousel-skeleton";
 
 export function GamingCarousel() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -29,7 +30,9 @@ export function GamingCarousel() {
     loadGaming();
   }, []);
 
-  if (loading || products.length === 0) return null;
+  if (loading) return <ProductCarouselSkeleton type="gaming" />;
+
+  if (products.length === 0) return null;
 
   return <ProductCarousel type="gaming" products={products} linkHref="/laptops/gaming" linkText="Ver laptops gaming" autoRotate />;
 }

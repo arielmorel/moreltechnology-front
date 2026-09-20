@@ -10,6 +10,7 @@ import { ArrowLeft } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
+import { useMounted } from "@/lib/use-mounted";
 
 const CartSheet = dynamic(() => import("./cart-sheet").then(m => m.CartSheet), { ssr: false });
 const SearchDialog = dynamic(() => import("./search-dialog").then(m => m.SearchDialog), { ssr: false });
@@ -36,7 +37,7 @@ const sucursalLinks = [
 export function Navbar() {
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [sucursalOpen, setSucursalOpen] = useState(false);
@@ -46,7 +47,6 @@ export function Navbar() {
   const moreRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setMounted(true);
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
@@ -96,7 +96,7 @@ export function Navbar() {
       className={cn(
         "fixed top-0 w-full z-50 transition-all duration-300",
         isScrolled
-          ? "bg-white/90 md:bg-background/80 backdrop-blur-md border-b border-slate-100 md:border-border shadow-sm"
+          ? "bg-card/90 md:bg-background/80 backdrop-blur-md border-b border-border md:border-border shadow-sm"
           : "bg-transparent"
       )}
     >
@@ -106,7 +106,7 @@ export function Navbar() {
           {mounted && pathname !== "/" && (
             <button
               onClick={() => window.history.back()}
-              className="md:hidden flex items-center justify-center min-h-[44px] min-w-[44px] text-slate-600 hover:text-slate-900 transition-colors -ml-1"
+              className="md:hidden flex items-center justify-center min-h-[44px] min-w-[44px] text-muted-foreground hover:text-foreground transition-colors -ml-1"
               aria-label="Volver"
             >
               <ArrowLeft className="w-5 h-5" />
@@ -252,12 +252,12 @@ export function Navbar() {
         <div className="hidden md:flex items-center gap-4">
           <button
             onClick={() => setSearchOpen(true)}
-            className="bg-slate-100 hover:bg-slate-200/70 text-slate-500 text-xs font-medium rounded-lg px-3 py-2 flex items-center justify-between w-56 transition-colors border border-transparent cursor-pointer"
+            className="bg-muted hover:bg-muted/70 text-muted-foreground text-xs font-medium rounded-lg px-3 py-2 flex items-center justify-between w-56 transition-colors border border-transparent cursor-pointer"
             aria-label="Buscar laptops"
           >
             <Search className="h-4 w-4 shrink-0" />
             <span className="flex-1 text-left ml-2">Buscar laptops...</span>
-            <kbd className="bg-white border border-slate-300 text-slate-500 rounded px-1.5 py-0.5 text-[10px] font-semibold">⌘K</kbd>
+            <kbd className="bg-card border border-border text-muted-foreground rounded px-1.5 py-0.5 text-[10px] font-semibold">⌘K</kbd>
           </button>
           <FavoritesSheet />
           <CartSheet />

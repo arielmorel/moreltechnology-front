@@ -76,8 +76,8 @@ const carouselConfig: Record<ProductCarouselType, {
     title: "Mismo modelo",
     subtitle: "Otras unidades disponibles de este modelo.",
     icon: Laptop,
-    iconColor: "text-slate-600",
-    accentColor: "text-slate-700",
+    iconColor: "text-muted-foreground",
+    accentColor: "text-foreground",
   },
 };
 
@@ -154,8 +154,8 @@ export function ProductCarousel({
             : type === "same-model"
               ? {
                   badge: "bg-slate-500/10 border-slate-500/20",
-                  icon: "text-slate-600",
-                  title: "text-slate-700",
+                  icon: "text-muted-foreground",
+                  title: "text-foreground",
                   glow: "bg-slate-500/5",
                 }
               : {
@@ -265,7 +265,7 @@ export function ProductCarousel({
         <div className="md:hidden mt-4">
           <Link
             href={linkHref}
-            className="flex items-center justify-center gap-2 w-full py-2.5 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
+            className="flex items-center justify-center gap-2 w-full py-2.5 border border-border rounded-xl text-xs font-semibold text-foreground hover:bg-muted transition-colors"
           >
             {linkText}
             <ArrowRight className="h-3.5 w-3.5" />

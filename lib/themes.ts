@@ -1,18 +1,29 @@
 export type CatalogTheme = "theme-novus" | "theme-emerald" | "theme-midnight" | "theme-crimson" | "theme-amber";
 
+export interface ThemeColors {
+  primary: string;
+  primaryHover: string;
+  primaryLight: string;
+  accent: string;
+  background: string;
+  card: string;
+  border: string;
+  text: string;
+  textSecondary: string;
+}
+
+export interface ThemeDarkColors {
+  background: string;
+  card: string;
+  border: string;
+  text: string;
+  textSecondary: string;
+}
+
 export interface ThemeConfig {
   name: string;
-  colors: {
-    primary: string;
-    primaryHover: string;
-    primaryLight: string;
-    accent: string;
-    background: string;
-    card: string;
-    border: string;
-    text: string;
-    textSecondary: string;
-  };
+  colors: ThemeColors;
+  dark: ThemeDarkColors;
 }
 
 export const themeConfigs: Record<CatalogTheme, ThemeConfig> = {
@@ -29,6 +40,13 @@ export const themeConfigs: Record<CatalogTheme, ThemeConfig> = {
       text: "#0f172a",
       textSecondary: "#64748b",
     },
+    dark: {
+      background: "#0b1220",
+      card: "#1e293b",
+      border: "#334155",
+      text: "#f1f5f9",
+      textSecondary: "#94a3b8",
+    },
   },
   "theme-emerald": {
     name: "Emerald Garden",
@@ -42,6 +60,13 @@ export const themeConfigs: Record<CatalogTheme, ThemeConfig> = {
       border: "#d1d5db",
       text: "#064e3b",
       textSecondary: "#6b7280",
+    },
+    dark: {
+      background: "#04211a",
+      card: "#0b3a2e",
+      border: "#14503c",
+      text: "#ecfdf5",
+      textSecondary: "#93c5b5",
     },
   },
   "theme-midnight": {
@@ -57,6 +82,13 @@ export const themeConfigs: Record<CatalogTheme, ThemeConfig> = {
       text: "#1e1b4b",
       textSecondary: "#6b7280",
     },
+    dark: {
+      background: "#100e1f",
+      card: "#1e1b4b",
+      border: "#312e81",
+      text: "#eef2ff",
+      textSecondary: "#a5b4fc",
+    },
   },
   "theme-crimson": {
     name: "Crimson Night",
@@ -70,6 +102,13 @@ export const themeConfigs: Record<CatalogTheme, ThemeConfig> = {
       border: "#fda4af",
       text: "#1c1917",
       textSecondary: "#78716c",
+    },
+    dark: {
+      background: "#1c0a10",
+      card: "#4c0519",
+      border: "#881337",
+      text: "#fff1f2",
+      textSecondary: "#fda4af",
     },
   },
   "theme-amber": {
@@ -85,8 +124,20 @@ export const themeConfigs: Record<CatalogTheme, ThemeConfig> = {
       text: "#78350f",
       textSecondary: "#92400e",
     },
+    dark: {
+      background: "#1c1206",
+      card: "#451a03",
+      border: "#78350f",
+      text: "#fffbeb",
+      textSecondary: "#d8b06a",
+    },
   },
 };
+
+export function getThemeColors(theme: CatalogTheme, isDark: boolean): ThemeColors {
+  const config = themeConfigs[theme];
+  return isDark ? { ...config.colors, ...config.dark } : config.colors;
+}
 
 export function getThemeClasses(theme: CatalogTheme): string {
   const config = themeConfigs[theme];

@@ -116,7 +116,8 @@ export default function AdminNotificationsPage() {
   }, []);
 
   React.useEffect(() => {
-    loadNotifications(activeFilter);
+    const timeout = setTimeout(() => loadNotifications(activeFilter), 0);
+    return () => clearTimeout(timeout);
   }, [activeFilter, loadNotifications]);
 
   const handleAction = (notificationId: string, action: StockNotificationStatus, customerName: string) => {

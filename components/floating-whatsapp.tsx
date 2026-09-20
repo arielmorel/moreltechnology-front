@@ -2,16 +2,12 @@
 
 import { WhatsAppDropdown } from "./whatsapp-dropdown";
 import { WhatsApp } from "./icons";
-import { useState, useEffect } from "react";
+import { useMounted } from "@/lib/use-mounted";
 import { usePathname } from "next/navigation";
 
 export function FloatingWhatsApp() {
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
   const pathname = usePathname();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   if (!mounted || pathname.startsWith("/productos/")) return null;
 

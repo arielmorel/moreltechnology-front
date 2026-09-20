@@ -82,10 +82,11 @@ export function ProductReviewsCarousel({
 
   React.useEffect(() => {
     if (!emblaApi) return;
-    onSelect();
+    const timeout = setTimeout(() => onSelect(), 0);
     emblaApi.on("select", onSelect);
     emblaApi.on("reInit", onSelect);
     return () => {
+      clearTimeout(timeout);
       emblaApi.off("select", onSelect);
       emblaApi.off("reInit", onSelect);
     };

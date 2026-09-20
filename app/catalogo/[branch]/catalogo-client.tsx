@@ -28,8 +28,9 @@ import { ProductFilters } from "@/components/product-filters";
 import { branches } from "@/lib/data";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { CatalogTheme, themeConfigs } from "@/lib/themes";
+import { CatalogTheme, getThemeColors } from "@/lib/themes";
 import { motion, type Variants } from "framer-motion";
+import { useTheme } from "next-themes";
 
 const PAGE_SIZE = 6;
 
@@ -101,6 +102,9 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
 
   const [branch] = useState<string>(initialBranch);
   const [currentTheme, setCurrentTheme] = useState<CatalogTheme>("theme-novus");
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+  const themeColors = getThemeColors(currentTheme, isDark);
   const viewMode = useSyncExternalStore(viewModeSubscribe, viewModeGetSnapshot, viewModeGetServerSnapshot);
 
   const [search, setSearch] = useState(() => searchParams.get("q") || "");
@@ -365,10 +369,10 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
     <div 
       className="min-h-screen pt-16 pb-6"
       style={{ 
-        backgroundColor: themeConfigs[currentTheme].colors.background,
-        color: themeConfigs[currentTheme].colors.text,
+        backgroundColor: themeColors.background,
+        color: themeColors.text,
         ...Object.fromEntries(
-          Object.entries(themeConfigs[currentTheme].colors).map(([key, value]) => [`--theme-${key}`, value])
+          Object.entries(themeColors).map(([key, value]) => [`--theme-${key}`, value])
         )
       }}
     >
@@ -382,22 +386,22 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
         <motion.nav
           variants={itemVariants}
           aria-label="Ruta de navegación"
-          className="flex items-center gap-1.5 text-xs text-slate-500 mb-8"
+          className="flex items-center gap-1.5 text-xs text-muted-foreground mb-8"
         >
-          <Link href="/" className="hover:text-slate-900 transition-colors font-medium">
+          <Link href="/" className="hover:text-foreground transition-colors font-medium">
             Inicio
           </Link>
           <ChevronRight className="w-3 h-3 shrink-0" />
-          <Link href="/catalogo" className="hover:text-slate-900 transition-colors font-medium">
+          <Link href="/catalogo" className="hover:text-foreground transition-colors font-medium">
             Catálogo
           </Link>
           <ChevronRight className="w-3 h-3 shrink-0" />
-          <span className="text-slate-900 font-semibold">{getBranchLabel(branch)}</span>
+          <span className="text-foreground font-semibold">{getBranchLabel(branch)}</span>
         </motion.nav>
 
         {/* Header */}
         <motion.div variants={itemVariants} className="flex justify-between items-center w-full mb-4">
-          <h1 className="font-sans text-xl font-bold tracking-tight" style={{ color: themeConfigs[currentTheme].colors.text }}>
+          <h1 className="font-sans text-xl font-bold tracking-tight" style={{ color: themeColors.text }}>
             Laptops disponibles en {getBranchLabel(branch)}
           </h1>
           <button
@@ -405,8 +409,8 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
             onClick={handleShare}
             className="p-2 border rounded-lg transition-colors"
             style={{ 
-              borderColor: themeConfigs[currentTheme].colors.border,
-              color: themeConfigs[currentTheme].colors.textSecondary
+              borderColor: themeColors.border,
+              color: themeColors.textSecondary
             }}
             aria-label="Compartir catálogo"
           >
@@ -416,18 +420,18 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
 
         {/* Search Bar */}
         <motion.div variants={itemVariants} className="relative mb-4">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <input
             type="text"
             placeholder="Buscar laptops por nombre, marca o procesador..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full h-11 pl-10 pr-10 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent placeholder:text-slate-400"
+            className="w-full h-11 pl-10 pr-10 rounded-xl border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent placeholder:text-muted-foreground"
           />
           {search && (
             <button
               onClick={() => setSearch("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-muted-foreground"
             >
               <X className="h-4 w-4" />
             </button>
@@ -437,8 +441,8 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
         {/* Branch Selector + Filter Trigger Row */}
         <motion.div variants={itemVariants} className="flex items-center gap-2 mb-3">
           {/* Branch Selector */}
-          <div className="flex h-9 shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5">
-            <MapPin className="h-3.5 w-3.5 text-slate-400" />
+          <div className="flex h-9 shrink-0 items-center gap-1.5 rounded-lg border border-border bg-card px-2.5">
+            <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
             <Select value={branch} onValueChange={handleBranchChange}>
               <SelectTrigger className="h-auto w-[100px] border-0 bg-transparent p-0 text-xs font-medium shadow-none focus:ring-0 focus:ring-offset-0 md:w-[130px]">
                 <SelectValue>
@@ -463,8 +467,8 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
                   <Button
                     variant="outline"
                     className={cn(
-                      "h-9 px-3 gap-1.5 rounded-lg text-xs font-medium bg-white border-slate-200 shrink-0",
-                      activeFiltersCount > 0 && "border-slate-900 text-slate-900"
+                      "h-9 px-3 gap-1.5 rounded-lg text-xs font-medium bg-card border-border shrink-0",
+                      activeFiltersCount > 0 && "border-primary text-foreground"
                     )}
                   />
                 }
@@ -472,13 +476,13 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
                 <SlidersHorizontal className="w-3.5 h-3.5" />
                 Filtros
                 {activeFiltersCount > 0 && (
-                  <span className="h-4 w-4 bg-slate-900 text-white rounded-full flex items-center justify-center text-[9px] font-bold">
+                  <span className="h-4 w-4 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-[9px] font-bold">
                     {activeFiltersCount}
                   </span>
                 )}
               </SheetTrigger>
               <SheetContent side="right" className="w-[300px] sm:w-[400px] p-0">
-                <SheetHeader className="p-4 border-b border-slate-200">
+                <SheetHeader className="p-4 border-b border-border">
                   <SheetTitle className="text-lg font-bold flex items-center gap-2">
                     <SlidersHorizontal className="w-4 h-4" />
                     Filtros
@@ -611,7 +615,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
                 key={filter.label}
                 type="button"
                 onClick={filter.remove}
-                className="inline-flex shrink-0 items-center gap-1 bg-slate-100 text-slate-600 text-[11px] px-2.5 py-1 rounded-full hover:bg-slate-200 transition-colors"
+                className="inline-flex shrink-0 items-center gap-1 bg-muted text-muted-foreground text-[11px] px-2.5 py-1 rounded-full hover:bg-muted transition-colors"
               >
                 <span className="truncate max-w-[120px]">{filter.label}</span>
                 <X className="h-3 w-3 shrink-0" />
@@ -620,7 +624,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
             <button
               type="button"
               onClick={clearFilters}
-              className="text-[11px] text-slate-500 hover:text-slate-700 font-medium shrink-0"
+              className="text-[11px] text-muted-foreground hover:text-foreground font-medium shrink-0"
             >
               Limpiar
             </button>
@@ -662,20 +666,20 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
           <div className="flex-1">
             {/* Results count */}
             <div ref={resultsRef} className="flex items-center justify-between mb-3 gap-3">
-              <p className="text-xs text-slate-500" aria-live="polite" role="status">
+              <p className="text-xs text-muted-foreground" aria-live="polite" role="status">
                 {sortedProducts.length} {sortedProducts.length === 1 ? "equipo" : "equipos"} encontrados
               </p>
               <div className="flex items-center gap-2">
                 {/* View mode toggle */}
-                <div className="bg-slate-100 p-0.5 rounded-lg flex items-center gap-0.5 shrink-0" role="group" aria-label="Cambiar vista">
+                <div className="bg-muted p-0.5 rounded-lg flex items-center gap-0.5 shrink-0" role="group" aria-label="Cambiar vista">
                   <button
                     type="button"
                     onClick={() => setViewMode("grid")}
                     className={cn(
                       "p-1.5 rounded-md transition-all",
                       viewMode === "grid"
-                        ? "bg-white text-slate-900 shadow-sm"
-                        : "text-slate-500 hover:text-slate-700"
+                        ? "bg-card text-foreground shadow-sm"
+                        : "text-muted-foreground hover:text-foreground"
                     )}
                     aria-label="Vista de cuadrícula"
                     aria-pressed={viewMode === "grid"}
@@ -688,8 +692,8 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
                     className={cn(
                       "p-1.5 rounded-md transition-all",
                       viewMode === "list"
-                        ? "bg-white text-slate-900 shadow-sm"
-                        : "text-slate-500 hover:text-slate-700"
+                        ? "bg-card text-foreground shadow-sm"
+                        : "text-muted-foreground hover:text-foreground"
                     )}
                     aria-label="Vista de lista"
                     aria-pressed={viewMode === "list"}
@@ -698,7 +702,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
                   </button>
                 </div>
 
-                <div className="bg-slate-100 p-0.5 rounded-lg flex items-center gap-0.5">
+                <div className="bg-muted p-0.5 rounded-lg flex items-center gap-0.5">
                   {[
                     { value: "IN_STOCK" as const, label: "Disponibles" },
                     { value: "OUT_OF_STOCK" as const, label: "Agotados" },
@@ -711,8 +715,8 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
                       className={cn(
                         "text-[10px] font-medium px-2.5 py-1 rounded-md transition-all",
                         stockFilter === tab.value
-                          ? "bg-white text-slate-900 shadow-sm"
-                          : "text-slate-500 hover:text-slate-700"
+                          ? "bg-card text-foreground shadow-sm"
+                          : "text-muted-foreground hover:text-foreground"
                       )}
                     >
                       {tab.label}
@@ -780,7 +784,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
                       type="button"
                       onClick={() => goToPage(currentPage - 1)}
                       disabled={currentPage <= 1}
-                      className="px-3 py-2 rounded-lg text-sm font-medium bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none transition-colors"
+                      className="px-3 py-2 rounded-lg text-sm font-medium bg-card border border-border text-muted-foreground hover:bg-muted disabled:opacity-40 disabled:pointer-events-none transition-colors"
                     >
                       Anterior
                     </button>
@@ -795,7 +799,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
                       if (!isNearby) {
                         const isEllipsis = page === 2 || page === totalPages - 1;
                         return isEllipsis ? (
-                          <span key={page} className="px-1 text-slate-400 select-none">
+                          <span key={page} className="px-1 text-muted-foreground select-none">
                             …
                           </span>
                         ) : null;
@@ -810,8 +814,8 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
                           className={cn(
                             "min-w-9 h-9 px-2 rounded-lg text-sm font-medium transition-colors",
                             isPageActive
-                              ? "bg-slate-900 text-white"
-                              : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50"
+                              ? "bg-primary text-primary-foreground"
+                              : "bg-card border border-border text-muted-foreground hover:bg-muted"
                           )}
                         >
                           {page}
@@ -823,7 +827,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
                       type="button"
                       onClick={() => goToPage(currentPage + 1)}
                       disabled={currentPage >= totalPages}
-                      className="px-3 py-2 rounded-lg text-sm font-medium bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none transition-colors"
+                      className="px-3 py-2 rounded-lg text-sm font-medium bg-card border border-border text-muted-foreground hover:bg-muted disabled:opacity-40 disabled:pointer-events-none transition-colors"
                     >
                       Siguiente
                     </button>
@@ -831,12 +835,12 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
                 )}
               </>
             ) : (
-              <div className="text-center py-16 bg-white rounded-2xl border border-slate-200">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-slate-100 rounded-full mb-4">
-                  <Search className="w-6 h-6 text-slate-400" />
+              <div className="text-center py-16 bg-card rounded-2xl border border-border">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-muted rounded-full mb-4">
+                  <Search className="w-6 h-6 text-muted-foreground" />
                 </div>
                 <h2 className="text-lg font-bold mb-1">No encontramos equipos</h2>
-                <p className="text-slate-500 text-sm mb-6 max-w-sm mx-auto">
+                <p className="text-muted-foreground text-sm mb-6 max-w-sm mx-auto">
                   {search
                     ? `No hay resultados para "${search}". Intenta con otro término.`
                     : "No hay equipos disponibles con los filtros seleccionados."}
@@ -844,26 +848,26 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
                 <div className="flex items-center justify-center gap-2 flex-wrap">
                   <Button
                     onClick={clearFilters}
-                    className="bg-slate-900 text-white hover:bg-slate-800 px-4 py-2 rounded-lg text-sm"
+                    className="bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-lg text-sm"
                   >
                     Limpiar filtros
                   </Button>
                   <Link
                     href={`/catalogo/${branch}`}
-                    className="px-4 py-2 rounded-lg text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors"
+                    className="px-4 py-2 rounded-lg text-sm font-medium text-muted-foreground bg-muted hover:bg-muted transition-colors"
                   >
                     Ver catálogo completo
                   </Link>
                 </div>
                 <div className="mt-6">
-                  <p className="text-xs text-slate-400 mb-3">O explora por categoría:</p>
+                  <p className="text-xs text-muted-foreground mb-3">O explora por categoría:</p>
                   <div className="flex items-center justify-center gap-2 flex-wrap">
                     {categories.slice(0, 5).map(cat => (
                       <button
                         key={cat.name}
                         type="button"
                         onClick={() => setSelectedCategory(cat.name)}
-                        className="px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"
+                        className="px-3 py-1.5 rounded-full text-xs font-medium bg-muted text-muted-foreground hover:bg-muted transition-colors"
                       >
                         {cat.name}
                       </button>

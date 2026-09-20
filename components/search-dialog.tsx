@@ -15,6 +15,16 @@ export function SearchDialog({ open, onOpenChange }: { open: boolean; onOpenChan
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [prevOpen, setPrevOpen] = useState(open);
+
+  // Reset on close
+  if (prevOpen !== open) {
+    setPrevOpen(open);
+    if (!open) {
+      setQuery("");
+      setResults([]);
+    }
+  }
 
   const search = useCallback(async (q: string) => {
     if (q.trim().length < 2) {
@@ -48,14 +58,6 @@ export function SearchDialog({ open, onOpenChange }: { open: boolean; onOpenChan
     const timer = setTimeout(() => search(query), 250);
     return () => clearTimeout(timer);
   }, [query, search]);
-
-  // Reset on close
-  useEffect(() => {
-    if (!open) {
-      setQuery("");
-      setResults([]);
-    }
-  }, [open]);
 
   const handleSelect = (slug: string) => {
     onOpenChange(false);

@@ -78,10 +78,6 @@ export function CatalogSettings() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
-  useEffect(() => {
-    loadTheme();
-  }, []);
-
   const loadTheme = async () => {
     setIsLoading(true);
     try {
@@ -93,6 +89,12 @@ export function CatalogSettings() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    const timeout = setTimeout(() => loadTheme(), 0);
+    return () => clearTimeout(timeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSetTheme = async (theme: CatalogTheme) => {
     if (theme === selectedTheme) return;
@@ -141,13 +143,13 @@ export function CatalogSettings() {
                 "relative group cursor-pointer rounded-2xl border-2 transition-all duration-300 p-4 text-left overflow-hidden",
                 selectedTheme === theme.id
                   ? cn("bg-opacity-100 ring-2", themeBgColors[theme.id], themeRingColors[theme.id], themeBorderColors[theme.id])
-                  : "bg-white border-gray-200 hover:border-gray-300",
+                  : "bg-card border-border hover:border-border",
                 isSaving && "opacity-60 cursor-not-allowed"
               )}
             >
               <div className="flex flex-col gap-3">
                 {/* Color Preview */}
-                <div className="flex gap-1 h-10 rounded-lg overflow-hidden border border-gray-100">
+                <div className="flex gap-1 h-10 rounded-lg overflow-hidden border border-border">
                   {theme.colors.map((color, i) => (
                     <div key={i} className="flex-1" style={{ backgroundColor: color }} />
                   ))}
@@ -155,14 +157,14 @@ export function CatalogSettings() {
 
                 {/* Theme Name + Check */}
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-gray-900">{theme.name}</span>
+                  <span className="font-bold text-foreground">{theme.name}</span>
                   {selectedTheme === theme.id && (
                     <Check className={cn("w-5 h-5", themeCheckColors[theme.id])} />
                   )}
                 </div>
 
                 {/* Description */}
-                <p className="text-xs text-gray-500">{theme.description}</p>
+                <p className="text-xs text-muted-foreground">{theme.description}</p>
               </div>
             </button>
           ))}

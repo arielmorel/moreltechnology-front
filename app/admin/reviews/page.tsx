@@ -75,7 +75,8 @@ export default function AdminReviewsPage() {
   }, []);
 
   React.useEffect(() => {
-    loadReviews(activeFilter);
+    const timeout = setTimeout(() => loadReviews(activeFilter), 0);
+    return () => clearTimeout(timeout);
   }, [activeFilter, loadReviews]);
 
   const handleAction = (reviewId: string, action: "APPROVED" | "REJECTED", customerName: string) => {
