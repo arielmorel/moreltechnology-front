@@ -10,6 +10,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { WhatsAppDropdown } from "@/components/whatsapp-dropdown";
 import { Calendar, User, ArrowLeft, Tag, Clock, ArrowRight, ShoppingBag } from "lucide-react";
 import { BlogProductCarousel } from "@/components/blog-product-carousel";
+import { BlogCatalogProducts } from "@/components/blog-catalog-products";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -200,6 +201,7 @@ export default async function BlogPostPage({ params }: PageProps) {
             options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }}
             components={{
               BlogProductCarousel,
+              BlogCatalogProducts,
             }}
           />
         </article>

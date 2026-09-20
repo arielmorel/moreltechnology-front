@@ -1,9 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { ShoppingBag, ArrowRight } from "lucide-react";
 import { Product } from "@/lib/data";
-import { searchProducts, mapApiProductToProduct, ApiProduct, ApiResponse } from "@/lib/api";
 import { ProductCard } from "@/components/product-card";
 import {
   Carousel,
@@ -14,56 +12,18 @@ import {
 } from "@/components/ui/carousel";
 
 interface BlogProductCarouselProps {
-  query: string;
+  products: Product[];
   title?: string;
   subtitle?: string;
-  limit?: number;
+  ctaHref?: string;
 }
 
 export function BlogProductCarousel({
-  query,
+  products,
   title = "Producto mencionado",
   subtitle = "Disponible ahora en Morel Technology",
-  limit = 4,
+  ctaHref,
 }: BlogProductCarouselProps) {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchProducts() {
-      try {
-        const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8282";
-        const response = await fetch(
-          `${API_BASE_URL}/api/catalogs/moreltechnology/products/search?query=${encodeURIComponent(query)}&page=0&size=${limit}&availability=IN_STOCK`
-        );
-        const data: ApiResponse = await response.json();
-        setProducts(data.content.map(mapApiProductToProduct));
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchProducts();
-  }, [query, limit]);
-
-  if (loading) {
-    return (
-      <div className="my-8 rounded-2xl border border-border/50 bg-muted/30 p-6">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="h-5 w-5 bg-muted animate-pulse rounded" />
-          <div className="h-4 bg-muted animate-pulse rounded w-32" />
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {[1, 2].map((i) => (
-            <div key={i} className="h-24 bg-muted animate-pulse rounded-xl" />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
   if (products.length === 0) return null;
 
   return (
@@ -81,7 +41,7 @@ export function BlogProductCarousel({
 
       {/* Products */}
       {products.length === 1 ? (
-        <div className="mt-4">
+        <div className="mt-4 w-full sm:w-[48%] lg:w-[31%]">
           <ProductCard product={products[0]} />
         </div>
       ) : (
@@ -108,15 +68,17 @@ export function BlogProductCarousel({
       )}
 
       {/* CTA */}
-      <div className="mt-4 pt-4 border-t border-border/30">
-        <a
-          href={`/catalogo?search=${encodeURIComponent(query)}`}
-          className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
-        >
-          Ver todos los resultados
-          <ArrowRight className="w-4 h-4" />
-        </a>
-      </div>
+      {ctaHref && (
+        <div className="mt-4 pt-4 border-t border-border/30">
+          <a
+            href={ctaHref}
+            className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+          >
+            Ver todos los resultados
+            <ArrowRight className="w-4 h-4" />
+          </a>
+        </div>
+      )}
     </div>
   );
 }

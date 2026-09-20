@@ -7,7 +7,7 @@ import { WhatsAppDropdown } from "./whatsapp-dropdown";
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-background pt-16 md:pt-24 pb-16 md:pb-32">
+    <section className="relative overflow-hidden bg-background pt-16 md:pt-24 pb-10 md:pb-16">
       {/* Background Gradients */}
       <div className="absolute inset-0 z-0">
         <div className="absolute -top-40 -right-40 w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-primary/20 blur-[120px] rounded-full opacity-60" />
@@ -132,7 +132,7 @@ export function HeroSection() {
         </div>
 
         {/* Scroll indicator */}
-        <div className="hidden md:flex justify-center mt-12 animate-bounce">
+        <div className="hidden md:flex justify-center mt-8 animate-bounce">
           <ChevronDown className="w-6 h-6 text-muted-foreground/40" />
         </div>
       </div>
