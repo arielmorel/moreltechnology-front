@@ -7,7 +7,7 @@ import { ShoppingCart, Heart } from "lucide-react";
 import { useCart } from "@/lib/store";
 import { useFavorites } from "@/lib/favorites-store";
 import { toast } from "sonner";
-import { cn, isMinioImage, productUrl } from "@/lib/utils";
+import { cn, isMinioImage, productUrl, rememberOrigin } from "@/lib/utils";
 
 interface ProductCardCarouselProps {
   product: Product;
@@ -27,6 +27,7 @@ export function ProductCardCarousel({ product }: ProductCardCarouselProps) {
   return (
     <Link
       href={productUrl(product.slug)}
+      onClick={rememberOrigin}
       className={cn(
         "relative flex flex-col bg-card rounded-xl border border-border transition-all duration-200",
         "hover:shadow-lg hover:border-border hover:-translate-y-0.5",

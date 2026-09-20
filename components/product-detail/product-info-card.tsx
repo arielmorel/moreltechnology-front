@@ -15,10 +15,13 @@ import {
   Gamepad2,
   ChevronDown,
   FileText,
+  ArrowRightLeft,
 } from "lucide-react";
 import { cn, parseSpecsFromString } from "@/lib/utils";
 import { ConditionGuide } from "@/components/condition-guide";
 import { NotifyWhenAvailable } from "@/components/notify-when-available";
+import { useCart } from "@/lib/store";
+import { toast } from "sonner";
 
 interface ProductInfoCardProps {
   product: Product;
@@ -56,6 +59,26 @@ export function ProductInfoCard({
   const activeVariants = React.useMemo(() => {
     return product.variants?.filter(v => v.active) ?? [];
   }, [product.variants]);
+
+  const { compareItems, addToCompare, removeFromCompare } = useCart();
+  const isComparing = React.useMemo(
+    () => compareItems.some(item => item.id === product.id),
+    [compareItems, product.id]
+  );
+
+  const handleCompare = () => {
+    if (isComparing) {
+      removeFromCompare(product.id);
+      toast.success("Eliminado de comparación");
+    } else if (compareItems.length >= 3) {
+      toast.error("Máximo 3 productos para comparar");
+    } else {
+      addToCompare(product);
+      toast.success("Agregado a comparación", {
+        description: product.name,
+      });
+    }
+  };
 
   // Build the full list of options: primary (from product) + additional variants
   const variantOptions = React.useMemo(() => {
@@ -102,6 +125,20 @@ export function ProductInfoCard({
             </div>
             <button
               type="button"
+              onClick={handleCompare}
+              className={cn(
+                "p-2 border border-border rounded-lg transition-all duration-200 shrink-0 active:scale-90 hover:shadow-sm",
+                isComparing
+                  ? "bg-violet-600 text-white border-violet-600"
+                  : "text-muted-foreground hover:bg-muted"
+              )}
+              aria-label={isComparing ? "Quitar de comparación" : "Agregar a comparación"}
+              title={isComparing ? "Quitar de comparación" : "Agregar a comparación"}
+            >
+              <ArrowRightLeft className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
               onClick={onShare}
               className="p-2 border border-border hover:bg-muted text-muted-foreground rounded-lg transition-all duration-200 shrink-0 active:scale-90 hover:shadow-sm"
               aria-label="Compartir"
@@ -138,7 +175,7 @@ export function ProductInfoCard({
                       }
                     }}
                     className={cn(
-                      "flex items-center justify-between px-3 py-2.5 rounded-xl text-left text-xs font-medium border transition-all duration-200",
+                      "flex items-center justify-between px-3 py-2.5 rounded-xl text-left text-xs font-medium border transition-all duration-200 active:scale-[0.98]",
                       isSelected
                         ? "bg-slate-900 text-white border-slate-900 shadow-md"
                         : "bg-card text-muted-foreground border-border hover:border-border hover:bg-muted"
@@ -276,7 +313,7 @@ export function ProductInfoCard({
               const el = document.getElementById("product-description");
               el?.classList.toggle("hidden");
             }}
-            className="flex items-center justify-between w-full group"
+            className="flex items-center justify-between w-full group active:scale-[0.99] transition-transform duration-150"
           >
             <div className="flex items-center gap-2">
               <FileText className="w-4 h-4 text-muted-foreground" />
@@ -300,16 +337,16 @@ export function ProductInfoCard({
               <button
                 type="button"
                 onClick={onAddToCart}
-                className="w-full h-12 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+                className="w-full h-12 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm rounded-xl transition-all duration-200 shadow-md hover:shadow-lg active:scale-[0.98] active:shadow-md flex items-center justify-center gap-2 group"
               >
-                <ShoppingCart className="w-4 h-4" />
+                <ShoppingCart className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
                 Añadir al carrito
               </button>
               <a
                 href={`https://wa.me/18095551234?text=${encodeURIComponent(`Hola, estoy interesado en ${product.name}.`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-medium py-3 rounded-xl transition-colors flex items-center justify-center gap-2 text-xs"
+                className="w-full border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-medium py-3 rounded-xl transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2 text-xs"
               >
                 <MessageCircle className="w-3.5 h-3.5" />
                 Contactar por WhatsApp

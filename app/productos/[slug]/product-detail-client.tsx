@@ -1,15 +1,14 @@
 "use client";
 
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { Product, ProductVariant } from "@/lib/data";
-import { getProductBySlug, getProducts } from "@/lib/api";
-import { ArrowLeft, MessageCircle, ShoppingCart, ChevronDown } from "lucide-react";
+import { getProductBySlug, getProducts, PAGE_SIZE_RAIL } from "@/lib/api";
+import { MessageCircle, ShoppingCart, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/lib/store";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
 import { ProductCarousel } from "@/components/product-carousel";
 import { ModelCarousel } from "@/components/model-carousel";
 import { AccessoriesCarousel } from "@/components/accessories-carousel";
@@ -28,9 +27,7 @@ interface ProductDetailClientProps {
 export default function ProductDetailClient({ slug, initialProduct }: ProductDetailClientProps) {
   const [product, setProduct] = useState<Product | null>(initialProduct);
   const [isLoading, setIsLoading] = useState(!initialProduct);
-  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [activeImage, setActiveImage] = useState(0);
-  const [isImageViewerOpen, setIsImageViewerOpen] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | undefined>(undefined);
   const [prevProductId, setPrevProductId] = useState(product?.id);
   const [reviewsData, setReviewsData] = useState({
@@ -104,14 +101,6 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
           setProduct(currentProduct);
         }
 
-        const { products: allProducts } = await getProducts();
-        const related = currentProduct
-          ? allProducts.filter(p =>
-              p.slug !== slug && (p.category === currentProduct.category || p.brand === currentProduct.brand)
-            ).slice(0, 8)
-          : [];
-        setRelatedProducts(related);
-
         if (currentProduct) {
           const productId = parseInt(currentProduct.id, 10);
           if (!isNaN(productId)) {
@@ -128,6 +117,17 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
 
     loadData();
   }, [slug, initialProduct]);
+
+  const fetchRelated = useCallback(
+    async (page: number) => {
+      const category = product?.category;
+      if (!category) return { products: [], total: 0 };
+      const { products, total } = await getProducts(page, PAGE_SIZE_RAIL, category);
+      const excluded = products.filter(p => p.slug !== slug);
+      return { products: excluded, total: Math.max(0, total - (products.length - excluded.length)) };
+    },
+    [product?.category, slug]
+  );
 
   const handleAddToCart = () => {
     if (product) {
@@ -194,8 +194,6 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
               product={product}
               activeImage={activeImage}
               onActiveImageChange={setActiveImage}
-              isImageViewerOpen={isImageViewerOpen}
-              onImageViewerOpenChange={setIsImageViewerOpen}
             />
           </div>
 
@@ -244,16 +242,15 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
         </div>
 
         {/* Related Products */}
-        {relatedProducts.length > 0 && (
-          <div className="mt-6 md:mt-10 animate-slide-up-delay-6">
-            <ProductCarousel
-              type="related"
-              products={relatedProducts}
-              linkHref="/catalogo"
-              linkText="Ver catálogo"
-            />
-          </div>
-        )}
+        <div className="mt-6 md:mt-10 animate-slide-up-delay-6">
+          <ProductCarousel
+            type="related"
+            products={[]}
+            fetchPage={fetchRelated}
+            linkHref="/catalogo"
+            linkText="Ver catálogo"
+          />
+        </div>
       </div>
 
       {/* Mobile Sticky CTA Bar */}
@@ -276,7 +273,7 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
               <button
                 type="button"
                 onClick={handleAddToCart}
-                className="flex-1 h-12 bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold rounded-xl transition-all shadow-md flex items-center justify-center gap-2"
+                className="flex-1 h-12 bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-md active:scale-[0.97] flex items-center justify-center gap-2"
               >
                 <ShoppingCart className="w-4 h-4" />
                 Agregar
@@ -285,7 +282,7 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
                 href={`https://wa.me/18095551234?text=${encodeURIComponent(`Hola, estoy interesado en ${product.name}.`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="h-12 w-12 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl transition-colors flex items-center justify-center shrink-0"
+                className="h-12 w-12 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl transition-all duration-200 active:scale-90 flex items-center justify-center shrink-0"
                 aria-label="WhatsApp"
               >
                 <MessageCircle className="w-5 h-5" />

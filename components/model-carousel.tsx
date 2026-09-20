@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Product } from "@/lib/data";
-import { getProducts, PAGE_SIZE_ALL } from "@/lib/api";
+import { useCallback } from "react";
+import { getProducts, PAGE_SIZE_RAIL } from "@/lib/api";
 import { ProductCarousel } from "@/components/product-carousel";
 
 interface ModelCarouselProps {
@@ -11,34 +10,25 @@ interface ModelCarouselProps {
 }
 
 export function ModelCarousel({ query, excludeSlug }: ModelCarouselProps) {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+  const fetchPage = useCallback(
+    async (page: number) => {
+      const { products, total } = await getProducts(page, PAGE_SIZE_RAIL);
+      const matched = products
+        .filter(p => p.name.toLowerCase().includes(query.toLowerCase()))
+        .filter(p => p.slug !== excludeSlug);
+      return { products: matched, total };
+    },
+    [query, excludeSlug]
+  );
 
-  useEffect(() => {
-    const loadProducts = async () => {
-      try {
-        const { products: allProducts } = await getProducts(0, PAGE_SIZE_ALL);
-        const matched = allProducts
-          .filter(p => p.name.toLowerCase().includes(query.toLowerCase()))
-          .filter(p => p.slug !== excludeSlug)
-          .slice(0, 8);
-        setProducts(matched);
-      } catch (error) {
-        console.error("Error loading model products:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadProducts();
-  }, [query, excludeSlug]);
-
-  if (loading || products.length === 0) return null;
+  if (!query) return null;
 
   return (
     <div className="mt-8 md:mt-12">
       <ProductCarousel
         type="same-model"
-        products={products}
+        products={[]}
+        fetchPage={fetchPage}
         linkHref={`/catalogo?query=${encodeURIComponent(query)}`}
         linkText="Ver todos"
       />

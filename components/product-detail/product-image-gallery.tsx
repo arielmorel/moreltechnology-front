@@ -6,22 +6,17 @@ import Image from "next/image";
 import { Product } from "@/lib/data";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn, isMinioImage } from "@/lib/utils";
-import { DialogContent, Dialog, DialogTitle } from "@/components/ui/dialog";
 
 interface ProductImageGalleryProps {
   product: Product;
   activeImage: number;
   onActiveImageChange: (index: number) => void;
-  isImageViewerOpen: boolean;
-  onImageViewerOpenChange: (open: boolean) => void;
 }
 
 export function ProductImageGallery({
   product,
   activeImage,
   onActiveImageChange,
-  isImageViewerOpen,
-  onImageViewerOpenChange,
 }: ProductImageGalleryProps) {
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
@@ -59,17 +54,7 @@ export function ProductImageGallery({
       {/* Main Image Container */}
       <div className="group relative">
         <div
-          role="button"
-          tabIndex={0}
-          onClick={() => onImageViewerOpenChange(true)}
-          onKeyDown={(event) => {
-            if (event.key === "Enter" || event.key === " ") {
-              event.preventDefault();
-              onImageViewerOpenChange(true);
-            }
-          }}
-          aria-label="Abrir imagen en pantalla completa"
-          className="relative aspect-square md:aspect-[4/3] cursor-zoom-in rounded-2xl overflow-hidden touch-pan-y focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2"
+          className="relative aspect-square md:aspect-[4/3] cursor-zoom-in rounded-2xl overflow-hidden touch-pan-y"
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
@@ -182,6 +167,7 @@ export function ProductImageGallery({
       </div>
 
       {/* Fullscreen Dialog */}
+      {/* TODO: disabled on mobile for now - hard to navigate
       <Dialog open={isImageViewerOpen} onOpenChange={onImageViewerOpenChange}>
         <DialogContent
           showCloseButton
@@ -243,6 +229,7 @@ export function ProductImageGallery({
           </div>
         </DialogContent>
       </Dialog>
+      */}
 
       {/* Thumbnails */}
       {product.images.length > 1 && (

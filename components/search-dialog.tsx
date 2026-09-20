@@ -4,11 +4,10 @@ import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Command } from "cmdk";
-import { Search, Laptop, Store, CornerDownLeft } from "lucide-react";
+import { Search, CornerDownLeft } from "lucide-react";
 import { searchProducts } from "@/lib/api";
 import { Product } from "@/lib/data";
-import { isMinioImage, productUrl } from "@/lib/utils";
-import { cn } from "@/lib/utils";
+import { isMinioImage, productUrl, rememberOrigin } from "@/lib/utils";
 
 export function SearchDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const router = useRouter();
@@ -61,6 +60,7 @@ export function SearchDialog({ open, onOpenChange }: { open: boolean; onOpenChan
 
   const handleSelect = (slug: string) => {
     onOpenChange(false);
+    rememberOrigin();
     router.push(productUrl(slug));
   };
 

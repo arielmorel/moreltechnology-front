@@ -3,12 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Product } from "@/lib/data";
-import { ShoppingCart, Eye, Heart, Share2, ArrowRightLeft } from "lucide-react";
+import { ShoppingCart, Eye, Heart } from "lucide-react";
 import { useCart } from "@/lib/store";
 import { useFavorites } from "@/lib/favorites-store";
 import { toast } from "sonner";
-import { cn, isMinioImage, productUrl } from "@/lib/utils";
-import { ProductQuickView } from "@/components/product-quick-view";
+import { cn, isMinioImage, productUrl, rememberOrigin } from "@/lib/utils";
 
 export type ProductCardView = "grid" | "list";
 
@@ -18,11 +17,10 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, view = "grid" }: ProductCardProps) {
-  const { addItem, compareItems, addToCompare, removeFromCompare } = useCart();
+  const { addItem } = useCart();
   const { isFavorite, toggleFavorite } = useFavorites();
   const isOutOfStock = product.quantity <= 0;
   const isWishlisted = isFavorite(product.id);
-  const isComparing = compareItems.some(item => item.id === product.id);
 
   const hasDiscount = product.originalPrice && product.originalPrice > product.price;
   const discountPercent = hasDiscount
@@ -44,10 +42,11 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
     toast.success(isWishlisted ? "Eliminado de favoritos" : "Agregado a favoritos");
   };
 
+  {/* TODO: share only in product detail for now
   const handleShare = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     const url = `${typeof window !== "undefined" ? window.location.origin : ""}${productUrl(product.slug)}`;
     const title = product.name;
     const text = `Mira este producto: ${product.name} - RD$ ${product.price.toLocaleString("es-DO")}`;
@@ -65,22 +64,7 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
       toast.success("Enlace copiado al portapapeles");
     }
   };
-
-  const handleCompare = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (isComparing) {
-      removeFromCompare(product.id);
-      toast.success("Eliminado de comparación");
-    } else if (compareItems.length >= 3) {
-      toast.error("Máximo 3 productos para comparar");
-    } else {
-      addToCompare(product);
-      toast.success("Agregado a comparación", {
-        description: product.name,
-      });
-    }
-  };
+*/}
 
   const discountBadge = hasDiscount ? (
     <span className="bg-red-500 text-white text-xs px-3 py-1 rounded-full shadow-lg font-semibold uppercase tracking-wide flex items-center gap-1 animate-pulse hover:animate-bounce">
@@ -120,6 +104,7 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
     </button>
   );
 
+  {/* TODO: share button only in product detail for now
   const shareButton = (
     <button
       type="button"
@@ -130,38 +115,7 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
       <Share2 className="w-4 h-4 text-muted-foreground" />
     </button>
   );
-
-  const compareButton = (
-    <button
-      type="button"
-      onClick={handleCompare}
-      className={cn(
-        "p-2 rounded-full shadow-lg transition-all duration-300",
-        isComparing
-          ? "bg-violet-600 text-white"
-          : "bg-card text-foreground hover:bg-violet-600 hover:text-white"
-      )}
-      aria-label={isComparing ? "Quitar de comparación" : "Agregar a comparación"}
-      title={isComparing ? "Quitar de comparación" : "Agregar a comparación"}
-    >
-      <ArrowRightLeft className="w-4 h-4" />
-    </button>
-  );
-
-  const quickViewButton = (
-    <button
-      type="button"
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-      }}
-      className="p-2 bg-card/90 backdrop-blur-sm rounded-full shadow-md hover:bg-card hover:shadow-lg transition-all duration-200 hover:scale-110 active:scale-95"
-      aria-label="Vista rápida"
-      title="Vista rápida"
-    >
-      <Eye className="w-4 h-4 text-muted-foreground" />
-    </button>
-  );
+*/}
 
   const stockLabelElement = stockLabel ? (
     <span className="absolute bottom-3 left-3 bg-amber-400 text-black text-[9px] font-bold px-2 py-1 rounded-md shadow-sm z-10">
@@ -213,6 +167,7 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
     return (
       <Link
         href={productUrl(product.slug)}
+        onClick={rememberOrigin}
         className={cn(
           "product-card group relative flex flex-col sm:flex-row bg-card dark:bg-card rounded-3xl shadow-sm border border-border dark:border-border overflow-hidden",
           "hover:shadow-[0_8px_30px_-5px_rgba(0,102,204,0.3)] hover:border-blue-600 cursor-pointer hover:scale-[1.01]",
@@ -243,7 +198,7 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
 
           <div className="absolute top-3 right-3 z-20 flex items-center gap-2">
             {wishlistButton}
-            {shareButton}
+            {/* {shareButton} */}
           </div>
         </div>
 
@@ -289,7 +244,7 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
               {product.tags.slice(0, 3).map((tag) => (
                 <span
                   key={tag}
-                  className="inline-block px-2 py-1 text-[10px] font-semibold text-white bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full"
+                  className="inline-block px-2 py-1 text-[10px] font-semibold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 rounded-full"
                 >
                   {tag}
                 </span>
@@ -309,8 +264,6 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
               </span>
             </div>
             <div className="flex items-center gap-2 shrink-0">
-              <ProductQuickView product={product}>{quickViewButton}</ProductQuickView>
-              {compareButton}
               {addToCartButton}
             </div>
           </div>
@@ -322,6 +275,7 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
   return (
     <Link
       href={productUrl(product.slug)}
+      onClick={rememberOrigin}
       className={cn(
         "product-card group relative flex flex-col bg-card dark:bg-card rounded-3xl shadow-sm border border-border dark:border-border overflow-hidden h-full",
         "hover:shadow-[0_8px_30px_-5px_rgba(0,102,204,0.3)] hover:border-blue-600 cursor-pointer hover:scale-[1.02] hover:-translate-y-1",
@@ -330,14 +284,14 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
       )}
     >
       {/* Image Container */}
-      <div className="relative shrink-0 overflow-hidden bg-muted dark:bg-muted w-full h-[200px] rounded-t-3xl">
+      <div className="relative shrink-0 overflow-hidden bg-muted dark:bg-muted w-full h-[150px] sm:h-[200px] rounded-t-3xl">
         <Image
           src={product.images[0]}
           alt={product.name}
           fill
           unoptimized={isMinioImage(product.images[0])}
           className="object-cover transition-transform duration-500 group-hover:scale-110"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 320px"
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 320px"
         />
 
         {/* Hover Overlay - Ver detalle */}
@@ -375,7 +329,7 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
           type="button"
           onClick={handleWishlist}
           className={cn(
-            "absolute top-3 right-12 z-20 p-2 rounded-full shadow-lg transition-all duration-300",
+            "absolute top-3 right-3 z-20 p-2 rounded-full shadow-lg transition-all duration-300",
             isWishlisted
               ? "bg-blue-600 text-white"
               : "bg-card text-foreground hover:bg-blue-600 hover:text-white"
@@ -386,6 +340,7 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
         </button>
 
         {/* Share button - top right */}
+        {/* TODO: only in product detail for now
         <button
           type="button"
           onClick={handleShare}
@@ -394,6 +349,7 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
         >
           <Share2 className="w-4 h-4 text-muted-foreground" />
         </button>
+        */}
 
         {/* Stock indicator */}
         {stockLabel && (
@@ -404,12 +360,12 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
       </div>
 
       {/* Content */}
-      <div className="flex-1 flex flex-col justify-between p-5">
+      <div className="flex-1 flex flex-col justify-between p-3 sm:p-5">
         {/* Top section */}
         <div>
           {/* Title with quantity */}
           <div className="flex items-start justify-between">
-            <h3 className="text-lg font-semibold text-foreground dark:text-foreground leading-tight line-clamp-1 group-hover:text-blue-600 transition-colors duration-300">
+            <h3 className="text-sm sm:text-lg font-semibold text-foreground dark:text-foreground leading-tight line-clamp-1 group-hover:text-blue-600 transition-colors duration-300">
               {product.name}
             </h3>
             {product.quantity !== null && product.quantity !== undefined && (
@@ -427,7 +383,7 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
           </div>
 
           {/* Description */}
-          <p className="text-base text-muted-foreground dark:text-gray-300 line-clamp-2 mt-1">
+          <p className="text-xs sm:text-base text-muted-foreground dark:text-gray-300 line-clamp-2 mt-1">
             {product.description || `${product.brand} - ${product.processor}`}
           </p>
 
@@ -437,13 +393,13 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
               {product.tags.slice(0, 3).map((tag) => (
                 <span
                   key={tag}
-                  className="inline-block px-2 py-1 text-xs font-semibold text-white bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full"
+                  className="inline-block px-1.5 py-0.5 text-[9px] sm:text-xs font-semibold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 rounded-full"
                 >
                   {tag}
                 </span>
               ))}
               {product.tags.length > 3 && (
-                <span className="inline-block px-2 py-1 text-xs font-semibold text-muted-foreground dark:text-gray-300 bg-muted dark:bg-muted rounded-full">
+                <span className="inline-block px-1.5 py-0.5 text-[9px] sm:text-xs font-semibold text-muted-foreground dark:text-gray-300 bg-muted dark:bg-muted rounded-full">
                   +{product.tags.length - 3}
                 </span>
               )}
@@ -455,13 +411,13 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
         <div className="flex items-center justify-between pt-2">
           <div className="flex items-baseline gap-2">
             {hasDiscount && (
-              <span className="text-sm text-muted-foreground line-through font-normal">
+              <span className="text-xs sm:text-sm text-muted-foreground line-through font-normal">
                 RD$ {product.originalPrice!.toLocaleString("es-DO")}
               </span>
             )}
             <span className={cn(
               "font-bold",
-              hasDiscount ? "text-xl text-emerald-600" : "text-lg text-foreground dark:text-foreground"
+              hasDiscount ? "text-base sm:text-xl text-emerald-600" : "text-sm sm:text-lg text-foreground dark:text-foreground"
             )}>
               RD$ {product.price.toLocaleString("es-DO")}
             </span>
@@ -471,10 +427,6 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
         {/* Action Button */}
         <div className="mt-4 opacity-90 hover:opacity-100 transition-opacity duration-300">
           <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <ProductQuickView product={product}>{quickViewButton}</ProductQuickView>
-              {compareButton}
-            </div>
             {!isOutOfStock ? (
               <button
                 type="button"
@@ -486,7 +438,7 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
                     description: product.name,
                   });
                 }}
-                className="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition-all duration-300 hover:scale-105 hover:-translate-y-0.5"
+                className="flex-shrink-0 flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition-all duration-300 hover:scale-105 hover:-translate-y-0.5"
                 title="Agregar al carrito"
               >
                 <ShoppingCart className="w-5 h-5" />

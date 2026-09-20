@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { usePathname, useRouter } from "next/navigation";
+import { cn, consumeOrigin } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Moon, Sun, Home, ShoppingBag, Sparkles, CreditCard, Users, Phone, MapPin, BookOpen, ChevronDown, Search, MoreHorizontal } from "lucide-react";
 import { ArrowLeft } from "lucide-react";
@@ -36,6 +36,7 @@ const sucursalLinks = [
 
 export function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
   const { theme, setTheme } = useTheme();
   const mounted = useMounted();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -105,14 +106,21 @@ export function Navbar() {
         <div className="flex items-center gap-1 md:gap-2">
           {mounted && pathname !== "/" && (
             <button
-              onClick={() => window.history.back()}
+              onClick={() => {
+                if (window.history.length > 1) {
+                  window.history.back();
+                } else {
+                  const origin = consumeOrigin();
+                  router.push(origin ?? "/");
+                }
+              }}
               className="md:hidden flex items-center justify-center min-h-[44px] min-w-[44px] text-muted-foreground hover:text-foreground transition-colors -ml-1"
               aria-label="Volver"
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
           )}
-          <Link href="/" className="flex items-center transition-transform hover:scale-105 min-h-[44px] min-w-[44px] justify-center -ml-2">
+          <Link href={pathname.startsWith("/productos/") ? "/catalogo" : "/"} className="flex items-center transition-transform hover:scale-105 min-h-[44px] min-w-[44px] justify-center -ml-2">
             <Image
               src="/logo/moreltechnology.png"
               alt="MorelTechnology Logo"
