@@ -160,7 +160,43 @@ export const mapApiProductToProduct = (apiProduct: ApiProduct): Product => {
 export type AvailabilityFilter = "IN_STOCK" | "OUT_OF_STOCK" | "ALL";
 export type SortFilter = "price_asc" | "price_desc" | "newest";
 
+type CachedPage = { products: Product[]; total: number; timestamp: number };
+
+const CACHE_TTL_MS = 5 * 60 * 1000;
+const pageCache = new Map<string, CachedPage>();
+
+function pageCacheKey(prefix: string, page: number, size: number, category?: string, branchId?: string, tags?: string, availability?: AvailabilityFilter, sort?: SortFilter, query?: string): string {
+  return [prefix, page, size, category ?? "", branchId ?? "", tags ?? "", availability ?? "", sort ?? "", query ?? ""].join("|");
+}
+
+function getCachedPage(key: string): CachedPage | null {
+  const hit = pageCache.get(key);
+  if (hit && Date.now() - hit.timestamp < CACHE_TTL_MS) return hit;
+  return null;
+}
+
+function setCachedPage(key: string, result: { products: Product[]; total: number }): void {
+  if (pageCache.size > 500) {
+    const oldest = pageCache.entries().next().value;
+    if (oldest) pageCache.delete(oldest[0]);
+  }
+  pageCache.set(key, { ...result, timestamp: Date.now() });
+}
+
+export function getCachedProducts(page = 0, size = PAGE_SIZE_DEFAULT, category?: string, branchId?: string, tags?: string, availability?: AvailabilityFilter, sort?: SortFilter): { products: Product[]; total: number } | null {
+  return getCachedPage(pageCacheKey("p", page, size, category, branchId, tags, availability, sort));
+}
+
+export function getCachedSearch(query: string, page = 0, size = PAGE_SIZE_DEFAULT, category?: string, branchId?: string, tags?: string, availability?: AvailabilityFilter, sort?: SortFilter): { products: Product[]; total: number } | null {
+  return getCachedPage(pageCacheKey("s", page, size, category, branchId, tags, availability, sort, query));
+}
+
 export const getProducts = async (page = 0, size = PAGE_SIZE_DEFAULT, category?: string, branchId?: string, tags?: string, availability?: AvailabilityFilter, sort?: SortFilter): Promise<{ products: Product[], total: number }> => {
+  const key = pageCacheKey("p", page, size, category, branchId, tags, availability, sort);
+  const cached = getCachedPage(key);
+  if (cached) {
+    return { products: cached.products, total: cached.total };
+  }
   try {
     const params: Record<string, string | number> = { page, size };
     if (category && category !== "todas") {
@@ -177,10 +213,12 @@ export const getProducts = async (page = 0, size = PAGE_SIZE_DEFAULT, category?:
     }
     const response = await axios.get<ApiResponse>(getCatalogUrl(branchId), { params });
 
-    return {
+    const result = {
       products: response.data.content.map(mapApiProductToProduct),
       total: response.data.totalElements
     };
+    setCachedPage(key, result);
+    return result;
   } catch (error) {
     console.error("Error fetching products from API:", error);
     return { products: [], total: 0 };
@@ -226,6 +264,11 @@ export const getProductsByBrand = async (brand: string, branchId?: string): Prom
 };
 
 export const searchProducts = async (query: string, page = 0, size = PAGE_SIZE_DEFAULT, category?: string, branchId?: string, tags?: string, availability?: AvailabilityFilter, sort?: SortFilter): Promise<{ products: Product[], total: number }> => {
+  const key = pageCacheKey("s", page, size, category, branchId, tags, availability, sort, query);
+  const cached = getCachedPage(key);
+  if (cached) {
+    return { products: cached.products, total: cached.total };
+  }
   try {
     const params: Record<string, string | number> = { query, page, size };
     if (category && category !== "todas") {
@@ -242,10 +285,12 @@ export const searchProducts = async (query: string, page = 0, size = PAGE_SIZE_D
     }
     const response = await axios.get<ApiResponse>(`${getCatalogUrl(branchId)}/search`, { params });
 
-    return {
+    const result = {
       products: response.data.content.map(mapApiProductToProduct),
       total: response.data.totalElements
     };
+    setCachedPage(key, result);
+    return result;
   } catch (error) {
     console.error("Error searching products:", error);
     return { products: [], total: 0 };

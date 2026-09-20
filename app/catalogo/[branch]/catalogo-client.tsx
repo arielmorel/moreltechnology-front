@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect, useCallback, useRef, useSyncExternalStore } from "react";
 import { categories, Product } from "@/lib/data";
-import { getProducts, searchProducts, AvailabilityFilter, SortFilter, getSettingWithDefault } from "@/lib/api";
+import { getProducts, searchProducts, getCachedProducts, getCachedSearch, AvailabilityFilter, SortFilter, getSettingWithDefault } from "@/lib/api";
 import { useDebounce } from "@/hooks/use-debounce";
 import { ProductCard, type ProductCardView } from "@/components/product-card";
 import { ProductCardSkeleton } from "@/components/product-card-skeleton";
@@ -228,6 +228,23 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
     pageRef.current = 0;
     let cancelled = false;
     const loadInitial = async () => {
+      if (debouncedSearch.trim() === "") {
+        const cached = getCachedProducts(0, PAGE_SIZE, selectedCategory, branch, undefined, stockFilter);
+        if (!cancelled && cached) {
+          setProducts(cached.products);
+          setTotal(cached.total);
+          setIsLoading(false);
+          return;
+        }
+      } else {
+        const cached = getCachedSearch(debouncedSearch, 0, PAGE_SIZE, selectedCategory, branch, undefined, stockFilter);
+        if (!cancelled && cached) {
+          setProducts(cached.products);
+          setTotal(cached.total);
+          setIsLoading(false);
+          return;
+        }
+      }
       if (!cancelled) setIsLoading(true);
       try {
         let result;
