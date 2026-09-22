@@ -1,9 +1,11 @@
 import { Metadata } from "next";
-import Script from "next/script";
+import { cache, Suspense } from "react";
 import { getProductBySlug } from "@/lib/api";
-import { getApprovedReviews } from "@/app/actions/reviews";
 import { productUrl } from "@/lib/utils";
+import { ProductReviewsSection } from "@/components/product-detail/product-reviews-section";
 import ProductDetailClient from "./product-detail-client";
+
+const getProductBySlugCached = cache(getProductBySlug);
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -11,7 +13,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const product = await getProductBySlug(slug);
+  const product = await getProductBySlugCached(slug);
 
   if (!product) {
     return {
@@ -55,40 +57,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ProductDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const product = await getProductBySlug(slug);
+  const product = await getProductBySlugCached(slug);
 
-  let aggregateRating = null;
-  let jsonLdReviews: Array<Record<string, unknown>> = [];
+  let productId = NaN;
   if (product) {
-    const productId = parseInt(product.id, 10);
-    if (!isNaN(productId)) {
-      const { reviews, averageRating, totalReviews } = await getApprovedReviews(productId);
-      if (totalReviews > 0) {
-        aggregateRating = {
-          "@type": "AggregateRating" as const,
-          ratingValue: averageRating,
-          reviewCount: totalReviews,
-          bestRating: 5,
-          worstRating: 1,
-        };
-        jsonLdReviews = reviews.map((r) => ({
-          "@type": "Review",
-          author: {
-            "@type": "Person",
-            name: r.customerName,
-          },
-          reviewRating: {
-            "@type": "Rating",
-            ratingValue: r.rating,
-            bestRating: 5,
-            worstRating: 1,
-          },
-          name: r.title || undefined,
-          reviewBody: r.comment,
-          datePublished: new Date(r.createdAt).toISOString().split("T")[0],
-        }));
-      }
-    }
+    productId = parseInt(product.id, 10);
   }
 
   const productSchema = product ? {
@@ -201,8 +174,6 @@ export default async function ProductDetailPage({ params }: PageProps) {
       ],
     },
     category: product.category,
-    ...(aggregateRating && { aggregateRating }),
-    ...(jsonLdReviews.length > 0 && { review: jsonLdReviews }),
   } : null;
 
   const breadcrumbSchema = {
@@ -233,20 +204,35 @@ export default async function ProductDetailPage({ params }: PageProps) {
   return (
     <>
       {productSchema && (
-        <Script
+        <script
           id="product-schema"
           type="application/ld+json"
-          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
         />
       )}
-      <Script
+      <script
         id="product-breadcrumb-schema"
         type="application/ld+json"
-        strategy="beforeInteractive"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <ProductDetailClient slug={slug} initialProduct={product} />
+      <ProductDetailClient slug={slug} initialProduct={product}>
+        {!isNaN(productId) && (
+          <Suspense
+            fallback={
+              <div className="bg-card rounded-2xl p-4 mt-4 md:mt-6 shadow-sm animate-pulse">
+                <div className="h-6 w-40 bg-muted rounded mb-4" />
+                <div className="h-20 bg-muted rounded" />
+              </div>
+            }
+          >
+            <ProductReviewsSection
+              productId={productId}
+              productName={product!.name}
+              slug={slug}
+            />
+          </Suspense>
+        )}
+      </ProductDetailClient>
     </>
   );
 }

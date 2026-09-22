@@ -168,6 +168,7 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
       <Link
         href={productUrl(product.slug)}
         onClick={rememberOrigin}
+        prefetch={true}
         className={cn(
           "product-card group relative flex flex-col sm:flex-row bg-card dark:bg-card rounded-3xl shadow-sm border border-border dark:border-border overflow-hidden",
           "hover:shadow-[0_8px_30px_-5px_rgba(0,102,204,0.3)] hover:border-blue-600 cursor-pointer hover:scale-[1.01]",
@@ -276,6 +277,7 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
     <Link
       href={productUrl(product.slug)}
       onClick={rememberOrigin}
+      prefetch={true}
       className={cn(
         "product-card group relative flex flex-col bg-card dark:bg-card rounded-3xl shadow-sm border border-border dark:border-border overflow-hidden h-full",
         "hover:shadow-[0_8px_30px_-5px_rgba(0,102,204,0.3)] hover:border-blue-600 cursor-pointer hover:scale-[1.02] hover:-translate-y-1",

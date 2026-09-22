@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Script from "next/script";
 import { getProducts, getProductsByBrand, PAGE_SIZE_ALL } from "@/lib/api";
 import { ProductCard } from "@/components/product-card";
 import { WhatsAppDropdown } from "@/components/whatsapp-dropdown";
@@ -375,8 +374,8 @@ export default async function LaptopSlugPage({ params }: PageProps) {
       </section>
 
       {/* Schemas */}
-      <Script id="laptop-breadcrumb-schema" type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
-      <Script id="laptop-faq-schema" type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script id="laptop-breadcrumb-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script id="laptop-faq-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
     </div>
   );
 }

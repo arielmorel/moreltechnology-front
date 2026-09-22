@@ -63,7 +63,7 @@ export function FavoritesSheet() {
           ) : (
             items.map((item) => (
               <div key={item.id} className="flex gap-4 group">
-                <Link href={productUrl(item.slug)} className="w-16 h-16 rounded-xl bg-muted border border-border/80 overflow-hidden shrink-0 relative">
+                <Link href={productUrl(item.slug)} prefetch={true} className="w-16 h-16 rounded-xl bg-muted border border-border/80 overflow-hidden shrink-0 relative">
                   <Image
                     src={item.images?.[0] || '/images/placeholder-laptop.png'}
                     alt={item.name}
@@ -77,6 +77,7 @@ export function FavoritesSheet() {
                   <div className="flex justify-between items-start gap-2">
                     <Link
                       href={productUrl(item.slug)}
+                      prefetch={true}
                       className="font-sans text-sm font-semibold text-foreground truncate hover:text-primary transition-colors"
                     >
                       {item.name}

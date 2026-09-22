@@ -13,36 +13,22 @@ import { ProductCarousel } from "@/components/product-carousel";
 import { ModelCarousel } from "@/components/model-carousel";
 import { AccessoriesCarousel } from "@/components/accessories-carousel";
 import { ProductReviewForm } from "@/components/product-review-form";
-import { getApprovedReviews } from "@/app/actions/reviews";
 import { ProductImageGallery } from "@/components/product-detail/product-image-gallery";
 import { ProductInfoCard } from "@/components/product-detail/product-info-card";
-import { ProductReviewsSummary } from "@/components/product-detail/product-reviews-summary";
 import { NotifyWhenAvailable } from "@/components/notify-when-available";
 
 interface ProductDetailClientProps {
   slug: string;
   initialProduct: Product | null;
+  children?: React.ReactNode;
 }
 
-export default function ProductDetailClient({ slug, initialProduct }: ProductDetailClientProps) {
+export default function ProductDetailClient({ slug, initialProduct, children }: ProductDetailClientProps) {
   const [product, setProduct] = useState<Product | null>(initialProduct);
   const [isLoading, setIsLoading] = useState(!initialProduct);
   const [activeImage, setActiveImage] = useState(0);
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | undefined>(undefined);
   const [prevProductId, setPrevProductId] = useState(product?.id);
-  const [reviewsData, setReviewsData] = useState({
-    reviews: [] as Array<{
-      id: string;
-      customerName: string;
-      rating: number;
-      title: string | null;
-      comment: string;
-      verifiedPurchase: boolean;
-      createdAt: Date;
-    }>,
-    averageRating: 0,
-    totalReviews: 0,
-  });
   const { addItem } = useCart();
 
   const warrantyLabel = product?.warranty
@@ -93,20 +79,14 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
   };
 
   useEffect(() => {
+    if (initialProduct) return;
+
     async function loadData() {
       try {
-        const currentProduct = initialProduct || await getProductBySlug(slug);
-
-        if (!initialProduct) {
-          setProduct(currentProduct);
-        }
+        const currentProduct = await getProductBySlug(slug);
 
         if (currentProduct) {
-          const productId = parseInt(currentProduct.id, 10);
-          if (!isNaN(productId)) {
-            const reviews = await getApprovedReviews(productId);
-            setReviewsData(reviews);
-          }
+          setProduct(currentProduct);
         }
       } catch (error) {
         console.error("Error loading product:", error);
@@ -219,13 +199,9 @@ export default function ProductDetailClient({ slug, initialProduct }: ProductDet
           <AccessoriesCarousel currentProductId={product.slug} />
         </div>
 
-        {/* Reviews Summary Card */}
+        {/* Reviews Summary Card (streamed from server) */}
         <div className="animate-slide-up-delay-4">
-          <ProductReviewsSummary
-            reviews={reviewsData.reviews}
-            averageRating={reviewsData.averageRating}
-            totalReviews={reviewsData.totalReviews}
-          />
+          {children}
         </div>
 
         {/* Review Form - Collapsible on mobile */}

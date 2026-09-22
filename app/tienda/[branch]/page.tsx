@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import Script from "next/script";
 import Link from "next/link";
 import { MapPin, Phone, Clock, ShieldCheck, Truck, CreditCard, MessageCircle } from "lucide-react";
 import { WhatsAppDropdown } from "@/components/whatsapp-dropdown";
@@ -330,10 +329,9 @@ export default async function TiendaBranchPage({ params }: PageProps) {
       </section>
 
       {/* Schema */}
-      <Script
+      <script
         id={`tienda-${branch}-schema`}
         type="application/ld+json"
-        strategy="beforeInteractive"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
       />
     </div>

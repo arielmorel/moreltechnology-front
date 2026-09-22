@@ -161,7 +161,7 @@ export default function CompararPage() {
                         <ShoppingCart className="w-4 h-4 mr-2" />
                         Agregar al carrito
                       </Button>
-                      <Link href={productUrl(item.slug)} className="w-full">
+                      <Link href={productUrl(item.slug)} prefetch={true} className="w-full">
                         <Button variant="outline" className="w-full rounded-xl">
                           Ver detalle
                         </Button>
