@@ -6,6 +6,7 @@ allowBuilds:
   prisma: true
   sharp: true
   unrs-resolver: true
+  
 onlyBuiltDependencies:
  - '@prisma/client'
  - '@prisma/engines'
