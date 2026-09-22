@@ -22,6 +22,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Base pages
   const staticPages = [
     "",
+    "/laptops",
     "/catalogo",
     "/ofertas",
     "/financiamiento",
