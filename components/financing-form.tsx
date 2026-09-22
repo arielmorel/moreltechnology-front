@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { branches } from "@/lib/data";
-import { ShieldCheck, CreditCard, Send, CheckCircle, User, Briefcase, MessageCircle, Copy, FileText } from "lucide-react";
+import { CreditCard, Send, CheckCircle, User, Briefcase, MessageCircle, Copy, FileText } from "lucide-react";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8282";
 const API_FINANCING_URL = `${API_BASE_URL}/api/company/moreltechnology/financing/requests`;
@@ -201,9 +201,9 @@ export function FinancingForm({ initialBranch }: { initialBranch?: string }) {
   }
 
   return (
-    <div className="max-w-3xl mx-auto bg-card border border-border/50 rounded-2xl">
+    <div className="max-w-6xl mx-auto bg-card border border-border/50 rounded-2xl overflow-hidden">
       {/* Header */}
-      <div className="px-6 sm:px-10 pt-8 sm:pt-10 pb-6 sm:pb-8 border-b border-border/50">
+      <div className="px-6 sm:px-8 pt-7 sm:pt-9 pb-5 sm:pb-7 border-b border-border/50">
         <div className="flex items-center gap-3 mb-2">
           <CreditCard className="w-5 h-5 text-muted-foreground" />
           <h2 className="text-xl sm:text-2xl font-bold tracking-tight">Solicitud de Pre-Aprobación</h2>
@@ -215,302 +215,315 @@ export function FinancingForm({ initialBranch }: { initialBranch?: string }) {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="px-6 sm:px-10 py-8 sm:py-10 space-y-10">
-            {/* Section: Datos Personales */}
-            <fieldset className="space-y-5">
-              <legend className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
-                <User className="w-3.5 h-3.5" />
-                Datos Personales
-              </legend>
+          <div className="px-6 sm:px-8 py-8 sm:py-10">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Section: Datos Personales */}
+              <div className="bg-background border border-border/50 rounded-2xl p-5 sm:p-6 space-y-5">
+                <h3 className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
+                  <User className="w-3.5 h-3.5" />
+                  Datos Personales
+                </h3>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <FormField
-                  control={form.control}
-                  name="fullName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Nombre Completo</FormLabel>
-                      <FormControl>
-                        <Input className="placeholder:text-muted-foreground/50" placeholder="Ej. Juan Pérez" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="cedula"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Cédula de Identidad</FormLabel>
-                      <FormControl>
-                        <Input className="placeholder:text-muted-foreground/50" placeholder="Sin guiones (Ej. 40200000000)" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <FormField
+                    control={form.control}
+                    name="fullName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Nombre Completo</FormLabel>
+                        <FormControl>
+                          <Input className="placeholder:text-muted-foreground/50" placeholder="Ej. Juan Pérez" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="cedula"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Cédula de Identidad</FormLabel>
+                        <FormControl>
+                          <Input className="placeholder:text-muted-foreground/50" placeholder="Sin guiones (Ej. 40200000000)" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <FormField
+                    control={form.control}
+                    name="gender"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Género</FormLabel>
+                        <Select value={field.value} onValueChange={(val) => field.onChange(val || "")}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Seleccionar">
+                                {field.value === "M" ? "Masculino" : field.value === "F" ? "Femenino" : field.value === "Otro" ? "Otro" : "Seleccionar"}
+                              </SelectValue>
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="M">Masculino</SelectItem>
+                            <SelectItem value="F">Femenino</SelectItem>
+                            <SelectItem value="Otro">Otro</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="maritalStatus"
+                    render={({ field }) => {
+                      const maritalLabels: Record<string, string> = {
+                        "Soltero": "Soltero/a",
+                        "Casado": "Casado/a",
+                        "Divorciado": "Divorciado/a",
+                        "Viudo": "Viudo/a",
+                        "Union Libre": "Unión Libre",
+                      };
+                      return (
+                        <FormItem>
+                          <FormLabel>Estado Civil</FormLabel>
+                          <Select value={field.value} onValueChange={(val) => field.onChange(val || "")}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Seleccionar">
+                                  {field.value ? (maritalLabels[field.value] || "Seleccionar") : "Seleccionar"}
+                                </SelectValue>
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="Soltero">Soltero/a</SelectItem>
+                              <SelectItem value="Casado">Casado/a</SelectItem>
+                              <SelectItem value="Divorciado">Divorciado/a</SelectItem>
+                              <SelectItem value="Viudo">Viudo/a</SelectItem>
+                              <SelectItem value="Union Libre">Unión Libre</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      );
+                    }}
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <FormField
+                    control={form.control}
+                    name="branch"
+                    render={({ field }) => {
+                      const isDisabled = !!initialBranch;
+                      return (
+                        <FormItem className="sm:col-span-2">
+                          <FormLabel>Sucursal</FormLabel>
+                          <Select
+                            value={branchValue || undefined}
+                            onValueChange={(val) => {
+                              setBranchValue(val || "");
+                              field.onChange(val || "");
+                            }}
+                            disabled={isDisabled}
+                          >
+                            <FormControl>
+                              <SelectTrigger className={isDisabled ? "opacity-80" : ""}>
+                                <SelectValue placeholder="Elige la sucursal" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {branches.map((branch) => (
+                                <SelectItem key={branch.id} value={branch.id}>
+                                  {branch.name.replace('Sucursal ', '')}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          {isDisabled && (
+                            <FormDescription>
+                              {branches.find((b) => b.id === initialBranch)?.name || "Sucursal"} preseleccionada desde el enlace.
+                            </FormDescription>
+                          )}
+                          <FormMessage />
+                        </FormItem>
+                      );
+                    }}
+                  />
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                <FormField
-                  control={form.control}
-                  name="gender"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Género</FormLabel>
-                      <Select value={field.value} onValueChange={(val) => field.onChange(val || "")}>
+              {/* Section: Contacto */}
+              <div className="bg-background border border-border/50 rounded-2xl p-5 sm:p-6 space-y-5">
+                <h3 className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
+                  <MessageCircle className="w-3.5 h-3.5" />
+                  Contacto
+                </h3>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Teléfono / WhatsApp</FormLabel>
                         <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Seleccionar">
-                              {field.value === "M" ? "Masculino" : field.value === "F" ? "Femenino" : field.value === "Otro" ? "Otro" : "Seleccionar"}
-                            </SelectValue>
-                          </SelectTrigger>
+                          <Input className="placeholder:text-muted-foreground/50" placeholder="Ej. 809-555-5555" {...field} />
                         </FormControl>
-                        <SelectContent>
-                          <SelectItem value="M">Masculino</SelectItem>
-                          <SelectItem value="F">Femenino</SelectItem>
-                          <SelectItem value="Otro">Otro</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="maritalStatus"
-                  render={({ field }) => {
-                    const maritalLabels: Record<string, string> = {
-                      "Soltero": "Soltero/a",
-                      "Casado": "Casado/a",
-                      "Divorciado": "Divorciado/a",
-                      "Viudo": "Viudo/a",
-                      "Union Libre": "Unión Libre",
-                    };
-                    return (
-                    <FormItem>
-                      <FormLabel>Estado Civil</FormLabel>
-                      <Select value={field.value} onValueChange={(val) => field.onChange(val || "")}>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Correo Electrónico</FormLabel>
                         <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Seleccionar">
-                              {field.value ? (maritalLabels[field.value] || "Seleccionar") : "Seleccionar"}
-                            </SelectValue>
-                          </SelectTrigger>
+                          <Input className="placeholder:text-muted-foreground/50" type="email" placeholder="Ej. juan@email.com" {...field} />
                         </FormControl>
-                        <SelectContent>
-                          <SelectItem value="Soltero">Soltero/a</SelectItem>
-                          <SelectItem value="Casado">Casado/a</SelectItem>
-                          <SelectItem value="Divorciado">Divorciado/a</SelectItem>
-                          <SelectItem value="Viudo">Viudo/a</SelectItem>
-                          <SelectItem value="Union Libre">Unión Libre</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                    );
-                  }}
-                />
-                <FormField
-                  control={form.control}
-                  name="branch"
-                  render={({ field }) => {
-                    const isDisabled = !!initialBranch;
-                    return (
-                    <FormItem>
-                      <FormLabel>Sucursal</FormLabel>
-                      <Select
-                        value={branchValue || undefined}
-                        onValueChange={(val) => {
-                          setBranchValue(val || "");
-                          field.onChange(val || "");
-                        }}
-                        disabled={isDisabled}
-                      >
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 gap-5">
+                  <FormField
+                    control={form.control}
+                    name="address"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Dirección</FormLabel>
                         <FormControl>
-                          <SelectTrigger className={isDisabled ? "opacity-80" : ""}>
-                            <SelectValue placeholder="Elige la sucursal" />
-                          </SelectTrigger>
+                          <Input className="placeholder:text-muted-foreground/50" placeholder="Ej. Calle Principal #123, Santo Domingo" {...field} />
                         </FormControl>
-                        <SelectContent>
-                          {branches.map((branch) => (
-                            <SelectItem key={branch.id} value={branch.id}>
-                              {branch.name.replace('Sucursal ', '')}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      {isDisabled && (
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              {/* Section: Situación Financiera */}
+              <div className="bg-background border border-border/50 rounded-2xl p-5 sm:p-6 space-y-5">
+                <h3 className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
+                  <CreditCard className="w-3.5 h-3.5" />
+                  Situación Financiera
+                </h3>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <FormField
+                    control={form.control}
+                    name="salary"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Salario Mensual (DOP)</FormLabel>
+                        <FormControl>
+                          <Input className="placeholder:text-muted-foreground/50" type="number" placeholder="Ej. 35000" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="otherIncome"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Otros Ingresos</FormLabel>
+                        <FormControl>
+                          <Input className="placeholder:text-muted-foreground/50" type="number" placeholder="Ej. 5000" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <FormField
+                    control={form.control}
+                    name="loanAmount"
+                    render={({ field }) => (
+                      <FormItem className="sm:col-span-2">
+                        <FormLabel>Monto del Préstamo (DOP)</FormLabel>
+                        <FormControl>
+                          <Input className="placeholder:text-muted-foreground/50" type="number" placeholder="Ej. 50000" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              {/* Section: Empleo */}
+              <div className="bg-background border border-border/50 rounded-2xl p-5 sm:p-6 space-y-5">
+                <h3 className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
+                  <Briefcase className="w-3.5 h-3.5" />
+                  Empleo
+                </h3>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <FormField
+                    control={form.control}
+                    name="company"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Empresa donde laboras</FormLabel>
+                        <FormControl>
+                          <Input className="placeholder:text-muted-foreground/50" placeholder="Nombre de la empresa" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="workTime"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Tiempo Laborando</FormLabel>
+                        <FormControl>
+                          <Input className="placeholder:text-muted-foreground/50" placeholder="Ej. 2 años y 4 meses" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 gap-5">
+                  <FormField
+                    control={form.control}
+                    name="equipment"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Equipo de Interés</FormLabel>
+                        <FormControl>
+                          <Input className="placeholder:text-muted-foreground/50" placeholder="Ej. MacBook Pro M3 o Asus ROG" {...field} />
+                        </FormControl>
                         <FormDescription>
-                          {branches.find((b) => b.id === initialBranch)?.name || "Sucursal"} preseleccionada desde el enlace.
+                          Si ya tienes una laptop en mente, déjanos saber cuál es.
                         </FormDescription>
-                      )}
-                      <FormMessage />
-                    </FormItem>
-                    );
-                  }}
-                />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
-            </fieldset>
-
-            {/* Section: Contacto */}
-            <fieldset className="space-y-5">
-              <legend className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
-                Contacto
-              </legend>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <FormField
-                  control={form.control}
-                  name="phone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Teléfono / WhatsApp</FormLabel>
-                      <FormControl>
-                        <Input className="placeholder:text-muted-foreground/50" placeholder="Ej. 809-555-5555" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Correo Electrónico</FormLabel>
-                      <FormControl>
-                        <Input className="placeholder:text-muted-foreground/50" type="email" placeholder="Ej. juan@email.com" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <FormField
-                control={form.control}
-                name="address"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Dirección</FormLabel>
-                    <FormControl>
-                      <Input className="placeholder:text-muted-foreground/50" placeholder="Ej. Calle Principal #123, Santo Domingo" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </fieldset>
-
-            {/* Section: Situación Financiera */}
-            <fieldset className="space-y-5">
-              <legend className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
-                <CreditCard className="w-3.5 h-3.5" />
-                Situación Financiera
-              </legend>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                <FormField
-                  control={form.control}
-                  name="salary"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Salario Mensual (DOP)</FormLabel>
-                      <FormControl>
-                        <Input className="placeholder:text-muted-foreground/50" type="number" placeholder="Ej. 35000" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="otherIncome"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Otros Ingresos</FormLabel>
-                      <FormControl>
-                        <Input className="placeholder:text-muted-foreground/50" type="number" placeholder="Ej. 5000" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="loanAmount"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Monto del Préstamo (DOP)</FormLabel>
-                      <FormControl>
-                        <Input className="placeholder:text-muted-foreground/50" type="number" placeholder="Ej. 50000" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </fieldset>
-
-            {/* Section: Empleo */}
-            <fieldset className="space-y-5">
-              <legend className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
-                <Briefcase className="w-3.5 h-3.5" />
-                Empleo
-              </legend>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <FormField
-                  control={form.control}
-                  name="company"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Empresa donde laboras</FormLabel>
-                      <FormControl>
-                        <Input className="placeholder:text-muted-foreground/50" placeholder="Nombre de la empresa" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="workTime"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Tiempo Laborando</FormLabel>
-                      <FormControl>
-                        <Input className="placeholder:text-muted-foreground/50" placeholder="Ej. 2 años y 4 meses" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <FormField
-                control={form.control}
-                name="equipment"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Equipo de Interés</FormLabel>
-                    <FormControl>
-                      <Input className="placeholder:text-muted-foreground/50" placeholder="Ej. MacBook Pro M3 o Asus ROG" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      Si ya tienes una laptop en mente, déjanos saber cuál es.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </fieldset>
+            </div>
           </div>
 
           {/* Footer */}
-          <div className="px-6 sm:px-10 py-6 sm:py-8 border-t border-border/50 bg-muted/20 rounded-b-2xl">
+          <div className="px-6 sm:px-8 py-6 sm:py-8 border-t border-border/50 bg-muted/20 rounded-b-2xl">
             <Button
               type="submit"
               disabled={isSubmitting}
