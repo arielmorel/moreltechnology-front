@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Script from "next/script";
 import { getAllPosts, getPostsByCategory } from "@/lib/blog";
 import { blogCategories, getBlogCategoryBySlug } from "@/lib/data/blog-categories";
 import { BlogCard } from "@/components/blog-card";
@@ -120,7 +119,7 @@ export default async function BlogCategoryPage({ params }: PageProps) {
 
       </div>
 
-      <Script id="blog-category-breadcrumb" type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script id="blog-category-breadcrumb" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
     </div>
   );
 }

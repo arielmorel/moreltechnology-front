@@ -1,32 +1,10 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { Product } from "@/lib/data";
 import { getProducts, PAGE_SIZE_ALL } from "@/lib/api";
 import { ProductCard } from "@/components/product-card";
-import { ProductCardSkeleton } from "@/components/product-card-skeleton";
 import { BadgePercent, Sparkles } from "lucide-react";
 
-export default function OfertasPage() {
-  const [deals, setDeals] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const loadDeals = async () => {
-      setIsLoading(true);
-      try {
-        const { products } = await getProducts(0, PAGE_SIZE_ALL);
-        // Filtramos solo los que tienen precio original (están en oferta)
-        const filteredDeals = products.filter(p => p.originalPrice && p.originalPrice > p.price);
-        setDeals(filteredDeals);
-      } catch (error) {
-        console.error("Error loading deals:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    loadDeals();
-  }, []);
+export default async function OfertasPage() {
+  const { products } = await getProducts(0, PAGE_SIZE_ALL);
+  const deals = products.filter(p => p.originalPrice && p.originalPrice > p.price);
 
   return (
     <div className="min-h-screen pt-32 pb-16 bg-muted/20">
@@ -51,34 +29,23 @@ export default function OfertasPage() {
           )}
         </div>
 
-        {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[...Array(8)].map((_, i) => (
-              <ProductCardSkeleton key={i} />
-            ))}
-          </div>
-        ) : (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {deals.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {deals.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+
+        {deals.length === 0 && (
+          <div className="text-center py-32 bg-card rounded-[3rem] border border-border/50 shadow-sm flex flex-col items-center">
+            <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mb-6">
+              <BadgePercent className="w-10 h-10 text-muted-foreground/30" />
             </div>
-
-            {deals.length === 0 && (
-              <div className="text-center py-32 bg-card rounded-[3rem] border border-border/50 shadow-sm flex flex-col items-center">
-                <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mb-6">
-                  <BadgePercent className="w-10 h-10 text-muted-foreground/30" />
-                </div>
-                <h2 className="text-2xl font-bold mb-2 text-foreground">No hay ofertas flash en este momento</h2>
-                <p className="text-muted-foreground max-w-md mx-auto">
-                  Estamos negociando nuevos precios. ¡Vuelve pronto o revisa nuestro catálogo completo!
-                </p>
-              </div>
-            )}
-          </>
+            <h2 className="text-2xl font-bold mb-2 text-foreground">No hay ofertas flash en este momento</h2>
+            <p className="text-muted-foreground max-w-md mx-auto">
+              Estamos negociando nuevos precios. ¡Vuelve pronto o revisa nuestro catálogo completo!
+            </p>
+          </div>
         )}
-
       </div>
     </div>
   );

@@ -210,7 +210,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
     const newUrl = `/catalogo/${branch}${queryString ? `?${queryString}` : ""}`;
     const currentUrl = `${window.location.pathname}${window.location.search}`;
     if (newUrl !== currentUrl) {
-      router.push(newUrl, { scroll: false });
+      window.history.replaceState(null, "", newUrl);
     }
   }, [debouncedSearch, selectedCategory, selectedBrand, selectedProcessor, selectedRam, selectedStorage, showOnlyOffers, selectedCondition, selectedTag, priceRange, stockFilter, sortBy, branch, router]);
 

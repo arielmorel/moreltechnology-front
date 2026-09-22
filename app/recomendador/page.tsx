@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo, Suspense } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Product } from "@/lib/data";
 import { getProducts, PAGE_SIZE_ALL } from "@/lib/api";
 import { productUrl } from "@/lib/utils";
@@ -104,7 +104,6 @@ function matchesCondition(product: Product, condition: ConditionFilter): boolean
 }
 
 function RecomendadorPageInner() {
-  const router = useRouter();
   const searchParams = useSearchParams();
 
   const [step, setStep] = useState<Step>("usage");
@@ -169,8 +168,12 @@ function RecomendadorPageInner() {
     if (selections.brand && selections.brand !== "todas") params.set("marca", selections.brand);
     if (selections.condition !== "todas") params.set("condicion", selections.condition);
     const qs = params.toString();
-    router.replace(qs ? `/recomendador?${qs}` : "/recomendador", { scroll: false });
-  }, [selections, router]);
+    const newUrl = qs ? `/recomendador?${qs}` : "/recomendador";
+    const currentUrl = `${window.location.pathname}${window.location.search}`;
+    if (newUrl !== currentUrl) {
+      window.history.replaceState(null, "", newUrl);
+    }
+  }, [selections]);
 
   const brands = useMemo(() => {
     const uniqueBrands = new Set(products.map(p => p.brand));

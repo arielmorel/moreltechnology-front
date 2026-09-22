@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import { Command } from "cmdk";
 import { Search, CornerDownLeft } from "lucide-react";
 import { searchProducts } from "@/lib/api";
@@ -101,27 +102,38 @@ export function SearchDialog({ open, onOpenChange }: { open: boolean; onOpenChan
                   key={product.id}
                   value={`${product.name} ${product.brand}`}
                   onSelect={() => handleSelect(product.slug)}
-                  className="flex items-center gap-3 px-3 py-3 rounded-xl cursor-pointer transition-colors aria-selected:bg-primary/10"
+                  className="aria-selected:bg-primary/10 rounded-xl"
                 >
-                  <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-muted shrink-0">
-                    <Image
-                      src={product.images[0]}
-                      alt={product.name}
-                      fill
-                      unoptimized={isMinioImage(product.images[0])}
-                      className="object-cover"
-                      sizes="48px"
-                    />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-sm truncate">{product.name}</p>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-xs text-muted-foreground">{product.brand}</span>
-                      <span className="text-xs text-muted-foreground">·</span>
-                      <span className="text-xs font-semibold text-primary">RD$ {product.price.toLocaleString("es-DO")}</span>
+                  <Link
+                    href={productUrl(product.slug)}
+                    prefetch={true}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onOpenChange(false);
+                      rememberOrigin();
+                    }}
+                    className="flex items-center gap-3 px-3 py-3 cursor-pointer transition-colors rounded-xl"
+                  >
+                    <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-muted shrink-0">
+                      <Image
+                        src={product.images[0]}
+                        alt={product.name}
+                        fill
+                        unoptimized={isMinioImage(product.images[0])}
+                        className="object-cover"
+                        sizes="48px"
+                      />
                     </div>
-                  </div>
-                  <CornerDownLeft className="w-4 h-4 text-muted-foreground/50 shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-sm truncate">{product.name}</p>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <span className="text-xs text-muted-foreground">{product.brand}</span>
+                        <span className="text-xs text-muted-foreground">·</span>
+                        <span className="text-xs font-semibold text-primary">RD$ {product.price.toLocaleString("es-DO")}</span>
+                      </div>
+                    </div>
+                    <CornerDownLeft className="w-4 h-4 text-muted-foreground/50 shrink-0" />
+                  </Link>
                 </Command.Item>
               ))}
             </Command.Group>

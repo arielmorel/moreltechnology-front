@@ -1,72 +1,30 @@
 import axios from "axios";
-import { Product, ProductCondition, ProductPrice, ProductVariant } from "./data";
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8282";
-const DEFAULT_BRANCH = "moreltechnology";
+import { Product, ProductCondition, ProductPrice, ProductVariant } from "../data";
+import { ApiProduct, ApiResponse } from "./types";
+import { getCatalogUrl } from "./config";
 
 export const PAGE_SIZE_DEFAULT = 20;
 export const PAGE_SIZE_SEARCH = 10;
 export const PAGE_SIZE_ALL = 30;
 export const PAGE_SIZE_RAIL = 8;
 
-function getCatalogUrl(branchId?: string): string {
-  const branch = branchId || DEFAULT_BRANCH;
-  return `${API_BASE_URL}/api/catalogs/${branch}/products`;
+type CachedProductDetail = { product: Product; timestamp: number };
+
+const PRODUCT_DETAIL_CACHE_TTL_MS = 5 * 60 * 1000;
+const productDetailCache = new Map<string, CachedProductDetail>();
+
+function getCachedProductDetail(key: string): Product | null {
+  const hit = productDetailCache.get(key);
+  if (hit && Date.now() - hit.timestamp < PRODUCT_DETAIL_CACHE_TTL_MS) return hit.product;
+  return null;
 }
 
-function getFinancingUrl(): string {
-  return `${API_BASE_URL}/api/company/${DEFAULT_BRANCH}/financing/requests`;
-}
-
-
-export interface ApiProduct {
-  id: number;
-  sku: string;
-  slug: string;
-  imageUrl: string | null;
-  imageUrls: string[] | null;
-  name: string;
-  description: string | null;
-  priceOut: number;
-  offerPrice: number;
-  categoryName: string;
-  details: string | null;
-  quantity: number;
-  warranty?: number;
-  tags: string[];
-  pinned: boolean;
-  createdAt?: string;
-  prices: {
-    id: string;
-    currency: string;
-    priceOut: number;
-    offerPrice: number | null;
-    isPrimary: boolean;
-    active: boolean;
-  }[];
-  variants?: {
-    id: string;
-    name: string;
-    sku: string;
-    priceOut: number;
-    offerPrice: number | null;
-    defaultVariant: boolean;
-    active: boolean;
-    prices: {
-      id: string;
-      currency: string;
-      priceOut: number;
-      offerPrice: number | null;
-      isPrimary: boolean;
-      active: boolean;
-    }[];
-  }[];
-}
-
-export interface ApiResponse {
-  content: ApiProduct[];
-  totalElements: number;
-  totalPages: number;
+function setCachedProductDetail(key: string, product: Product): void {
+  if (productDetailCache.size > 300) {
+    const oldest = productDetailCache.entries().next().value;
+    if (oldest) productDetailCache.delete(oldest[0]);
+  }
+  productDetailCache.set(key, { product, timestamp: Date.now() });
 }
 
 export const mapApiProductToProduct = (apiProduct: ApiProduct): Product => {
@@ -237,10 +195,15 @@ export const getProductById = async (id: string, branchId?: string): Promise<Pro
 };
 
 export const getProductBySlug = async (slug: string, branchId?: string): Promise<Product | null> => {
+  const key = `${branchId ?? ""}|${slug}`;
+  const cached = getCachedProductDetail(key);
+  if (cached) return cached;
   try {
     const catalogUrl = getCatalogUrl(branchId);
     const response = await axios.get<ApiProduct>(`${catalogUrl}/slug/${slug}`);
-    return mapApiProductToProduct(response.data);
+    const product = mapApiProductToProduct(response.data);
+    setCachedProductDetail(key, product);
+    return product;
   } catch (error) {
     console.error(`Error fetching product by slug ${slug}:`, error);
     return null;
@@ -299,6 +262,7 @@ export const searchProducts = async (query: string, page = 0, size = PAGE_SIZE_D
 
 export interface HomeProducts {
   offers: Product[];
+  gaming: Product[];
   newArrivals: Product[];
   featured: Product[];
 }
@@ -309,7 +273,14 @@ export const getHomeProducts = async (branchId?: string): Promise<HomeProducts> 
 
     const offers = products
       .filter(p => p.originalPrice && p.originalPrice > p.price)
-      .slice(0, 8);
+      .slice(0, 12);
+
+    const gaming = products
+      .filter(p =>
+        p.category.toLowerCase().includes("gaming") ||
+        p.tags.some(t => t.toLowerCase().includes("gaming"))
+      )
+      .slice(0, 12);
 
     const featured = products
       .filter(p => p.pinned === true)
@@ -324,84 +295,9 @@ export const getHomeProducts = async (branchId?: string): Promise<HomeProducts> 
       })
       .slice(0, 8);
 
-    return { offers, newArrivals, featured };
+    return { offers, gaming, newArrivals, featured };
   } catch (error) {
     console.error("Error fetching home products:", error);
-    return { offers: [], newArrivals: [], featured: [] };
+    return { offers: [], gaming: [], newArrivals: [], featured: [] };
   }
-};
-
-const FINANCING_API_URL = getFinancingUrl();
-const APP_TOKEN = process.env.NEXT_PUBLIC_APP_TOKEN || "smartbusiness-public-web-key-2026";
-
-export interface FinancingRequest {
-  fullName: string;
-  idNumber: string;
-  phone: string;
-  email: string;
-  monthlyIncome: number;
-  workplaceName: string;
-  workplaceAddress: string;
-  monthlyExpenses: number;
-  productId: string;
-  productName: string;
-  productPrice: number;
-  downPayment: number;
-  termMonths: number;
-}
-
-export const createFinancingRequest = async (request: FinancingRequest): Promise<{ success: boolean; message: string }> => {
-  try {
-    await axios.post(FINANCING_API_URL, request, {
-      headers: {
-        "X-Public-App-Token": APP_TOKEN,
-      },
-    });
-    return { success: true, message: "Solicitud enviada correctamente" };
-  } catch (error) {
-    console.error("Error creating financing request:", error);
-    return { success: false, message: "Error al enviar la solicitud" };
-  }
-};
-
-// Settings API (uses Next.js API routes)
-export interface Setting {
-  id: string;
-  key: string;
-  value: string | null;
-  type: "STRING" | "INTEGER" | "DECIMAL" | "BOOLEAN" | "JSON";
-  category: "APPEARANCE" | "SEO" | "ANALYTICS" | "CATALOG" | "COMMERCE" | "SYSTEM" | "GENERAL";
-  description: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
-
-const SETTINGS_BASE = "/api/settings";
-
-export const getSettingByKey = async (key: string): Promise<Setting | null> => {
-  try {
-    const response = await axios.get(`${SETTINGS_BASE}/${key}`);
-    return response.data;
-  } catch {
-    return null;
-  }
-};
-
-export const getSettingWithDefault = async (key: string, defaultValue: string): Promise<string> => {
-  const setting = await getSettingByKey(key);
-  return setting?.value ?? defaultValue;
-};
-
-export const getSettingsByCategory = async (category: Setting["category"]): Promise<Setting[]> => {
-  try {
-    const response = await axios.get(`${SETTINGS_BASE}/category/${category}`);
-    return response.data;
-  } catch {
-    return [];
-  }
-};
-
-export const saveSetting = async (key: string, value: string, type: Setting["type"] = "STRING", category: Setting["category"] = "GENERAL"): Promise<Setting> => {
-  const response = await axios.patch(`${SETTINGS_BASE}/${key}`, { value, type, category });
-  return response.data;
 };

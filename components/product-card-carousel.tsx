@@ -28,6 +28,7 @@ export function ProductCardCarousel({ product }: ProductCardCarouselProps) {
     <Link
       href={productUrl(product.slug)}
       onClick={rememberOrigin}
+      prefetch={true}
       className={cn(
         "relative flex flex-col bg-card rounded-xl border border-border transition-all duration-200",
         "hover:shadow-lg hover:border-border hover:-translate-y-0.5",
