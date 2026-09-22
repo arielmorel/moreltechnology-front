@@ -7,8 +7,8 @@ services:
     restart: always
     env_file:
       - .env
-    environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-moreltech}:${POSTGRES_PASSWORD:-moreltech2026}@postgres:5432/${POSTGRES_DB:-moreltechnology_newsletter}?schema=public
+    # environment:
+      # DATABASE_URL: postgresql://${POSTGRES_USER:-moreltech}:${POSTGRES_PASSWORD:-moreltech2026}@postgres:5432/${POSTGRES_DB:-moreltechnology_newsletter}?schema=public
     networks:
       - web
     ports:
