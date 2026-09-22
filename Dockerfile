@@ -3,20 +3,23 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-RUN npm install -g pnpm
+RUN npm install -g pnpm@11.20.0
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+
 RUN pnpm install --frozen-lockfile
 
 COPY . .
+
 RUN pnpm run build
+
 
 # Etapa 2: Producción
 FROM node:20-alpine AS runner
 
 WORKDIR /app
 
-RUN npm install -g pnpm
+RUN npm install -g pnpm@11.20.0
 
 COPY --from=builder /app/package.json /app/pnpm-lock.yaml ./
 COPY --from=builder /app/node_modules ./node_modules
@@ -33,5 +36,4 @@ EXPOSE 3333
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:3333 || exit 1
 
-# Aplica migraciones de la DB antes de arrancar (nuevo)
 CMD ["sh", "-c", "pnpm exec prisma migrate deploy && pnpm start"]
