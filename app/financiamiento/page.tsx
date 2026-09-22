@@ -22,38 +22,42 @@ export default async function FinanciamientoPage({
   return (
     <div className="min-h-screen bg-muted/20 pt-20 sm:pt-16 pb-12 sm:pb-16">
       <div className="container mx-auto px-4 sm:px-6">
+        <div className="grid lg:grid-cols-5 gap-10 lg:gap-14 items-start">
 
-        {/* Header Section */}
-        <div className="max-w-3xl mx-auto text-center mb-8 md:mb-12">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-3 sm:mb-4">
-            Llévate tu laptop hoy, <span className="text-primary">págala al paso.</span>
-          </h1>
-          <p className="text-base sm:text-lg text-muted-foreground mb-6 sm:mb-8">
-            Llena este breve formulario para pre-evaluar tu perfil. Te respondemos por WhatsApp en tiempo récord con las mejores opciones de cuotas para ti.
-          </p>
+          {/* Header Section */}
+          <div className="lg:col-span-2 lg:sticky lg:top-16 lg:pt-4 text-center lg:text-left">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-3 sm:mb-4 text-balance">
+              Llévate tu laptop hoy, <span className="text-primary">págala al paso.</span>
+            </h1>
+            <p className="text-base sm:text-lg text-muted-foreground mb-6 sm:mb-8">
+              Llena este breve formulario para pre-evaluar tu perfil. Te respondemos por WhatsApp en tiempo récord con las mejores opciones de cuotas para ti.
+            </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 text-left">
-            <div className="flex flex-col gap-2 p-4 bg-background border border-border/50 rounded-xl">
-              <Clock className="w-6 h-6 text-primary" />
-              <h2 className="font-semibold">Respuesta Rápida</h2>
-              <p className="text-sm text-muted-foreground">Evaluamos tu solicitud en menos de 24 horas laborables.</p>
-            </div>
-            <div className="flex flex-col gap-2 p-4 bg-background border border-border/50 rounded-xl">
-              <CheckCircle2 className="w-6 h-6 text-green-500" />
-              <h2 className="font-semibold">Sin Papeleo Físico</h2>
-              <p className="text-sm text-muted-foreground">Todo el proceso inicial se hace digital vía WhatsApp.</p>
-            </div>
-            <div className="flex flex-col gap-2 p-4 bg-background border border-border/50 rounded-xl">
-              <ShieldCheck className="w-6 h-6 text-blue-500" />
-              <h2 className="font-semibold">Seguridad Total</h2>
-              <p className="text-sm text-muted-foreground">Tus datos están protegidos y solo se usan para evaluación.</p>
+            <div className="grid grid-cols-1 gap-3 sm:gap-4 text-left">
+              <div className="flex flex-col gap-2 p-4 bg-background border border-border/50 rounded-xl">
+                <Clock className="w-6 h-6 text-primary" />
+                <h2 className="font-semibold">Respuesta Rápida</h2>
+                <p className="text-sm text-muted-foreground">Evaluamos tu solicitud en menos de 24 horas laborables.</p>
+              </div>
+              <div className="flex flex-col gap-2 p-4 bg-background border border-border/50 rounded-xl">
+                <CheckCircle2 className="w-6 h-6 text-green-500" />
+                <h2 className="font-semibold">Sin Papeleo Físico</h2>
+                <p className="text-sm text-muted-foreground">Todo el proceso inicial se hace digital vía WhatsApp.</p>
+              </div>
+              <div className="flex flex-col gap-2 p-4 bg-background border border-border/50 rounded-xl">
+                <ShieldCheck className="w-6 h-6 text-blue-500" />
+                <h2 className="font-semibold">Seguridad Total</h2>
+                <p className="text-sm text-muted-foreground">Tus datos están protegidos y solo se usan para evaluación.</p>
+              </div>
             </div>
           </div>
+
+          {/* Form Section */}
+          <div className="lg:col-span-3 w-full">
+            <FinancingForm initialBranch={initialBranch} />
+          </div>
+
         </div>
-
-        {/* Form Section */}
-        <FinancingForm initialBranch={initialBranch} />
-
       </div>
     </div>
   );

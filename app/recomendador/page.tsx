@@ -26,6 +26,8 @@ import {
   CreditCard,
   ArrowUpDown,
   ExternalLink,
+  Zap,
+  MessageCircle,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -307,27 +309,58 @@ function RecomendadorPageInner() {
 
   return (
     <div className="min-h-screen pt-16 pb-16 bg-muted/20">
-      <div className="container mx-auto px-4 md:px-6 max-w-4xl">
+      <div className="container mx-auto px-4 md:px-6 max-w-7xl">
+        <div className="grid lg:grid-cols-[minmax(0,3fr)_minmax(0,5fr)] gap-10 lg:gap-12 items-start">
 
-        {/* Progress Header */}
-        <div className="mb-4 md:mb-8 text-center space-y-3 md:space-y-4">
-          <div className="inline-flex items-center gap-1.5 md:gap-2 px-2.5 md:px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] md:text-xs font-bold uppercase tracking-widest">
-            <Sparkles className="w-3 h-3" />
-            Asistente Inteligente
+          {/* Left column */}
+          <div className="lg:sticky lg:top-16 lg:pt-4">
+            <div className="text-center lg:text-left space-y-3 md:space-y-4">
+              <div className="inline-flex items-center gap-1.5 md:gap-2 px-2.5 md:px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] md:text-xs font-bold uppercase tracking-widest">
+                <Sparkles className="w-3 h-3" />
+                Asistente Inteligente
+              </div>
+              <h1 className="text-2xl md:text-5xl font-black tracking-tight">
+                {step === "results" ? "Tus Recomendaciones" : "Encuentra tu Laptop Ideal"}
+              </h1>
+              <p className="text-muted-foreground text-sm md:text-lg">
+                {step === "results"
+                  ? `Basado en tus necesidades, estos son los ${Math.min(8, recommendations.length)} mejores equipos para ti.`
+                  : "Responde 3 preguntas rápidas y nuestro algoritmo hará el resto."}
+              </p>
+            </div>
+
+            {/* Trust points (desktop) */}
+            <div className="mt-8 hidden lg:flex flex-col gap-3">
+              <div className="flex items-start gap-3 p-4 bg-background border border-border/50 rounded-xl">
+                <Sparkles className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                <div>
+                  <h3 className="font-semibold text-sm">Match a tu perfil</h3>
+                  <p className="text-xs text-muted-foreground">Ordenamos los equipos según tu uso, presupuesto y marca.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 p-4 bg-background border border-border/50 rounded-xl">
+                <Zap className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+                <div>
+                  <h3 className="font-semibold text-sm">En menos de 1 minuto</h3>
+                  <p className="text-xs text-muted-foreground">Solo 3 preguntas rápidas y obtienes resultados al instante.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 p-4 bg-background border border-border/50 rounded-xl">
+                <MessageCircle className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
+                <div>
+                  <h3 className="font-semibold text-sm">Soporte humano</h3>
+                  <p className="text-xs text-muted-foreground">Confirma tu elección con un asesor real por WhatsApp.</p>
+                </div>
+              </div>
+            </div>
           </div>
-          <h1 className="text-2xl md:text-5xl font-black tracking-tight">
-            {step === "results" ? "Tus Recomendaciones" : "Encuentra tu Laptop Ideal"}
-          </h1>
-          <p className="text-muted-foreground text-sm md:text-lg">
-            {step === "results"
-              ? `Basado en tus necesidades, estos son los ${Math.min(8, recommendations.length)} mejores equipos para ti.`
-              : "Responde 3 preguntas rápidas y nuestro algoritmo hará el resto."}
-          </p>
-        </div>
+
+          {/* Right column */}
+          <div className="w-full">
 
         {/* Progress Indicator */}
         {step !== "results" && (
-          <div className="mb-4 md:mb-8 max-w-md mx-auto">
+          <div className="mb-4 md:mb-8 max-w-md mx-auto lg:mx-0">
             <div className="flex items-center justify-between">
               {progressSteps.map((s, i) => (
                 <div key={s} className="flex items-center flex-1 last:flex-none">
@@ -364,7 +397,7 @@ function RecomendadorPageInner() {
         )}
 
         {/* Wizard Card */}
-        <div className="bg-card border border-border/50 rounded-3xl md:rounded-[2.5rem] shadow-2xl overflow-hidden min-h-[400px] md:min-h-[500px] flex flex-col">
+        <div className="bg-card border border-border/50 rounded-3xl md:rounded-[2.5rem] shadow-2xl overflow-hidden min-h-[420px] md:min-h-[560px] flex flex-col">
 
           <AnimatePresence mode="wait">
             {step === "usage" && (
@@ -373,13 +406,13 @@ function RecomendadorPageInner() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="p-5 md:p-12 space-y-5 md:space-y-8 flex-1"
+                className="p-5 md:p-8 lg:p-10 space-y-5 md:space-y-8 flex-1"
               >
                 <div className="space-y-1.5 md:space-y-2">
                   <h2 className="text-lg md:text-2xl font-bold">1. ¿Para qué necesitas la laptop?</h2>
                   <p className="text-muted-foreground text-sm md:text-base">Selecciona el uso principal que le darás.</p>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
                   {usageOptions.map((opt) => (
                     <button
                       key={opt.id}
@@ -414,13 +447,13 @@ function RecomendadorPageInner() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="p-5 md:p-12 space-y-5 md:space-y-8 flex-1"
+                className="p-5 md:p-8 lg:p-10 space-y-5 md:space-y-8 flex-1"
               >
                 <div className="space-y-1.5 md:space-y-2">
                   <h2 className="text-lg md:text-2xl font-bold">2. ¿Cuál es tu presupuesto?</h2>
                   <p className="text-muted-foreground text-sm md:text-base">Dinos cuánto planeas invertir aproximadamente (precios en RD$).</p>
                 </div>
-                <div className="grid grid-cols-1 gap-3 md:gap-4">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4">
                   {budgetOptions.map((opt) => (
                     <button
                       key={opt.id}
@@ -454,7 +487,7 @@ function RecomendadorPageInner() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="p-5 md:p-12 space-y-5 md:space-y-8 flex-1"
+                className="p-5 md:p-8 lg:p-10 space-y-5 md:space-y-8 flex-1"
               >
                 <div className="space-y-1.5 md:space-y-2">
                   <h2 className="text-lg md:text-2xl font-bold">3. ¿Alguna marca de preferencia?</h2>
@@ -462,13 +495,13 @@ function RecomendadorPageInner() {
                 </div>
 
                 {isLoading ? (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 md:gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 md:gap-4">
                     {Array.from({ length: 6 }).map((_, i) => (
                       <div key={i} className="h-16 md:h-24 rounded-2xl md:rounded-3xl border-2 border-border/50 bg-muted/40 animate-pulse" />
                     ))}
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 md:gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 md:gap-4">
                     <button
                       onClick={() => setSelections({ ...selections, brand: "todas" })}
                       className={cn(
@@ -509,7 +542,7 @@ function RecomendadorPageInner() {
                 key="results"
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="p-5 md:p-12 space-y-6 md:space-y-8 flex-1"
+                className="p-5 md:p-8 lg:p-10 space-y-6 md:space-y-8 flex-1"
               >
                 <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 pb-6 md:pb-8 border-b">
                   <div className="text-center md:text-left space-y-1">
@@ -540,7 +573,7 @@ function RecomendadorPageInner() {
                 </div>
 
                 {isLoading ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-8">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
                     {Array.from({ length: 4 }).map((_, i) => (
                       <div key={i} className="h-72 rounded-2xl bg-muted/40 animate-pulse" />
                     ))}
@@ -618,7 +651,7 @@ function RecomendadorPageInner() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
                       {recommendations.map((rec) => {
                         const monthly = Math.ceil(rec.product.price / FINANCING_MONTHS);
                         const budgetTop = budgetOpt?.range[1];
@@ -752,6 +785,8 @@ function RecomendadorPageInner() {
           <Link href="/financiamiento" className="underline">Ver financiamiento</Link>
         </p>
 
+          </div>
+        </div>
       </div>
     </div>
   );
