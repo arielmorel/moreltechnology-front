@@ -33,3 +33,9 @@ location = /maintenance.html {
     alias /home/<USER>/moreltechnology/app/maintenance.html;
     internal;
 }
+
+# Sirve el logo de la app como estático. Funciona con la app arriba
+# (sirve el real) y durante el mantenimiento (para el img de la pagina).
+location ^~ /logo/ {
+    root /home/<USER>/moreltechnology/app/public;
+}
