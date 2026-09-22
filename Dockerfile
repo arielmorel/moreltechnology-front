@@ -23,6 +23,7 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/content ./content
+COPY --from=builder /app/prisma ./prisma
 
 ENV NODE_ENV=production
 ENV PORT=3333
@@ -32,4 +33,5 @@ EXPOSE 3333
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:3333 || exit 1
 
-CMD ["pnpm", "start"]
+# Aplica migraciones de la DB antes de arrancar (nuevo)
+CMD ["sh", "-c", "pnpm exec prisma migrate deploy && pnpm start"]
