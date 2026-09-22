@@ -2,14 +2,16 @@
 
 import { useCallback } from "react";
 import { getProducts, PAGE_SIZE_RAIL } from "@/lib/api";
+import { Product } from "@/lib/data";
 import { ProductCarousel } from "@/components/product-carousel";
 
 interface ModelCarouselProps {
   query: string;
   excludeSlug?: string;
+  initialProducts?: Product[];
 }
 
-export function ModelCarousel({ query, excludeSlug }: ModelCarouselProps) {
+export function ModelCarousel({ query, excludeSlug, initialProducts }: ModelCarouselProps) {
   const fetchPage = useCallback(
     async (page: number) => {
       const { products, total } = await getProducts(page, PAGE_SIZE_RAIL);
@@ -27,7 +29,7 @@ export function ModelCarousel({ query, excludeSlug }: ModelCarouselProps) {
     <div className="mt-8 md:mt-12">
       <ProductCarousel
         type="same-model"
-        products={[]}
+        products={initialProducts ?? []}
         fetchPage={fetchPage}
         linkHref={`/catalogo?query=${encodeURIComponent(query)}`}
         linkText="Ver todos"
