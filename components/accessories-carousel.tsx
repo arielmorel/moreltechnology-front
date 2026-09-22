@@ -2,13 +2,15 @@
 
 import { useCallback } from "react";
 import { getProducts, PAGE_SIZE_RAIL } from "@/lib/api";
+import { Product } from "@/lib/data";
 import { ProductCarousel } from "@/components/product-carousel";
 
 interface AccessoriesCarouselProps {
   currentProductId?: string;
+  initialProducts?: Product[];
 }
 
-export function AccessoriesCarousel({ currentProductId }: AccessoriesCarouselProps) {
+export function AccessoriesCarousel({ currentProductId, initialProducts }: AccessoriesCarouselProps) {
   const fetchPage = useCallback(
     async (page: number) => {
       const { products, total } = await getProducts(page, PAGE_SIZE_RAIL, "Accesorios");
@@ -26,7 +28,7 @@ export function AccessoriesCarousel({ currentProductId }: AccessoriesCarouselPro
     <div className="mt-12 md:mt-16">
       <ProductCarousel
         type="accessories"
-        products={[]}
+        products={initialProducts ?? []}
         fetchPage={fetchPage}
         linkHref="/catalogo?categoria=accesorios"
         linkText="Ver accesorios"

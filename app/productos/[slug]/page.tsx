@@ -3,6 +3,10 @@ import { cache, Suspense } from "react";
 import { getProductBySlug } from "@/lib/api";
 import { productUrl } from "@/lib/utils";
 import { ProductReviewsSection } from "@/components/product-detail/product-reviews-section";
+import { SameModelSection } from "@/components/product-detail/same-model-section";
+import { AccessoriesSection } from "@/components/product-detail/accessories-section";
+import { RelatedSection } from "@/components/product-detail/related-section";
+import { CarouselSectionSkeleton } from "@/components/product-detail/carousel-section-skeleton";
 import ProductDetailClient from "./product-detail-client";
 
 const getProductBySlugCached = cache(getProductBySlug);
@@ -63,6 +67,11 @@ export default async function ProductDetailPage({ params }: PageProps) {
   if (product) {
     productId = parseInt(product.id, 10);
   }
+
+  const modelQuery = product?.name
+    ?.replace(new RegExp(`^${product.brand}\\s+`, "i"), "")
+    .trim() ?? "";
+  const category = product?.category ?? "";
 
   const productSchema = product ? {
     "@context": "https://schema.org",
@@ -215,24 +224,43 @@ export default async function ProductDetailPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <ProductDetailClient slug={slug} initialProduct={product}>
-        {!isNaN(productId) && (
-          <Suspense
-            fallback={
-              <div className="bg-card rounded-2xl p-4 mt-4 md:mt-6 shadow-sm animate-pulse">
-                <div className="h-6 w-40 bg-muted rounded mb-4" />
-                <div className="h-20 bg-muted rounded" />
-              </div>
-            }
-          >
-            <ProductReviewsSection
-              productId={productId}
-              productName={product!.name}
-              slug={slug}
-            />
+      <ProductDetailClient
+        slug={slug}
+        initialProduct={product}
+        reviewsSlot={
+          !isNaN(productId) ? (
+            <Suspense
+              fallback={
+                <div className="bg-card rounded-2xl p-4 mt-4 md:mt-6 shadow-sm animate-pulse">
+                  <div className="h-6 w-40 bg-muted rounded mb-4" />
+                  <div className="h-20 bg-muted rounded" />
+                </div>
+              }
+            >
+              <ProductReviewsSection
+                productId={productId}
+                productName={product!.name}
+                slug={slug}
+              />
+            </Suspense>
+          ) : null
+        }
+        sameModelSlot={
+          <Suspense fallback={<CarouselSectionSkeleton title="Mismo modelo" />}>
+            <SameModelSection query={modelQuery} excludeSlug={product?.slug} />
           </Suspense>
-        )}
-      </ProductDetailClient>
+        }
+        accessoriesSlot={
+          <Suspense fallback={<CarouselSectionSkeleton title="Accesorios" />}>
+            <AccessoriesSection currentProductId={product?.slug} />
+          </Suspense>
+        }
+        relatedSlot={
+          <Suspense fallback={<CarouselSectionSkeleton title="Relacionados" />}>
+            <RelatedSection category={category} excludeSlug={product?.slug} />
+          </Suspense>
+        }
+      />
     </>
   );
 }

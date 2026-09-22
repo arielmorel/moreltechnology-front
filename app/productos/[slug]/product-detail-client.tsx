@@ -1,17 +1,14 @@
 "use client";
 
 import * as React from "react";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Product, ProductVariant } from "@/lib/data";
-import { getProductBySlug, getProducts, PAGE_SIZE_RAIL } from "@/lib/api";
+import { getProductBySlug } from "@/lib/api";
 import { MessageCircle, ShoppingCart, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/lib/store";
 import { toast } from "sonner";
-import { ProductCarousel } from "@/components/product-carousel";
-import { ModelCarousel } from "@/components/model-carousel";
-import { AccessoriesCarousel } from "@/components/accessories-carousel";
 import { ProductReviewForm } from "@/components/product-review-form";
 import { ProductImageGallery } from "@/components/product-detail/product-image-gallery";
 import { ProductInfoCard } from "@/components/product-detail/product-info-card";
@@ -20,10 +17,20 @@ import { NotifyWhenAvailable } from "@/components/notify-when-available";
 interface ProductDetailClientProps {
   slug: string;
   initialProduct: Product | null;
-  children?: React.ReactNode;
+  reviewsSlot?: React.ReactNode;
+  sameModelSlot?: React.ReactNode;
+  accessoriesSlot?: React.ReactNode;
+  relatedSlot?: React.ReactNode;
 }
 
-export default function ProductDetailClient({ slug, initialProduct, children }: ProductDetailClientProps) {
+export default function ProductDetailClient({
+  slug,
+  initialProduct,
+  reviewsSlot,
+  sameModelSlot,
+  accessoriesSlot,
+  relatedSlot,
+}: ProductDetailClientProps) {
   const [product, setProduct] = useState<Product | null>(initialProduct);
   const [isLoading, setIsLoading] = useState(!initialProduct);
   const [activeImage, setActiveImage] = useState(0);
@@ -52,11 +59,6 @@ export default function ProductDetailClient({ slug, initialProduct, children }: 
   const currentDisplayPrice = selectedVariant?.prices?.length
     ? getDisplayPrice(selectedVariant.prices)
     : product ? getDisplayPrice(product.prices) : 0;
-
-  // Derive model search query: "Dell Latitude 7420" → "Latitude 7420"
-  const modelQuery = product?.name
-    ?.replace(new RegExp(`^${product.brand}\\s+`, "i"), "")
-    .trim() ?? "";
 
   const handleShare = async () => {
     if (!product) return;
@@ -97,17 +99,6 @@ export default function ProductDetailClient({ slug, initialProduct, children }: 
 
     loadData();
   }, [slug, initialProduct]);
-
-  const fetchRelated = useCallback(
-    async (page: number) => {
-      const category = product?.category;
-      if (!category) return { products: [], total: 0 };
-      const { products, total } = await getProducts(page, PAGE_SIZE_RAIL, category);
-      const excluded = products.filter(p => p.slug !== slug);
-      return { products: excluded, total: Math.max(0, total - (products.length - excluded.length)) };
-    },
-    [product?.category, slug]
-  );
 
   const handleAddToCart = () => {
     if (product) {
@@ -191,17 +182,17 @@ export default function ProductDetailClient({ slug, initialProduct, children }: 
 
         {/* Same Model Carousel */}
         <div className="animate-slide-up-delay-3">
-          <ModelCarousel query={modelQuery} excludeSlug={product.slug} />
+          {sameModelSlot}
         </div>
 
         {/* Accessories Carousel */}
         <div className="mt-4 md:mt-8 animate-slide-up-delay-3">
-          <AccessoriesCarousel currentProductId={product.slug} />
+          {accessoriesSlot}
         </div>
 
         {/* Reviews Summary Card (streamed from server) */}
         <div className="animate-slide-up-delay-4">
-          {children}
+          {reviewsSlot}
         </div>
 
         {/* Review Form - Collapsible on mobile */}
@@ -219,13 +210,7 @@ export default function ProductDetailClient({ slug, initialProduct, children }: 
 
         {/* Related Products */}
         <div className="mt-6 md:mt-10 animate-slide-up-delay-6">
-          <ProductCarousel
-            type="related"
-            products={[]}
-            fetchPage={fetchRelated}
-            linkHref="/catalogo"
-            linkText="Ver catálogo"
-          />
+          {relatedSlot}
         </div>
       </div>
 
