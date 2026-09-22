@@ -19,8 +19,6 @@ FROM node:22-alpine AS runner
 
 WORKDIR /app
 
-RUN npm install -g pnpm@11.20.0
-
 COPY --from=builder /app/package.json /app/pnpm-lock.yaml ./
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/.next ./.next
@@ -36,4 +34,7 @@ EXPOSE 3333
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:3333 || exit 1
 
-CMD ["sh", "-c", "pnpm exec prisma migrate deploy && pnpm start"]
+# Sin pnpm en runtime: pnpm 11 ejecuta un `pnpm install` automático
+# (verifyDepsBeforeRun) al correr comandos y falla al no tener pnpm-workspace.yaml.
+# Ejecutamos los binarios directamente desde node_modules.
+CMD ["sh", "-c", "./node_modules/.bin/prisma migrate deploy && ./node_modules/.bin/next start"]
