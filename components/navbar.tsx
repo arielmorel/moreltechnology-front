@@ -94,6 +94,7 @@ export function Navbar() {
     <>
     <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
     <header
+      style={{ viewTransitionName: "site-header" }}
       className={cn(
         "fixed top-0 w-full z-50 transition-all duration-300",
         isScrolled
