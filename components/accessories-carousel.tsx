@@ -8,12 +8,13 @@ import { ProductCarousel } from "@/components/product-carousel";
 interface AccessoriesCarouselProps {
   currentProductId?: string;
   initialProducts?: Product[];
+  branch?: string;
 }
 
-export function AccessoriesCarousel({ currentProductId, initialProducts }: AccessoriesCarouselProps) {
+export function AccessoriesCarousel({ currentProductId, initialProducts, branch }: AccessoriesCarouselProps) {
   const fetchPage = useCallback(
     async (page: number) => {
-      const { products, total } = await getProducts(page, PAGE_SIZE_RAIL, "Accesorios");
+      const { products, total } = await getProducts(page, PAGE_SIZE_RAIL, "Accesorios", branch);
       const filtered = products.filter(p =>
         p.category.toLowerCase().includes("accesorio") ||
         p.tags.some(t => t.toLowerCase().includes("accesorio"))
@@ -21,7 +22,7 @@ export function AccessoriesCarousel({ currentProductId, initialProducts }: Acces
       const excluded = filtered.filter(p => p.slug !== currentProductId);
       return { products: excluded, total };
     },
-    [currentProductId]
+    [currentProductId, branch]
   );
 
   return (
@@ -30,8 +31,9 @@ export function AccessoriesCarousel({ currentProductId, initialProducts }: Acces
         type="accessories"
         products={initialProducts ?? []}
         fetchPage={fetchPage}
-        linkHref="/catalogo?categoria=accesorios"
+        linkHref={`${branch ? `/catalogo/${branch}` : "/catalogo"}?categoria=accesorios`}
         linkText="Ver accesorios"
+        branch={branch}
       />
     </div>
   );

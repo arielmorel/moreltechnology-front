@@ -14,9 +14,10 @@ export type ProductCardView = "grid" | "list";
 interface ProductCardProps {
   product: Product;
   view?: ProductCardView;
+  branch?: string;
 }
 
-export function ProductCard({ product, view = "grid" }: ProductCardProps) {
+export function ProductCard({ product, view = "grid", branch }: ProductCardProps) {
   const { addItem } = useCart();
   const { isFavorite, toggleFavorite } = useFavorites();
   const isOutOfStock = product.quantity <= 0;
@@ -166,7 +167,7 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
   if (view === "list") {
     return (
       <Link
-        href={productUrl(product.slug)}
+        href={productUrl(product.slug, branch)}
         onClick={rememberOrigin}
         prefetch={true}
         className={cn(

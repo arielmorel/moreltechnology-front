@@ -16,7 +16,10 @@ export function slugify(text: string): string {
     .replace(/^-|-$/g, "")
 }
 
-export function productUrl(slug: string): string {
+export function productUrl(slug: string, branch?: string): string {
+  if (branch) {
+    return `/productos/${slug}?branch=${branch}`
+  }
   return `/productos/${slug}`
 }
 

@@ -69,7 +69,7 @@ export default async function CatalogoBranchPage({ params }: PageProps) {
             availability: product.quantity > 0
               ? "https://schema.org/InStock"
               : "https://schema.org/OutOfStock",
-            url: absoluteUrl(productUrl(product.slug)),
+            url: absoluteUrl(productUrl(product.slug, branch)),
           },
         },
       };
@@ -96,7 +96,7 @@ export default async function CatalogoBranchPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <CatalogoBranchClient branch={branch} />
+      <CatalogoBranchClient key={branch} branch={branch} />
     </>
   );
 }

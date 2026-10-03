@@ -412,9 +412,26 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
 
   const handleBranchChange = useCallback((newBranch: string | null) => {
     if (newBranch) {
-      router.push(`/catalogo/${newBranch}`);
+      const params = new URLSearchParams();
+      if (debouncedSearch) params.set("q", debouncedSearch);
+      if (selectedCategory !== "todas") params.set("category", selectedCategory);
+      if (selectedBrand !== "todas") params.set("brand", selectedBrand);
+      if (selectedProcessor !== "todas") params.set("processor", selectedProcessor);
+      if (selectedRam !== "todas") params.set("ram", selectedRam);
+      if (selectedStorage !== "todas") params.set("storage", selectedStorage);
+      if (showOnlyOffers) params.set("offers", "true");
+      if (selectedCondition !== "todas") params.set("condition", selectedCondition);
+      if (selectedTag !== "todas") params.set("tags", selectedTag);
+      if (priceRange[0] > 0 || priceRange[1] < 200000) {
+        params.set("priceMin", priceRange[0].toString());
+        params.set("priceMax", priceRange[1].toString());
+      }
+      if (stockFilter !== "IN_STOCK") params.set("availability", stockFilter);
+      if (sortBy !== "newest") params.set("sort", sortBy);
+      const queryString = params.toString();
+      router.push(`/catalogo/${newBranch}${queryString ? `?${queryString}` : ""}`);
     }
-  }, [router]);
+  }, [router, debouncedSearch, selectedCategory, selectedBrand, selectedProcessor, selectedRam, selectedStorage, showOnlyOffers, selectedCondition, selectedTag, priceRange, stockFilter, sortBy]);
 
   return (
     <div 
@@ -782,7 +799,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
                   >
                     {sortedProducts.map(product => (
                       <motion.div key={product.id} variants={productItemVariants}>
-                        <ProductCard key={product.id} product={product} view="list" />
+                        <ProductCard key={product.id} product={product} view="list" branch={branch} />
                       </motion.div>
                     ))}
                   </motion.div>
@@ -797,7 +814,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
                   >
                     {sortedProducts.map(product => (
                       <motion.div key={product.id} variants={productItemVariants} className="h-full">
-                        <ProductCard key={product.id} product={product} />
+                        <ProductCard key={product.id} product={product} branch={branch} />
                       </motion.div>
                     ))}
                   </motion.div>
