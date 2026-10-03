@@ -22,6 +22,7 @@ interface ProductCarouselProps {
   linkText?: string;
   autoRotate?: boolean | number;
   fetchPage?: (page: number) => Promise<{ products: Product[]; total: number }>;
+  branch?: string;
 }
 
 const carouselConfig: Record<ProductCarouselType, {
@@ -89,6 +90,7 @@ export function ProductCarousel({
   linkText = "Ver catálogo",
   autoRotate = false,
   fetchPage,
+  branch,
 }: ProductCarouselProps) {
   const config = carouselConfig[type];
   const Icon = config.icon;
@@ -308,7 +310,7 @@ export function ProductCarousel({
                     key={product.id}
                     className="shrink-0 w-[75%] sm:w-[45%] md:w-[31%] xl:w-[24%] snap-center md:snap-start"
                   >
-                    <ProductCardCarousel product={product} />
+                    <ProductCardCarousel product={product} branch={branch} />
                   </div>
                 ))}
                 {displayProducts.length > 0 && !hasMore && !isLoadingMore && (
@@ -379,7 +381,7 @@ export function ProductCarousel({
                   key={product.id}
                   className="shrink-0 w-[75%] snap-center"
                 >
-                  <ProductCardCarousel product={product} />
+                  <ProductCardCarousel product={product} branch={branch} />
                 </div>
               ))}
             </div>
@@ -407,7 +409,7 @@ export function ProductCarousel({
                       key={product.id}
                       className="pl-5 basis-[31%] xl:basis-[24%]"
                     >
-                      <ProductCardCarousel product={product} />
+                      <ProductCardCarousel product={product} branch={branch} />
                     </CarouselItem>
                   ))}
                 </CarouselContent>

@@ -104,7 +104,7 @@ export function Navbar() {
     >
       <div className="container mx-auto px-4 md:px-6 h-14 md:h-16 flex items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center gap-1 md:gap-2">
+        <div className="flex items-center gap-1.5 md:gap-2">
           {mounted && pathname !== "/" && (
             <button
               onClick={() => {
@@ -115,13 +115,13 @@ export function Navbar() {
                   router.push(origin ?? "/");
                 }
               }}
-              className="md:hidden flex items-center justify-center min-h-[44px] min-w-[44px] text-muted-foreground hover:text-foreground transition-colors -ml-1"
+              className="md:hidden group animate-fade-in flex items-center justify-center h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-card/90 backdrop-blur-md border border-border/70 shadow-sm text-foreground cursor-pointer touch-manipulation transition-all duration-200 hover:bg-card hover:shadow-md active:scale-90 motion-reduce:transition-none"
               aria-label="Volver"
             >
-              <ArrowLeft className="w-5 h-5" />
+              <ArrowLeft className="w-5 h-5 transition-transform duration-200 group-hover:-translate-x-1 group-active:-translate-x-1 motion-reduce:transition-none" />
             </button>
           )}
-          <Link href={pathname.startsWith("/productos/") ? "/catalogo" : "/"} className="flex items-center transition-transform hover:scale-105 min-h-[44px] min-w-[44px] justify-center -ml-2">
+          <Link href={pathname.startsWith("/productos/") ? "/catalogo" : "/"} className="flex items-center transition-transform hover:scale-105 min-h-[44px] min-w-[44px] justify-center ml-1 md:ml-0">
             <Image
               src="/logo/moreltechnology.png"
               alt="MorelTechnology Logo"

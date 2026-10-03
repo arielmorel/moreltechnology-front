@@ -4,7 +4,7 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Product, ProductVariant } from "@/lib/data";
-import { getProductBySlug } from "@/lib/api";
+import { getProductBySlug, resolveBranchId } from "@/lib/api";
 import { MessageCircle, ShoppingCart, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/lib/store";
@@ -21,6 +21,7 @@ interface ProductDetailClientProps {
   sameModelSlot?: React.ReactNode;
   accessoriesSlot?: React.ReactNode;
   relatedSlot?: React.ReactNode;
+  branch?: string;
 }
 
 export default function ProductDetailClient({
@@ -30,6 +31,7 @@ export default function ProductDetailClient({
   sameModelSlot,
   accessoriesSlot,
   relatedSlot,
+  branch,
 }: ProductDetailClientProps) {
   const [product, setProduct] = useState<Product | null>(initialProduct);
   const [isLoading, setIsLoading] = useState(!initialProduct);
@@ -85,7 +87,7 @@ export default function ProductDetailClient({
 
     async function loadData() {
       try {
-        const currentProduct = await getProductBySlug(slug);
+        const currentProduct = await getProductBySlug(slug, resolveBranchId(branch));
 
         if (currentProduct) {
           setProduct(currentProduct);
@@ -98,7 +100,7 @@ export default function ProductDetailClient({
     }
 
     loadData();
-  }, [slug, initialProduct]);
+  }, [slug, initialProduct, branch]);
 
   const handleAddToCart = () => {
     if (product) {
@@ -154,7 +156,7 @@ export default function ProductDetailClient({
         <nav className="hidden md:flex items-center gap-1.5 text-xs text-muted-foreground mb-4 md:mb-6 animate-slide-up">
           <Link href="/" className="hover:text-foreground transition-colors">Inicio</Link>
           <span className="text-muted-foreground">/</span>
-          <Link href="/catalogo/moreltechnology" className="hover:text-foreground transition-colors">Catálogo</Link>
+          <Link href={branch ? `/catalogo/${branch}` : "/catalogo/moreltechnology"} className="hover:text-foreground transition-colors">Catálogo</Link>
           <span className="text-muted-foreground">/</span>
           <span className="text-muted-foreground font-medium truncate max-w-[150px]">{product.name}</span>
         </nav>

@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { cache, Suspense } from "react";
-import { getProductBySlug } from "@/lib/api";
+import { getProductBySlug, resolveBranchId } from "@/lib/api";
 import { productUrl } from "@/lib/utils";
 import { ProductReviewsSection } from "@/components/product-detail/product-reviews-section";
 import { SameModelSection } from "@/components/product-detail/same-model-section";
@@ -13,11 +13,18 @@ const getProductBySlugCached = cache(getProductBySlug);
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ branch?: string | string[] }>;
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+async function resolveBranch(searchParams: PageProps["searchParams"]): Promise<string | undefined> {
+  const { branch } = await searchParams;
+  return resolveBranchId(typeof branch === "string" ? branch : undefined);
+}
+
+export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const product = await getProductBySlugCached(slug);
+  const branch = await resolveBranch(searchParams);
+  const product = await getProductBySlugCached(slug, branch);
 
   if (!product) {
     return {
@@ -36,7 +43,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: `${product.name} | Morel Technology`,
     description: metaDescription.substring(0, 160),
     alternates: {
-      canonical: productUrl(product.slug),
+      canonical: productUrl(product.slug, branch),
     },
     openGraph: {
       title: `${product.name} | Morel Technology RD`,
@@ -59,9 +66,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function ProductDetailPage({ params }: PageProps) {
+export default async function ProductDetailPage({ params, searchParams }: PageProps) {
   const { slug } = await params;
-  const product = await getProductBySlugCached(slug);
+  const branch = await resolveBranch(searchParams);
+  const product = await getProductBySlugCached(slug, branch);
 
   let productId = NaN;
   if (product) {
@@ -199,13 +207,13 @@ export default async function ProductDetailPage({ params }: PageProps) {
         "@type": "ListItem",
         position: 2,
         name: "Catálogo",
-        item: "https://moreltechnologyrd.com/catalogo",
+        item: `https://moreltechnologyrd.com/catalogo/${branch ?? "moreltechnology"}`,
       },
       ...(product ? [{
         "@type": "ListItem",
         position: 3,
         name: product.name,
-        item: `https://moreltechnologyrd.com${productUrl(product.slug)}`,
+        item: `https://moreltechnologyrd.com${productUrl(product.slug, branch)}`,
       }] : []),
     ],
   };
@@ -227,6 +235,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
       <ProductDetailClient
         slug={slug}
         initialProduct={product}
+        branch={branch}
         reviewsSlot={
           !isNaN(productId) ? (
             <Suspense
@@ -247,17 +256,17 @@ export default async function ProductDetailPage({ params }: PageProps) {
         }
         sameModelSlot={
           <Suspense fallback={<CarouselSectionSkeleton title="Mismo modelo" />}>
-            <SameModelSection query={modelQuery} excludeSlug={product?.slug} />
+            <SameModelSection query={modelQuery} excludeSlug={product?.slug} branch={branch} />
           </Suspense>
         }
         accessoriesSlot={
           <Suspense fallback={<CarouselSectionSkeleton title="Accesorios" />}>
-            <AccessoriesSection currentProductId={product?.slug} />
+            <AccessoriesSection currentProductId={product?.slug} branch={branch} />
           </Suspense>
         }
         relatedSlot={
           <Suspense fallback={<CarouselSectionSkeleton title="Relacionados" />}>
-            <RelatedSection category={category} excludeSlug={product?.slug} />
+            <RelatedSection category={category} excludeSlug={product?.slug} branch={branch} />
           </Suspense>
         }
       />

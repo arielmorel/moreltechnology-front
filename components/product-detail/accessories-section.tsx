@@ -3,10 +3,11 @@ import { AccessoriesCarousel } from "@/components/accessories-carousel";
 
 interface AccessoriesSectionProps {
   currentProductId?: string;
+  branch?: string;
 }
 
-export async function AccessoriesSection({ currentProductId }: AccessoriesSectionProps) {
-  const { products } = await getProducts(0, PAGE_SIZE_RAIL, "Accesorios");
+export async function AccessoriesSection({ currentProductId, branch }: AccessoriesSectionProps) {
+  const { products } = await getProducts(0, PAGE_SIZE_RAIL, "Accesorios", branch);
   const filtered = products.filter(p =>
     p.category.toLowerCase().includes("accesorio") ||
     p.tags.some(t => t.toLowerCase().includes("accesorio"))

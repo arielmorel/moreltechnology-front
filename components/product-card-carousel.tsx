@@ -11,9 +11,10 @@ import { cn, isMinioImage, productUrl, rememberOrigin } from "@/lib/utils";
 
 interface ProductCardCarouselProps {
   product: Product;
+  branch?: string;
 }
 
-export function ProductCardCarousel({ product }: ProductCardCarouselProps) {
+export function ProductCardCarousel({ product, branch }: ProductCardCarouselProps) {
   const { addItem } = useCart();
   const { isFavorite, toggleFavorite } = useFavorites();
   const isOutOfStock = product.quantity <= 0;
@@ -26,7 +27,7 @@ export function ProductCardCarousel({ product }: ProductCardCarouselProps) {
 
   return (
     <Link
-      href={productUrl(product.slug)}
+      href={productUrl(product.slug, branch)}
       onClick={rememberOrigin}
       prefetch={true}
       className={cn(
