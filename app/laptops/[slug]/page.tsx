@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getProducts, getProductsByBrand, PAGE_SIZE_ALL } from "@/lib/api";
+import type { Product } from "@/lib/data";
 import { ProductCard } from "@/components/product-card";
 import { WhatsAppDropdown } from "@/components/whatsapp-dropdown";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -99,6 +100,7 @@ const categories: Record<string, {
   description: string;
   longDescription: string;
   tags: string[];
+  productTags?: string[];
   faqs: { q: string; a: string }[];
 }> = {
   gaming: {
@@ -143,6 +145,7 @@ const categories: Record<string, {
     description: "Laptops para diseño gráfico, arquitectura y edición en RD. Pantallas de alta calidad y GPU potente.",
     longDescription: "Los diseñadores gráficos, arquitectos y creadores de contenido necesitan laptops con pantallas de color preciso y tarjetas gráficas potentes para ejecutar Adobe Creative Suite, AutoCAD, Revit y Blender sin problemas. En Morel Technology tenemos las mejores laptops para diseño en RD.",
     tags: ["diseno", "arquitectura", "diseño"],
+    productTags: ["gamer", "arquitectura"],
     faqs: [
       { q: "¿Qué GPU necesito para diseño?", a: "Para diseño gráfico 2D, con Intel Iris X o AMD Radeon es suficiente. Para 3D, video editing y arquitectura, necesitas NVIDIA RTX con al menos 6GB VRAM." },
       { q: "¿Son buenas las MacBook para diseño?", a: "Excelentes. Los chips Apple Silicon ofrecen rendimiento excepcional para Adobe Creative Suite y la pantalla Retina tiene excelente reproducción de color." },
@@ -163,12 +166,25 @@ const categories: Record<string, {
   },
 };
 
-function isBrand(slug: string): boolean {
-  return slug in brands;
-}
-
-function isCategory(slug: string): boolean {
-  return slug in categories;
+async function getCategoryProducts(categoryData: {
+  tags: string[];
+  productTags?: string[];
+}): Promise<Product[]> {
+  const queryTags = categoryData.productTags ?? [categoryData.tags[0]];
+  const results = await Promise.all(
+    queryTags.map((tag) => getProducts(0, PAGE_SIZE_ALL, undefined, undefined, tag))
+  );
+  const seen = new Set<string>();
+  const products: Product[] = [];
+  for (const { products: taggedProducts } of results) {
+    for (const product of taggedProducts) {
+      if (!seen.has(product.id)) {
+        seen.add(product.id);
+        products.push(product);
+      }
+    }
+  }
+  return products;
 }
 
 interface PageProps {
@@ -221,7 +237,7 @@ export default async function LaptopSlugPage({ params }: PageProps) {
 
   const products = isBrandPage
     ? await getProductsByBrand(brandData!.name)
-    : (await getProducts(0, PAGE_SIZE_ALL, undefined, undefined, categoryData!.tags[0])).products;
+    : await getCategoryProducts(categoryData!);
 
   const breadcrumbSchema = {
     "@context": "https://schema.org",

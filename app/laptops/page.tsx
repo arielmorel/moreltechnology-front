@@ -2,7 +2,10 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { getProducts } from "@/lib/api";
 import { productUrl } from "@/lib/utils";
-import { brands, needsCategories } from "@/lib/data";
+import { brands } from "@/lib/data";
+import { CATEGORY_LAPTOPS, isLaptopCategory, LAPTOP_USES, type LaptopUse } from "@/lib/laptops";
+import { getPostBySlug, type BlogPost } from "@/lib/blog";
+import { LaptopUseSection } from "@/components/laptop-use-section";
 import { WhatsAppDropdown } from "@/components/whatsapp-dropdown";
 import {
   Accordion,
@@ -11,16 +14,10 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { LaptopsClient } from "./laptops-client";
-import { CheckCircle2, ChevronRight, Laptop, ShieldCheck, Tag, Truck } from "lucide-react";
+import { ArrowRight, BookOpen, CheckCircle2, Laptop, ShieldCheck, Truck } from "lucide-react";
 
 const SITE_URL = "https://moreltechnologyrd.com";
-const CATEGORY_LAPTOPS = "Laptops";
 const PAGE_SIZE = 12;
-
-function isLaptopCategory(category: string): boolean {
-  const c = category.toLowerCase();
-  return c === "laptop" || c === "laptops" || c === "portatiles" || c === "port\u00e1tiles";
-}
 
 const faqs = [
   {
@@ -42,6 +39,14 @@ const faqs = [
   {
     q: "¿Ofrecen garantía, financiamiento y envío?",
     a: "Sí. Todas las laptops incluyen garantía local por escrito, financiamiento con varias entidades financieras y envío a todo el país, incluidos Santo Domingo y Santiago.",
+  },
+  {
+    q: "¿Cuál es la mejor laptop gaming en República Dominicana?",
+    a: "Depende de tu presupuesto y del tipo de juegos. Recomendamos laptops gaming con procesador AMD Ryzen o Intel Core de 12ª generación o superior, GPU NVIDIA RTX y al menos 16GB de RAM. Tenemos desde opciones para eSports hasta equipos para juegos AAA como GTA 6. Consúltanos por WhatsApp para conocer disponibilidad y precios.",
+  },
+  {
+    q: "¿Venden laptops usadas certificadas?",
+    a: "Sí. Contamos con laptops usadas certificadas, revisadas componente por componente: batería, teclado, pantalla y rendimiento. Todas incluyen garantía por escrito, por lo que consigues un gran precio sin sacrificar confianza.",
   },
 ];
 
@@ -142,6 +147,13 @@ export default async function LaptopsPage() {
     })),
   };
 
+  const guides = LAPTOP_USES
+    .map((use): { use: LaptopUse; post: BlogPost | null } => ({
+      use,
+      post: use.blogSlug ? getPostBySlug(use.blogSlug) : null,
+    }))
+    .filter((guide): guide is { use: LaptopUse; post: BlogPost } => guide.post !== null);
+
   return (
     <div className="min-h-screen">
       {/* Breadcrumbs */}
@@ -169,6 +181,18 @@ export default async function LaptopsPage() {
             <p className="text-lg text-muted-foreground leading-relaxed mb-8">
               En Morel Technology encontrarás las mejores laptops en Santo Domingo, República Dominicana: equipos nuevos y usados certificados de marcas como Lenovo, Dell, HP, Apple, ASUS, Acer y Razer. Ya sea que busques una laptop para estudiantes, para trabajo, para programar o una laptop gaming en oferta, tenemos el equipo ideal con garantía real, financiamiento y envío a todo el país.
             </p>
+            <div className="flex flex-wrap gap-2 mb-8">
+              {LAPTOP_USES.map((use) => (
+                <Link
+                  key={use.id}
+                  href={use.href}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-border bg-card text-sm font-semibold hover:border-blue-600 hover:text-blue-600 transition-colors duration-300"
+                >
+                  <Laptop className="w-3.5 h-3.5" />
+                  {use.name}
+                </Link>
+              ))}
+            </div>
             <div className="flex flex-wrap gap-4">
               <WhatsAppDropdown
                 message="Hola, estoy buscando una laptop. ¿Qué tienen disponible?"
@@ -201,34 +225,38 @@ export default async function LaptopsPage() {
         <LaptopsClient initialProducts={initialProducts} initialTotal={initialTotal} />
       </div>
 
-      {/* Explora por uso / categoría */}
+      {/* Laptops por uso — showcases con productos */}
+      {LAPTOP_USES.map((use) => (
+        <LaptopUseSection key={use.id} use={use} />
+      ))}
+
+      {/* Guías y consejos */}
       <section className="py-16 bg-muted/30">
         <div className="container mx-auto px-4 md:px-6">
           <div className="flex items-center gap-3 mb-10">
             <div className="p-3 rounded-2xl bg-primary/10 text-primary">
-              <Tag className="w-6 h-6" />
+              <BookOpen className="w-6 h-6" />
             </div>
             <div>
-              <h2 className="text-2xl md:text-3xl font-black tracking-tight">Laptops por uso</h2>
-              <p className="text-muted-foreground text-sm mt-1">Encuentra la laptop ideal según lo que necesitas.</p>
+              <h2 className="text-2xl md:text-3xl font-black tracking-tight">Guías y consejos sobre laptops en RD</h2>
+              <p className="text-muted-foreground text-sm mt-1">Aprende a elegir la mejor laptop según tu uso y presupuesto.</p>
             </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {needsCategories.map((need) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+            {guides.map(({ use, post }) => (
               <Link
-                key={need.id}
-                href={need.href}
-                className="group bg-card rounded-2xl border border-border/50 p-6 hover:border-blue-600 hover:shadow-[0_8px_30px_-5px_rgba(0,102,204,0.25)] transition-all duration-300"
+                key={post.slug}
+                href={`/blog/${post.slug}`}
+                className="group bg-card rounded-2xl border border-border/50 p-6 hover:border-blue-600 hover:shadow-[0_8px_30px_-5px_rgba(0,102,204,0.25)] transition-all duration-300 flex flex-col"
               >
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h3 className="text-lg font-bold group-hover:text-blue-600 transition-colors duration-300">
-                      Laptops para {need.name.toLowerCase()}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{need.description}</p>
-                  </div>
-                  <ChevronRight className="w-5 h-5 text-muted-foreground shrink-0 mt-1 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-blue-600" />
-                </div>
+                <span className="text-xs font-bold uppercase tracking-widest text-primary mb-3">{use.name}</span>
+                <h3 className="text-sm font-bold leading-snug group-hover:text-blue-600 transition-colors duration-300 flex-1">
+                  {post.title}
+                </h3>
+                <span className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-muted-foreground group-hover:text-blue-600 transition-colors duration-300">
+                  Leer guía
+                  <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+                </span>
               </Link>
             ))}
           </div>

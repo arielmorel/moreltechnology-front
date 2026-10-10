@@ -24,10 +24,10 @@ import {
 } from "@/components/ui/sheet";
 import { FilterChip } from "@/components/ui/filter-chip";
 import { WhatsAppDropdown } from "@/components/whatsapp-dropdown";
+import { CATEGORY_LAPTOPS, isLaptopCategory } from "@/lib/laptops";
 import { BadgePercent, SlidersHorizontal, X } from "lucide-react";
 
 const PAGE_SIZE = 12;
-const CATEGORY_LAPTOPS = "Laptops";
 const MAX_PRICE_DEFAULT = 200000;
 
 const USO_OPTIONS = [
@@ -54,11 +54,6 @@ const SORT_OPTIONS = [
   { id: "price_asc", label: "Precio ↑" },
   { id: "price_desc", label: "Precio ↓" },
 ];
-
-function isLaptopCategory(category: string): boolean {
-  const c = category.toLowerCase();
-  return c === "laptop" || c === "laptops" || c === "portatiles" || c === "port\u00e1tiles";
-}
 
 interface LaptopsClientProps {
   initialProducts: Product[];

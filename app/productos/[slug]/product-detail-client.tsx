@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Product, ProductVariant } from "@/lib/data";
 import { getProductBySlug, resolveBranchId } from "@/lib/api";
-import { MessageCircle, ShoppingCart, ChevronDown } from "lucide-react";
+import { MessageCircle, ShoppingCart, ChevronDown, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/lib/store";
 import { toast } from "sonner";
@@ -167,6 +167,7 @@ export default function ProductDetailClient({
               product={product}
               activeImage={activeImage}
               onActiveImageChange={setActiveImage}
+              onShare={handleShare}
             />
           </div>
 
@@ -175,7 +176,6 @@ export default function ProductDetailClient({
               product={product}
               warrantyLabel={warrantyLabel}
               onAddToCart={handleAddToCart}
-              onShare={handleShare}
               selectedVariant={selectedVariant}
               onVariantChange={setSelectedVariant}
             />
@@ -232,20 +232,28 @@ export default function ProductDetailClient({
                 Envío gratis
               </span>
             </div>
-            <div className="flex-1 flex items-center gap-2">
+            <div className="flex-1 flex items-center justify-end gap-2">
+              <button
+                type="button"
+                onClick={handleShare}
+                className="h-12 w-12 shrink-0 border border-border rounded-xl flex items-center justify-center text-muted-foreground hover:bg-muted transition-all duration-200 active:scale-95"
+                aria-label="Compartir producto"
+              >
+                <Share2 className="w-5 h-5" />
+              </button>
               <button
                 type="button"
                 onClick={handleAddToCart}
-                className="flex-1 h-12 bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-md active:scale-[0.97] flex items-center justify-center gap-2"
+                className="h-12 w-12 shrink-0 bg-slate-900 hover:bg-slate-800 text-white rounded-xl transition-all duration-200 shadow-md active:scale-[0.97] flex items-center justify-center"
+                aria-label="Agregar al carrito"
               >
-                <ShoppingCart className="w-4 h-4" />
-                Agregar
+                <ShoppingCart className="w-5 h-5" />
               </button>
               <a
                 href={`https://wa.me/18095551234?text=${encodeURIComponent(`Hola, estoy interesado en ${product.name}.`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="h-12 w-12 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl transition-all duration-200 active:scale-90 flex items-center justify-center shrink-0"
+                className="h-12 w-12 shrink-0 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl transition-all duration-200 active:scale-90 flex items-center justify-center"
                 aria-label="WhatsApp"
               >
                 <MessageCircle className="w-5 h-5" />

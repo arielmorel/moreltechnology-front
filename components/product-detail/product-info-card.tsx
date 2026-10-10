@@ -9,7 +9,6 @@ import {
   ShieldCheck,
   Truck,
   ShoppingCart,
-  Share2,
   MessageCircle,
   Monitor,
   Gamepad2,
@@ -27,7 +26,6 @@ interface ProductInfoCardProps {
   product: Product;
   warrantyLabel: string;
   onAddToCart: () => void;
-  onShare: () => void;
   selectedVariant?: ProductVariant;
   onVariantChange?: (variant: ProductVariant | undefined) => void;
 }
@@ -36,7 +34,6 @@ export function ProductInfoCard({
   product,
   warrantyLabel,
   onAddToCart,
-  onShare,
   selectedVariant,
   onVariantChange,
 }: ProductInfoCardProps) {
@@ -137,14 +134,6 @@ export function ProductInfoCard({
             >
               <ArrowRightLeft className="w-4 h-4" />
             </button>
-            <button
-              type="button"
-              onClick={onShare}
-              className="p-2 border border-border hover:bg-muted text-muted-foreground rounded-lg transition-all duration-200 shrink-0 active:scale-90 hover:shadow-sm"
-              aria-label="Compartir"
-            >
-              <Share2 className="w-4 h-4 transition-transform duration-300" />
-            </button>
           </div>
           <h1 className="font-sans text-xl md:text-2xl font-bold text-foreground tracking-tight leading-tight">
             {product.name}
@@ -175,15 +164,15 @@ export function ProductInfoCard({
                       }
                     }}
                     className={cn(
-                      "flex items-center justify-between px-3 py-2.5 rounded-xl text-left text-xs font-medium border transition-all duration-200 active:scale-[0.98]",
+                      "flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-3 px-3 py-2.5 rounded-xl text-left text-xs font-medium border transition-all duration-200 active:scale-[0.98]",
                       isSelected
                         ? "bg-slate-900 text-white border-slate-900 shadow-md"
                         : "bg-card text-muted-foreground border-border hover:border-border hover:bg-muted"
                     )}
                   >
-                    <span className="truncate flex-1">{option.label}</span>
+                    <span className="line-clamp-3 sm:truncate flex-1 leading-snug">{option.label}</span>
                     <span className={cn(
-                      "ml-2 whitespace-nowrap font-semibold",
+                      "whitespace-nowrap font-semibold shrink-0",
                       isSelected ? "text-white/80" : "text-muted-foreground"
                     )}>
                       RD$ {price.toLocaleString("es-DO")}
