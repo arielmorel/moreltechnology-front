@@ -276,7 +276,7 @@ export function ProductCard({ product, view = "grid", branch }: ProductCardProps
 
   return (
     <Link
-      href={productUrl(product.slug)}
+      href={productUrl(product.slug, branch)}
       onClick={rememberOrigin}
       prefetch={true}
       className={cn(
