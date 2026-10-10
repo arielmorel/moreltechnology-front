@@ -4,19 +4,21 @@ import * as React from "react";
 import { useRef, useCallback } from "react";
 import Image from "next/image";
 import { Product } from "@/lib/data";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Share2 } from "lucide-react";
 import { cn, isMinioImage } from "@/lib/utils";
 
 interface ProductImageGalleryProps {
   product: Product;
   activeImage: number;
   onActiveImageChange: (index: number) => void;
+  onShare?: () => void;
 }
 
 export function ProductImageGallery({
   product,
   activeImage,
   onActiveImageChange,
+  onShare,
 }: ProductImageGalleryProps) {
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
@@ -81,6 +83,22 @@ export function ProductImageGallery({
               últimos {product.quantity}
             </span>
           ) : null}
+
+          {/* Share Button */}
+          {onShare && (
+            <button
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation();
+                onShare();
+              }}
+              className="absolute top-3 right-3 z-10 w-10 h-10 bg-card/80 hover:bg-card backdrop-blur-md text-foreground rounded-full flex items-center justify-center shadow-md border border-white/50 transition-all duration-200 active:scale-90 hover:scale-105"
+              aria-label="Compartir producto"
+              title="Compartir producto"
+            >
+              <Share2 className="w-5 h-5" />
+            </button>
+          )}
 
           {/* Page Counter */}
           {product.images.length > 1 && (

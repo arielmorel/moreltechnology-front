@@ -9,7 +9,6 @@ import {
   ShieldCheck,
   Truck,
   ShoppingCart,
-  Share2,
   MessageCircle,
   Monitor,
   Gamepad2,
@@ -27,7 +26,6 @@ interface ProductInfoCardProps {
   product: Product;
   warrantyLabel: string;
   onAddToCart: () => void;
-  onShare: () => void;
   selectedVariant?: ProductVariant;
   onVariantChange?: (variant: ProductVariant | undefined) => void;
 }
@@ -36,7 +34,6 @@ export function ProductInfoCard({
   product,
   warrantyLabel,
   onAddToCart,
-  onShare,
   selectedVariant,
   onVariantChange,
 }: ProductInfoCardProps) {
@@ -136,14 +133,6 @@ export function ProductInfoCard({
               title={isComparing ? "Quitar de comparación" : "Agregar a comparación"}
             >
               <ArrowRightLeft className="w-4 h-4" />
-            </button>
-            <button
-              type="button"
-              onClick={onShare}
-              className="p-2 border border-border hover:bg-muted text-muted-foreground rounded-lg transition-all duration-200 shrink-0 active:scale-90 hover:shadow-sm"
-              aria-label="Compartir"
-            >
-              <Share2 className="w-4 h-4 transition-transform duration-300" />
             </button>
           </div>
           <h1 className="font-sans text-xl md:text-2xl font-bold text-foreground tracking-tight leading-tight">
