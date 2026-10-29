@@ -15,9 +15,10 @@ interface ProductCardProps {
   product: Product;
   view?: ProductCardView;
   branch?: string;
+  showSavings?: boolean;
 }
 
-export function ProductCard({ product, view = "grid", branch }: ProductCardProps) {
+export function ProductCard({ product, view = "grid", branch, showSavings = false }: ProductCardProps) {
   const { addItem } = useCart();
   const { isFavorite, toggleFavorite } = useFavorites();
   const isOutOfStock = product.quantity <= 0;
@@ -27,6 +28,7 @@ export function ProductCard({ product, view = "grid", branch }: ProductCardProps
   const discountPercent = hasDiscount
     ? Math.round(((product.originalPrice! - product.price) / product.originalPrice!) * 100)
     : 0;
+  const savings = hasDiscount ? product.originalPrice! - product.price : 0;
 
   const stockLabel = isOutOfStock
     ? null
@@ -411,7 +413,7 @@ export function ProductCard({ product, view = "grid", branch }: ProductCardProps
         </div>
 
         {/* Price */}
-        <div className="flex items-center justify-between pt-2">
+        <div className="flex flex-col gap-1 pt-2">
           <div className="flex items-baseline gap-2">
             {hasDiscount && (
               <span className="text-xs sm:text-sm text-muted-foreground line-through font-normal">
@@ -425,6 +427,11 @@ export function ProductCard({ product, view = "grid", branch }: ProductCardProps
               RD$ {product.price.toLocaleString("es-DO")}
             </span>
           </div>
+          {showSavings && hasDiscount && (
+            <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 sm:text-xs">
+              Ahorras RD$ {savings.toLocaleString("es-DO")}
+            </span>
+          )}
         </div>
 
         {/* Action Button */}

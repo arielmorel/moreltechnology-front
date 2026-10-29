@@ -6,6 +6,7 @@ import { brands } from "@/lib/data";
 import { CATEGORY_LAPTOPS, isLaptopCategory, LAPTOP_USES, type LaptopUse } from "@/lib/laptops";
 import { getPostBySlug, type BlogPost } from "@/lib/blog";
 import { LaptopUseSection } from "@/components/laptop-use-section";
+import { BlackFridayPromoBanner } from "@/components/black-friday/black-friday-promo-banner";
 import { WhatsAppDropdown } from "@/components/whatsapp-dropdown";
 import {
   Accordion,
@@ -218,6 +219,10 @@ export default async function LaptopsPage() {
           <div className="flex items-center gap-2"><ShieldCheck className="w-5 h-5 text-primary" /> Garantía Real</div>
           <div className="flex items-center gap-2"><Truck className="w-5 h-5 text-blue-500" /> Envío Nacional</div>
         </div>
+      </div>
+
+      <div className="container mx-auto px-4 pt-8 md:px-6">
+        <BlackFridayPromoBanner compact />
       </div>
 
       {/* Catalog (interactive) */}
