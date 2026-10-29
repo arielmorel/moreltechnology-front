@@ -3,6 +3,7 @@ import { getProducts } from "@/lib/api";
 import { productUrl } from "@/lib/utils";
 import { getAllPosts } from "@/lib/blog";
 import { blogCategories } from "@/lib/data/blog-categories";
+import { BLACK_FRIDAY_CAMPAIGN } from "@/lib/black-friday";
 
 const baseUrl = "https://moreltechnologyrd.com";
 
@@ -38,6 +39,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: "daily" as const,
     priority: route === "" ? 1 : 0.8,
   }));
+
+  const blackFridayPage = {
+    url: `${baseUrl}${BLACK_FRIDAY_CAMPAIGN.slug}`,
+    lastModified: new Date(BLACK_FRIDAY_CAMPAIGN.startIso),
+    changeFrequency: "daily" as const,
+    priority: 0.9,
+  };
 
   // Brand pages
   const brandPages = brands.map((brand) => ({
@@ -76,6 +84,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     return [
       ...staticPages,
+      blackFridayPage,
       ...brandPages,
       ...blogPages,
       ...blogCategoryPages,
@@ -86,6 +95,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     return [
       ...staticPages,
+      blackFridayPage,
       ...brandPages,
       ...blogPages,
       ...blogCategoryPages,

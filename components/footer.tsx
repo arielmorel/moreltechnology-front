@@ -51,6 +51,7 @@ export function Footer() {
                 <li><Link href="/catalogo/moreltechnology" className="hover:text-foreground transition-colors block py-1.5">Catálogo</Link></li>
                 <li><Link href="/servicios" className="hover:text-foreground transition-colors block py-1.5">Servicios</Link></li>
                 <li><Link href="/ofertas" className="hover:text-foreground transition-colors block py-1.5">Ofertas</Link></li>
+                <li><Link href="/black-friday" className="hover:text-foreground transition-colors block py-1.5">Black Friday</Link></li>
                 <li><Link href="/apps" className="hover:text-foreground transition-colors block py-1.5">Apps</Link></li>
                 <li><Link href="/blog" className="hover:text-foreground transition-colors block py-1.5">Blog</Link></li>
                 <li><Link href="/nosotros" className="hover:text-foreground transition-colors block py-1.5">Nosotros</Link></li>
@@ -104,6 +105,7 @@ export function Footer() {
               <li><Link href="/catalogo/moreltechnology" className="hover:text-foreground transition-colors">Catálogo</Link></li>
               <li><Link href="/servicios" className="hover:text-foreground transition-colors">Servicios</Link></li>
               <li><Link href="/ofertas" className="hover:text-foreground transition-colors">Ofertas</Link></li>
+              <li><Link href="/black-friday" className="hover:text-foreground transition-colors">Black Friday</Link></li>
               <li><Link href="/apps" className="hover:text-foreground transition-colors">Apps</Link></li>
               <li><Link href="/blog" className="hover:text-foreground transition-colors">Blog</Link></li>
               <li><Link href="/nosotros" className="hover:text-foreground transition-colors">Nosotros</Link></li>

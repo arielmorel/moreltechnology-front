@@ -1,6 +1,7 @@
 import { HeroSection } from "@/components/hero-section";
 import { OffersCarousel } from "@/components/offers-carousel";
 import { GamingCarousel } from "@/components/gaming-carousel";
+import { BlackFridayPromoBanner } from "@/components/black-friday/black-friday-promo-banner";
 import { getHomeProducts } from "@/lib/api";
 import dynamic from "next/dynamic";
 
@@ -150,6 +151,9 @@ export default async function Home() {
       <FlashAnnouncement />
       <HeroSection />
       <OffersCarousel products={offers} />
+      <div className="container mx-auto px-4 pb-2 md:px-6">
+        <BlackFridayPromoBanner />
+      </div>
       <GamingCarousel products={gaming} />
       <HomeProductSections
         newArrivals={newArrivals}

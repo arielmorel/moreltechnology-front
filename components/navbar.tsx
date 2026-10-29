@@ -5,12 +5,13 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { cn, consumeOrigin } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Moon, Sun, Home, ShoppingBag, Sparkles, CreditCard, Users, Phone, MapPin, BookOpen, ChevronDown, Search, MoreHorizontal } from "lucide-react";
+import { Menu, X, Moon, Sun, Home, ShoppingBag, Sparkles, CreditCard, Users, Phone, MapPin, BookOpen, ChevronDown, Search, MoreHorizontal, Flame } from "lucide-react";
 import { ArrowLeft } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import { useMounted } from "@/lib/use-mounted";
+import { isBlackFridayActive } from "@/lib/black-friday";
 
 const CartSheet = dynamic(() => import("./cart-sheet").then(m => m.CartSheet), { ssr: false });
 const SearchDialog = dynamic(() => import("./search-dialog").then(m => m.SearchDialog), { ssr: false });
@@ -21,6 +22,8 @@ const navLinks = [
   { name: "Catálogo", href: "/catalogo/moreltechnology", icon: ShoppingBag },
   { name: "Asistente IA", href: "/recomendador", icon: Sparkles },
 ];
+
+const blackFridayLink = { name: "Black Friday", href: "/black-friday", icon: Flame };
 
 const secondaryLinks = [
   { name: "Blog", href: "/blog", icon: BookOpen },
@@ -39,6 +42,9 @@ export function Navbar() {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
   const mounted = useMounted();
+  const displayNavLinks = mounted && isBlackFridayActive()
+    ? [...navLinks, blackFridayLink]
+    : navLinks;
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [sucursalOpen, setSucursalOpen] = useState(false);
@@ -133,7 +139,7 @@ export function Navbar() {
             />
           </Link>
           {mounted && (() => {
-            const activeLink = navLinks.find(link => link.href !== "/" && pathname.startsWith(link.href));
+            const activeLink = displayNavLinks.find(link => link.href !== "/" && pathname.startsWith(link.href));
             if (!activeLink) return null;
             return (
               <span className="md:hidden text-[10px] font-bold uppercase tracking-widest text-primary px-2 py-0.5 bg-primary/10 rounded-md">
@@ -145,8 +151,9 @@ export function Navbar() {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-1">
-          {navLinks.map((link) => {
+          {displayNavLinks.map((link) => {
             const isActive = mounted && pathname === link.href;
+            const isBlackFriday = link.href === "/black-friday";
             return (
               <Link
                 key={link.href}
@@ -155,12 +162,18 @@ export function Navbar() {
                   "relative text-sm font-medium px-3 py-2 rounded-lg transition-colors flex items-center gap-2",
                   isActive
                     ? "text-foreground"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                    : isBlackFriday
+                      ? "font-bold text-red-600 hover:bg-red-500/10 hover:text-red-700"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                 )}
               >
                 <link.icon className={cn(
                   "w-3.5 h-3.5",
-                  isActive ? "text-foreground" : "text-muted-foreground"
+                  isActive
+                    ? "text-foreground"
+                    : isBlackFriday
+                      ? "text-red-600"
+                      : "text-muted-foreground"
                 )} />
                 {link.name}
                 {isActive && (
@@ -330,8 +343,9 @@ export function Navbar() {
               </button>
 
               <nav className="flex flex-col gap-0.5">
-                {navLinks.map((link) => {
+                {displayNavLinks.map((link) => {
                   const isActive = mounted && pathname === link.href;
+                  const isBlackFriday = link.href === "/black-friday";
                   return (
                     <Link
                       key={link.href}
@@ -341,10 +355,12 @@ export function Navbar() {
                         "text-sm font-medium px-4 py-3 rounded-xl transition-all active:scale-[0.98] flex items-center gap-3 min-h-[44px]",
                         isActive
                           ? "bg-primary text-primary-foreground"
-                          : "text-foreground/80 active:bg-muted"
+                          : isBlackFriday
+                            ? "bg-red-500/5 font-bold text-red-600 active:bg-red-500/10"
+                            : "text-foreground/80 active:bg-muted"
                       )}
                     >
-                      <link.icon className={cn("w-4 h-4 shrink-0", isActive ? "text-primary-foreground" : "text-primary")} />
+                      <link.icon className={cn("w-4 h-4 shrink-0", isActive ? "text-primary-foreground" : isBlackFriday ? "text-red-600" : "text-primary")} />
                       {link.name}
                     </Link>
                   );

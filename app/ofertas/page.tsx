@@ -1,5 +1,6 @@
 import { getProducts, PAGE_SIZE_ALL } from "@/lib/api";
 import { ProductCard } from "@/components/product-card";
+import { BlackFridayPromoBanner } from "@/components/black-friday/black-friday-promo-banner";
 import { BadgePercent, Sparkles } from "lucide-react";
 
 export default async function OfertasPage() {
@@ -28,6 +29,8 @@ export default async function OfertasPage() {
             </div>
           )}
         </div>
+
+        <BlackFridayPromoBanner className="mb-8" compact />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {deals.map((product) => (

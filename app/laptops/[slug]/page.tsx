@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getProducts, getProductsByBrand, PAGE_SIZE_ALL } from "@/lib/api";
 import type { Product } from "@/lib/data";
 import { ProductCard } from "@/components/product-card";
+import { BlackFridayPromoBanner } from "@/components/black-friday/black-friday-promo-banner";
 import { WhatsAppDropdown } from "@/components/whatsapp-dropdown";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ShieldCheck, Truck, CheckCircle2, Tag } from "lucide-react";
@@ -311,6 +312,10 @@ export default async function LaptopSlugPage({ params }: PageProps) {
           <div className="flex items-center gap-2"><ShieldCheck className="w-5 h-5 text-primary" /> Garantía Real</div>
           <div className="flex items-center gap-2"><Truck className="w-5 h-5 text-blue-500" /> Envío Nacional</div>
         </div>
+      </div>
+
+      <div className="container mx-auto px-4 pt-8 md:px-6">
+        <BlackFridayPromoBanner compact />
       </div>
 
       {/* Products */}
