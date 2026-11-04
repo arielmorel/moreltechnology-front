@@ -123,8 +123,8 @@ type CachedPage = { products: Product[]; total: number; timestamp: number };
 const CACHE_TTL_MS = 5 * 60 * 1000;
 const pageCache = new Map<string, CachedPage>();
 
-function pageCacheKey(prefix: string, page: number, size: number, category?: string, branchId?: string, tags?: string, availability?: AvailabilityFilter, sort?: SortFilter, query?: string): string {
-  return [prefix, page, size, category ?? "", branchId ?? "", tags ?? "", availability ?? "", sort ?? "", query ?? ""].join("|");
+function pageCacheKey(prefix: string, page: number, size: number, category?: string, branchId?: string, tags?: string, availability?: AvailabilityFilter, sort?: SortFilter, query?: string, onlyOffers?: boolean): string {
+  return [prefix, page, size, category ?? "", branchId ?? "", tags ?? "", availability ?? "", sort ?? "", query ?? "", onlyOffers ?? ""].join("|");
 }
 
 function getCachedPage(key: string): CachedPage | null {
@@ -141,16 +141,16 @@ function setCachedPage(key: string, result: { products: Product[]; total: number
   pageCache.set(key, { ...result, timestamp: Date.now() });
 }
 
-export function getCachedProducts(page = 0, size = PAGE_SIZE_DEFAULT, category?: string, branchId?: string, tags?: string, availability?: AvailabilityFilter, sort?: SortFilter): { products: Product[]; total: number } | null {
-  return getCachedPage(pageCacheKey("p", page, size, category, branchId, tags, availability, sort));
+export function getCachedProducts(page = 0, size = PAGE_SIZE_DEFAULT, category?: string, branchId?: string, tags?: string, availability?: AvailabilityFilter, sort?: SortFilter, onlyOffers?: boolean): { products: Product[]; total: number } | null {
+  return getCachedPage(pageCacheKey("p", page, size, category, branchId, tags, availability, sort, undefined, onlyOffers));
 }
 
 export function getCachedSearch(query: string, page = 0, size = PAGE_SIZE_DEFAULT, category?: string, branchId?: string, tags?: string, availability?: AvailabilityFilter, sort?: SortFilter): { products: Product[]; total: number } | null {
   return getCachedPage(pageCacheKey("s", page, size, category, branchId, tags, availability, sort, query));
 }
 
-export const getProducts = async (page = 0, size = PAGE_SIZE_DEFAULT, category?: string, branchId?: string, tags?: string, availability?: AvailabilityFilter, sort?: SortFilter): Promise<{ products: Product[], total: number }> => {
-  const key = pageCacheKey("p", page, size, category, branchId, tags, availability, sort);
+export const getProducts = async (page = 0, size = PAGE_SIZE_DEFAULT, category?: string, branchId?: string, tags?: string, availability?: AvailabilityFilter, sort?: SortFilter, onlyOffers?: boolean): Promise<{ products: Product[], total: number }> => {
+  const key = pageCacheKey("p", page, size, category, branchId, tags, availability, sort, undefined, onlyOffers);
   const cached = getCachedPage(key);
   if (cached) {
     return { products: cached.products, total: cached.total };
@@ -169,6 +169,9 @@ export const getProducts = async (page = 0, size = PAGE_SIZE_DEFAULT, category?:
     if (sort) {
       params.sort = sort;
     }
+    if (onlyOffers) {
+      params.onlyOffers = "true";
+    }
     const response = await axios.get<ApiResponse>(getCatalogUrl(branchId), { params });
 
     const result = {
@@ -181,6 +184,26 @@ export const getProducts = async (page = 0, size = PAGE_SIZE_DEFAULT, category?:
     console.error("Error fetching products from API:", error);
     return { products: [], total: 0 };
   }
+};
+
+export const getAllProducts = async (category?: string, branchId?: string, tags?: string, availability?: AvailabilityFilter, sort?: SortFilter, onlyOffers?: boolean): Promise<Product[]> => {
+  const all: Product[] = [];
+  let page = 0;
+  let total = Infinity;
+
+  while (page * PAGE_SIZE_ALL < total) {
+    const result = await getProducts(page, PAGE_SIZE_ALL, category, branchId, tags, availability, sort, onlyOffers);
+    all.push(...result.products);
+    total = result.total;
+    if (result.products.length < PAGE_SIZE_ALL) break;
+    page++;
+  }
+
+  return all;
+};
+
+export const getAllOfferProducts = async (branchId?: string): Promise<Product[]> => {
+  return getAllProducts(undefined, branchId, undefined, undefined, undefined, true);
 };
 
 export const getProductById = async (id: string, branchId?: string): Promise<Product | null> => {

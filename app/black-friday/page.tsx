@@ -12,7 +12,7 @@ import {
   Sparkles,
   Truck,
 } from "lucide-react";
-import { getProducts, PAGE_SIZE_ALL } from "@/lib/api";
+import { getAllOfferProducts } from "@/lib/api";
 import {
   BLACK_FRIDAY_CAMPAIGN,
   getBlackFridayDeals,
@@ -104,9 +104,7 @@ export default async function BlackFridayPage() {
   const isActive = state === "active";
   const countdownTarget = getBlackFridayTargetIso(state);
 
-  const { products } = isActive
-    ? await getProducts(0, PAGE_SIZE_ALL)
-    : { products: [] };
+  const products = isActive ? await getAllOfferProducts() : [];
   const deals = getBlackFridayDeals(products);
   const whatsappMessage =
     "Hola, estoy interesado en las ofertas de laptops de Black Friday 2026. ¿Qué modelos tienen disponibles?";

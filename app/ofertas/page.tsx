@@ -1,10 +1,10 @@
-import { getProducts, PAGE_SIZE_ALL } from "@/lib/api";
+import { getAllOfferProducts } from "@/lib/api";
 import { ProductCard } from "@/components/product-card";
 import { BlackFridayPromoBanner } from "@/components/black-friday/black-friday-promo-banner";
 import { BadgePercent, Sparkles } from "lucide-react";
 
 export default async function OfertasPage() {
-  const { products } = await getProducts(0, PAGE_SIZE_ALL);
+  const products = await getAllOfferProducts();
   const deals = products.filter(p => p.originalPrice && p.originalPrice > p.price);
 
   return (
