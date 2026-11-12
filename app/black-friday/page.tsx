@@ -83,21 +83,13 @@ export const metadata: Metadata = {
     description:
       "Laptops en oferta para Black Friday 2026 en República Dominicana. Garantía local, financiamiento y envío a todo el país.",
     siteName: "Morel Technology",
-    images: [
-      {
-        url: `${SITE_URL}/og-image.png`,
-        width: 1200,
-        height: 630,
-        alt: "Black Friday 2026 en Morel Technology",
-      },
-    ],
+    // og:image comes from ./opengraph-image.tsx
   },
   twitter: {
     card: "summary_large_image",
     title: BLACK_FRIDAY_CAMPAIGN.title,
     description:
       "Laptops en oferta para Black Friday 2026 en República Dominicana. Garantía local, financiamiento y envío a todo el país.",
-    images: [`${SITE_URL}/og-image.png`],
   },
 };
 

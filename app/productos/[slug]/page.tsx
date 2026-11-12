@@ -45,23 +45,20 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
     alternates: {
       canonical: productUrl(product.slug, branch),
     },
+    // og:image comes from ./opengraph-image.tsx (served from our domain, 1200x630 JPEG).
+    // X/Twitter falls back to og:image when twitter:image is absent.
     openGraph: {
+      type: "website",
+      locale: "es_DO",
+      siteName: "Morel Technology",
+      url: productUrl(product.slug, branch),
       title: `${product.name} | Morel Technology RD`,
       description: shortDescription,
-      images: [
-        {
-          url: product.images[0],
-          width: 1200,
-          height: 630,
-          alt: product.name,
-        },
-      ],
     },
     twitter: {
       card: "summary_large_image",
       title: `${product.name} | Morel Technology`,
       description: metaDescription.substring(0, 200),
-      images: [product.images[0]],
     },
   };
 }
