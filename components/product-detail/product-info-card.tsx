@@ -21,6 +21,7 @@ import { ConditionGuide } from "@/components/condition-guide";
 import { NotifyWhenAvailable } from "@/components/notify-when-available";
 import { useCart } from "@/lib/store";
 import { toast } from "sonner";
+import { trackContact } from "@/lib/analytics/events";
 
 interface ProductInfoCardProps {
   product: Product;
@@ -332,9 +333,16 @@ export function ProductInfoCard({
                 Añadir al carrito
               </button>
               <a
-                href={`https://wa.me/18095551234?text=${encodeURIComponent(`Hola, estoy interesado en ${product.name}.`)}`}
+                href={`https://wa.me/18096175517?text=${encodeURIComponent(`Hola, estoy interesado en ${product.name}.`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() =>
+                  trackContact({
+                    location: "product_detail_desktop",
+                    product,
+                    variant: selectedVariant,
+                  })
+                }
                 className="w-full border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-medium py-3 rounded-xl transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2 text-xs"
               >
                 <MessageCircle className="w-3.5 h-3.5" />

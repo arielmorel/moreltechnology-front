@@ -31,6 +31,7 @@ import Link from "next/link";
 import { CatalogTheme, getThemeColors } from "@/lib/themes";
 import { motion, type Variants } from "framer-motion";
 import { useTheme } from "next-themes";
+import { trackSearch } from "@/lib/analytics/events";
 
 const PAGE_SIZE = 8;
 
@@ -217,6 +218,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
   const [products, setProducts] = useState<Product[]>([]);
   const [total, setTotal] = useState(0);
   const pageRef = useRef(0);
+  const trackedSearchRef = useRef("");
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [stockCounts, setStockCounts] = useState({ available: 0, outOfStock: 0, total: 0 });
@@ -242,6 +244,10 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
           setProducts(cached.products);
           setTotal(cached.total);
           setIsLoading(false);
+          if (trackedSearchRef.current !== debouncedSearch) {
+            trackedSearchRef.current = debouncedSearch;
+            trackSearch(debouncedSearch, cached.total);
+          }
           return;
         }
       }
@@ -256,6 +262,10 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
         if (!cancelled) {
           setProducts(result.products);
           setTotal(result.total);
+          if (debouncedSearch.trim() && trackedSearchRef.current !== debouncedSearch) {
+            trackedSearchRef.current = debouncedSearch;
+            trackSearch(debouncedSearch, result.total);
+          }
         }
       } finally {
         if (!cancelled) setIsLoading(false);

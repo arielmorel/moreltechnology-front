@@ -8,6 +8,7 @@ import { useCart } from "@/lib/store";
 import { useFavorites } from "@/lib/favorites-store";
 import { toast } from "sonner";
 import { cn, isMinioImage, productUrl, rememberOrigin } from "@/lib/utils";
+import { trackAddToCart } from "@/lib/analytics/events";
 
 export type ProductCardView = "grid" | "list";
 
@@ -133,6 +134,7 @@ export function ProductCard({ product, view = "grid", branch, showSavings = fals
         e.preventDefault();
         e.stopPropagation();
         addItem(product);
+        trackAddToCart(product);
         toast.success("Agregado al carrito", {
           description: product.name,
         });
@@ -444,6 +446,7 @@ export function ProductCard({ product, view = "grid", branch, showSavings = fals
                   e.preventDefault();
                   e.stopPropagation();
                   addItem(product);
+                  trackAddToCart(product);
                   toast.success("Agregado al carrito", {
                     description: product.name,
                   });

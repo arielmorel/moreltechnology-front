@@ -13,7 +13,8 @@ import { buttonVariants } from "@/components/ui/button";
 import { MapPin } from "lucide-react";
 import { WhatsApp } from "@/components/icons";
 import { cn } from "@/lib/utils";
-import { branches } from "@/lib/data";
+import { branches, type Product, type ProductVariant } from "@/lib/data";
+import { trackContact } from "@/lib/analytics/events";
 
 interface WhatsAppDropdownProps {
   message?: string;
@@ -24,6 +25,9 @@ interface WhatsAppDropdownProps {
   side?: "top" | "bottom" | "left" | "right";
   align?: "start" | "center" | "end";
   ariaLabel?: string;
+  location?: string;
+  product?: Product;
+  productVariant?: ProductVariant;
 }
 
 export function WhatsAppDropdown({
@@ -34,10 +38,19 @@ export function WhatsAppDropdown({
   showIcon = true,
   side = "bottom",
   align = "end",
-  ariaLabel = "Contactar por WhatsApp"
+  ariaLabel = "Contactar por WhatsApp",
+  location = "whatsapp_dropdown",
+  product,
+  productVariant,
 }: WhatsAppDropdownProps) {
 
   const handleWhatsApp = (number: string) => {
+    trackContact({
+      method: "whatsapp",
+      location,
+      product,
+      variant: productVariant,
+    });
     window.open(`https://wa.me/${number}?text=${encodeURIComponent(message)}`, "_blank");
   };
 

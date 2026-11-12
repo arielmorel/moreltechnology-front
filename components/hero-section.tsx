@@ -69,6 +69,7 @@ export function HeroSection() {
               </Button>
               <WhatsAppDropdown
                 variant="outline"
+                location="hero"
                 className="rounded-xl font-bold h-11 sm:h-12 flex-1 px-1 sm:px-4 border-2 border-green-700/30 hover:bg-green-50 dark:hover:bg-green-950/30 text-green-700 text-[11px] sm:text-sm"
                 showIcon={true}
               >

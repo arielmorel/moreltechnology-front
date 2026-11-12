@@ -7,6 +7,7 @@ import { ArrowRightLeft, Cpu, MemoryStick, HardDrive, ShieldCheck, DollarSign, T
 import Image from "next/image";
 import Link from "next/link";
 import { isMinioImage, productUrl } from "@/lib/utils";
+import { trackAddToCart } from "@/lib/analytics/events";
 
 export default function CompararPage() {
   const { compareItems, removeFromCompare, clearCompare, addItem } = useCart();
@@ -156,7 +157,10 @@ export default function CompararPage() {
                       <Button
                         className="w-full rounded-xl font-bold"
                         disabled={item.quantity <= 0}
-                        onClick={() => addItem(item)}
+                        onClick={() => {
+                          addItem(item);
+                          trackAddToCart(item);
+                        }}
                       >
                         <ShoppingCart className="w-4 h-4 mr-2" />
                         Agregar al carrito

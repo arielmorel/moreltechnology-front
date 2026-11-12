@@ -13,6 +13,8 @@ import { ProductReviewForm } from "@/components/product-review-form";
 import { ProductImageGallery } from "@/components/product-detail/product-image-gallery";
 import { ProductInfoCard } from "@/components/product-detail/product-info-card";
 import { NotifyWhenAvailable } from "@/components/notify-when-available";
+import { trackAddToCart, trackContact, trackViewItem } from "@/lib/analytics/events";
+import { useAnalyticsConsent } from "@/lib/analytics/consent";
 
 interface ProductDetailClientProps {
   slug: string;
@@ -39,6 +41,7 @@ export default function ProductDetailClient({
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | undefined>(undefined);
   const [prevProductId, setPrevProductId] = useState(product?.id);
   const { addItem } = useCart();
+  const analyticsConsent = useAnalyticsConsent();
 
   const warrantyLabel = product?.warranty
     ? `${Math.round(product.warranty / 30)} ${Math.round(product.warranty / 30) === 1 ? "mes" : "meses"}`
@@ -102,9 +105,16 @@ export default function ProductDetailClient({
     loadData();
   }, [slug, initialProduct, branch]);
 
+  useEffect(() => {
+    if (product && analyticsConsent === "granted") {
+      trackViewItem(product, selectedVariant);
+    }
+  }, [product, selectedVariant, analyticsConsent]);
+
   const handleAddToCart = () => {
     if (product) {
-      addItem(product);
+      addItem(product, selectedVariant);
+      trackAddToCart(product, selectedVariant);
       toast.success("Producto añadido al carrito", {
         description: `${product.name} se ha agregado correctamente.`,
       });
@@ -250,9 +260,16 @@ export default function ProductDetailClient({
                 <ShoppingCart className="w-5 h-5" />
               </button>
               <a
-                href={`https://wa.me/18095551234?text=${encodeURIComponent(`Hola, estoy interesado en ${product.name}.`)}`}
+                href={`https://wa.me/18096175517?text=${encodeURIComponent(`Hola, estoy interesado en ${product.name}.`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() =>
+                  trackContact({
+                    location: "product_detail_mobile",
+                    product,
+                    variant: selectedVariant,
+                  })
+                }
                 className="h-12 w-12 shrink-0 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl transition-all duration-200 active:scale-90 flex items-center justify-center"
                 aria-label="WhatsApp"
               >

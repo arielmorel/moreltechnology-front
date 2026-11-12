@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import dynamic from "next/dynamic";
+import { ConsentBanner } from "@/components/analytics/consent-banner";
 
 const Toaster = dynamic(() => import("@/components/ui/sonner").then(m => m.Toaster), { ssr: false });
 const CompareDrawer = dynamic(() => import("@/components/compare-drawer").then(m => m.CompareDrawer), { ssr: false });
@@ -21,6 +22,7 @@ export function ClientProviders() {
       <Toaster position="bottom-right" />
       <CompareDrawer />
       <FloatingWhatsApp />
+      <ConsentBanner />
     </>
   );
 }

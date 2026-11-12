@@ -29,6 +29,7 @@ export function FloatingWhatsApp() {
         showIcon={false}
         side="top"
         align="end"
+        location="floating_whatsapp"
       >
         <div className="relative flex items-center justify-center w-full h-full">
           {/* Pulsing effect */}

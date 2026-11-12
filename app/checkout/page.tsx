@@ -1,9 +1,9 @@
 "use client";
 
-import { Suspense, useState, useEffect } from "react";
+import { Suspense, useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { useMounted } from "@/lib/use-mounted";
-import { useCart } from "@/lib/store";
+import { useCart, useCartHydrated } from "@/lib/store";
 import { bankAccounts, branches } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,7 +34,14 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { WhatsApp } from "@/components/icons";
 import { isMinioImage } from "@/lib/utils";
-import { getShippingCost, getShippingZoneLabel } from "@/lib/shipping";
+import { getShippingCost } from "@/lib/shipping";
+import {
+  getCartAnalyticsItems,
+  trackBeginCheckout,
+  trackContact,
+  trackLead,
+} from "@/lib/analytics/events";
+import { sendLeadToCapi } from "@/lib/analytics/capi-client";
 import axios from "axios";
 
 const bankStyles: Record<string, { accent: string; soft: string; text: string; hover: string }> = {
@@ -68,8 +75,10 @@ export default function CheckoutPageWrapper() {
 
 function CheckoutPage() {
   const { items, totalPrice, clearCart } = useCart();
+  const hydrated = useCartHydrated();
   const searchParams = useSearchParams();
   const mounted = useMounted();
+  const beginCheckoutTrackedRef = useRef(false);
   const [referralCode, setReferralCode] = useState<string | null>(null);
 
   useEffect(() => {
@@ -102,6 +111,15 @@ function CheckoutPage() {
   const clearError = (field: keyof typeof errors) => {
     if (errors[field]) setErrors((prev) => ({ ...prev, [field]: undefined }));
   };
+
+  useEffect(() => {
+    if (!hydrated || items.length === 0 || step === "success" || beginCheckoutTrackedRef.current) {
+      return;
+    }
+
+    beginCheckoutTrackedRef.current = true;
+    trackBeginCheckout(getCartAnalyticsItems(items));
+  }, [hydrated, items, step]);
 
   if (!mounted) return null;
 
@@ -143,7 +161,34 @@ function CheckoutPage() {
 
       const data = response.data;
       const newOrderId = data.code || data.orderCode || data.orderId || data.id || `MT-${Math.floor(1000 + Math.random() * 9000)}`;
-      setOrderId(String(newOrderId));
+      const normalizedOrderId = String(newOrderId);
+      const analyticsItems = getCartAnalyticsItems(items);
+      const customer = {
+        name: formData.name,
+        email: formData.email || undefined,
+        phone: formData.phone,
+      };
+
+      setOrderId(normalizedOrderId);
+
+      const leadEventId = trackLead({
+        orderId: normalizedOrderId,
+        leadType: "order",
+        items: analyticsItems,
+        customer,
+      });
+
+      if (leadEventId) {
+        void sendLeadToCapi({
+          eventId: leadEventId,
+          eventName: "Lead",
+          orderId: normalizedOrderId,
+          leadType: "order",
+          items: analyticsItems,
+          customer,
+        });
+      }
+
       setStep("success");
     } catch (error) {
       console.error("Error creating order:", error);
@@ -155,6 +200,7 @@ function CheckoutPage() {
 
   const sendWhatsApp = () => {
     const message = `Hola Morel Technology! 👋\n\nAcabo de realizar un pedido en la web.\n\n*Orden:* ${orderId}\n*Cliente:* ${formData.name}\n*Total:* RD$ ${totalPrice().toLocaleString("es-DO")}\n*Método:* Transferencia Bancaria\n\nAquí adjunto mi comprobante de pago.`;
+    trackContact({ location: "checkout_success" });
     window.open(`https://wa.me/18096175517?text=${encodeURIComponent(message)}`, "_blank");
     clearCart();
   };
