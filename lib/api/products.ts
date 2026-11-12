@@ -187,16 +187,27 @@ export const getProducts = async (page = 0, size = PAGE_SIZE_DEFAULT, category?:
   }
 };
 
-export const getAllProducts = async (category?: string, branchId?: string, tags?: string, availability?: AvailabilityFilter, sort?: SortFilter, onlyOffers?: boolean): Promise<Product[]> => {
+const MAX_PAGES_ALL = 50;
+const PAGE_SIZE_OFFERS = 100;
+
+export const getAllProducts = async (category?: string, branchId?: string, tags?: string, availability?: AvailabilityFilter, sort?: SortFilter, onlyOffers?: boolean, pageSize = PAGE_SIZE_ALL): Promise<Product[]> => {
   const all: Product[] = [];
+  const seen = new Set<string>();
   let page = 0;
   let total = Infinity;
 
-  while (page * PAGE_SIZE_ALL < total) {
-    const result = await getProducts(page, PAGE_SIZE_ALL, category, branchId, tags, availability, sort, onlyOffers);
-    all.push(...result.products);
+  // Paginate by `totalElements`, not by page length: with `onlyOffers=true` the API
+  // filters each page after paginating, so a page can come back short (or empty)
+  // while later pages still contain offers.
+  while (page * pageSize < total && page < MAX_PAGES_ALL) {
+    const result = await getProducts(page, pageSize, category, branchId, tags, availability, sort, onlyOffers);
+    for (const product of result.products) {
+      if (seen.has(product.id)) continue;
+      seen.add(product.id);
+      all.push(product);
+    }
     total = result.total;
-    if (result.products.length < PAGE_SIZE_ALL) break;
+    if (!onlyOffers && result.products.length < pageSize) break;
     page++;
   }
 
@@ -204,7 +215,7 @@ export const getAllProducts = async (category?: string, branchId?: string, tags?
 };
 
 export const getAllOfferProducts = async (branchId?: string): Promise<Product[]> => {
-  return getAllProducts(undefined, branchId, undefined, undefined, undefined, true);
+  return getAllProducts(undefined, branchId, undefined, undefined, undefined, true, PAGE_SIZE_OFFERS);
 };
 
 export const getProductById = async (id: string, branchId?: string): Promise<Product | null> => {

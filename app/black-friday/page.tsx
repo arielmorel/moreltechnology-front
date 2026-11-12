@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -10,6 +11,7 @@ import {
   Laptop,
   ShieldCheck,
   Sparkles,
+  Trophy,
   Truck,
 } from "lucide-react";
 import { getAllOfferProducts } from "@/lib/api";
@@ -20,8 +22,8 @@ import {
   getBlackFridayTargetIso,
 } from "@/lib/black-friday";
 import { LAPTOP_USES } from "@/lib/laptops";
-import { productUrl } from "@/lib/utils";
-import { ProductCard } from "@/components/product-card";
+import { isMinioImage, productUrl } from "@/lib/utils";
+import { BlackFridayDeals } from "@/components/black-friday/black-friday-deals";
 import { BlackFridayCountdown } from "@/components/black-friday/black-friday-countdown";
 import { WhatsAppDropdown } from "@/components/whatsapp-dropdown";
 import {
@@ -106,6 +108,13 @@ export default async function BlackFridayPage() {
 
   const products = isActive ? await getAllOfferProducts() : [];
   const deals = getBlackFridayDeals(products);
+  const topDeal = deals[0];
+  const maxPercent = deals.reduce(
+    (max, p) => Math.max(max, Math.round(((p.originalPrice! - p.price) / p.originalPrice!) * 100)),
+    0
+  );
+  const maxSavings = deals.reduce((max, p) => Math.max(max, p.originalPrice! - p.price), 0);
+  const formatRD = (value: number) => `RD$ ${value.toLocaleString("es-DO")}`;
   const whatsappMessage =
     "Hola, estoy interesado en las ofertas de laptops de Black Friday 2026. ¿Qué modelos tienen disponibles?";
 
@@ -178,7 +187,7 @@ export default async function BlackFridayPage() {
         <div className="pointer-events-none absolute -right-24 top-24 h-80 w-80 rounded-full bg-orange-500/20 blur-[110px]" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.08),transparent_45%)]" />
 
-        <div className="container relative mx-auto px-4 py-16 md:px-6 md:py-24">
+        <div className="container relative mx-auto px-4 pb-20 pt-16 md:px-6 md:pb-32 md:pt-24">
           <div className="grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr]">
             <div>
               <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-red-400/25 bg-red-500/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-red-300">
@@ -222,22 +231,40 @@ export default async function BlackFridayPage() {
                 </WhatsAppDropdown>
               </div>
 
-              <div className="mt-10 grid max-w-xl grid-cols-3 gap-3 border-t border-white/10 pt-6">
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/45">Vigencia</p>
-                  <p className="mt-1 text-sm font-bold">1 - 27 nov 2026</p>
-                </div>
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/45">Disponibles</p>
-                  <p className="mt-1 text-sm font-bold">
-                    {isActive ? `${deals.length} ofertas` : "Muy pronto"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/45">Cobertura</p>
-                  <p className="mt-1 text-sm font-bold">Envío nacional</p>
-                </div>
-              </div>
+              <dl className="mt-10 grid max-w-2xl grid-cols-2 gap-x-3 gap-y-5 border-t border-white/10 pt-6 sm:grid-cols-4">
+                {[
+                  { label: "Vigencia", value: "1 - 27 nov 2026" },
+                  {
+                    label: "Disponibles",
+                    value: isActive ? `${deals.length} ofertas` : "Muy pronto",
+                  },
+                  {
+                    label: "Descuentos",
+                    value: isActive && maxPercent > 0 ? `Hasta -${maxPercent}%` : "Reales",
+                    accent: isActive && maxPercent > 0,
+                  },
+                  {
+                    label: isActive && maxSavings > 0 ? "Ahorra hasta" : "Cobertura",
+                    value: isActive && maxSavings > 0 ? formatRD(maxSavings) : "Envío nacional",
+                    accent: isActive && maxSavings > 0,
+                  },
+                ].map((stat) => (
+                  <div key={stat.label}>
+                    <dt className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/45">
+                      {stat.label}
+                    </dt>
+                    <dd
+                      className={
+                        stat.accent
+                          ? "mt-1 text-base font-black text-red-300"
+                          : "mt-1 text-sm font-bold"
+                      }
+                    >
+                      {stat.value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
             </div>
 
             <div className="rounded-[2rem] border border-white/10 bg-white/[0.06] p-5 shadow-2xl shadow-black/30 backdrop-blur-md md:p-7">
@@ -299,38 +326,95 @@ export default async function BlackFridayPage() {
         </div>
       </section>
 
-      {isActive ? (
-        <section id="ofertas" className="py-16 md:py-24">
+      {isActive && topDeal && (
+        <section className="relative -mt-8 pb-4 md:-mt-12">
           <div className="container mx-auto px-4 md:px-6">
-            <div className="mb-10 flex flex-col justify-between gap-4 md:flex-row md:items-end">
-              <div>
-                <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-red-500/20 bg-red-500/10 px-3 py-1 text-xs font-bold uppercase tracking-widest text-red-600">
-                  <BadgePercent className="h-4 w-4" />
-                  Ofertas activas
-                </div>
-                <h2 className="text-3xl font-black tracking-tight md:text-4xl">
-                  Laptops en oferta para Black Friday
-                </h2>
-                <p className="mt-2 max-w-2xl text-muted-foreground">
-                  Precios regulares tachados, precio de oferta y ahorro real en pesos dominicanos.
-                  Sujeto a disponibilidad de inventario.
-                </p>
+            <Link
+              href={productUrl(topDeal.slug)}
+              className="group grid overflow-hidden rounded-[2rem] border border-red-500/20 bg-card shadow-2xl shadow-red-500/10 transition-all duration-300 hover:-translate-y-0.5 hover:border-red-500/50 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]"
+            >
+              <div className="relative h-60 bg-muted md:h-full md:min-h-[320px]">
+                <Image
+                  src={topDeal.images[0]}
+                  alt={topDeal.name}
+                  fill
+                  priority
+                  unoptimized={isMinioImage(topDeal.images[0])}
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, 45vw"
+                />
+                <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-red-500 px-3 py-1.5 text-xs font-black uppercase tracking-wider text-white shadow-lg">
+                  <Trophy className="h-3.5 w-3.5" />
+                  Oferta estrella
+                </span>
               </div>
-              <Link
-                href="/ofertas"
-                className="inline-flex items-center gap-1 text-sm font-bold text-primary hover:underline"
-              >
-                Ver todas las ofertas
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+
+              <div className="flex flex-col justify-center gap-5 p-6 md:p-10">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-red-600">
+                    {topDeal.brand} · {topDeal.condition}
+                  </p>
+                  <h2 className="mt-2 text-2xl font-black leading-tight tracking-tight md:text-3xl">
+                    {topDeal.name}
+                  </h2>
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {[topDeal.processor, topDeal.ram, topDeal.ssd]
+                      .filter((spec) => spec && spec !== "N/A" && spec !== "Consultar")
+                      .map((spec) => (
+                        <span
+                          key={spec}
+                          className="rounded-full bg-muted px-2.5 py-1 text-[11px] font-semibold text-foreground"
+                        >
+                          {spec}
+                        </span>
+                      ))}
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-end gap-x-4 gap-y-2">
+                  <div>
+                    <p className="text-sm text-muted-foreground line-through">
+                      {formatRD(topDeal.originalPrice!)}
+                    </p>
+                    <p className="text-4xl font-black tracking-tight text-emerald-600 md:text-5xl">
+                      {formatRD(topDeal.price)}
+                    </p>
+                  </div>
+                  <span className="mb-1.5 rounded-xl bg-red-500/10 px-3 py-1.5 text-sm font-black text-red-600">
+                    Ahorras {formatRD(topDeal.originalPrice! - topDeal.price)}
+                  </span>
+                </div>
+
+                <span className="inline-flex h-12 w-fit items-center justify-center gap-2 rounded-xl bg-zinc-950 px-6 text-sm font-bold text-white transition-colors group-hover:bg-red-500 dark:bg-white dark:text-zinc-950 dark:group-hover:bg-red-500 dark:group-hover:text-white">
+                  Ver oferta
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </span>
+              </div>
+            </Link>
+          </div>
+        </section>
+      )}
+
+      {isActive ? (
+        <section id="ofertas" className="scroll-mt-24 py-16 md:py-20">
+          <div className="container mx-auto px-4 md:px-6">
+            <div className="mb-8">
+              <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-red-500/20 bg-red-500/10 px-3 py-1 text-xs font-bold uppercase tracking-widest text-red-600">
+                <BadgePercent className="h-4 w-4" />
+                {deals.length > 0 ? `${deals.length} ofertas activas` : "Ofertas activas"}
+              </div>
+              <h2 className="text-3xl font-black tracking-tight md:text-4xl">
+                Todas las ofertas de Black Friday
+              </h2>
+              <p className="mt-2 max-w-2xl text-muted-foreground">
+                Precios regulares tachados, precio de oferta y ahorro real en pesos dominicanos.
+                Filtra por tipo de equipo u ordena por mayor ahorro. Sujeto a disponibilidad de
+                inventario.
+              </p>
             </div>
 
             {deals.length > 0 ? (
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-                {deals.map((product) => (
-                  <ProductCard key={product.id} product={product} showSavings />
-                ))}
-              </div>
+              <BlackFridayDeals deals={deals} />
             ) : (
               <div className="rounded-[2rem] border border-border/60 bg-card px-6 py-16 text-center shadow-sm">
                 <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-red-500/10 text-red-600">
