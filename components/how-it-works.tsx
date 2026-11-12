@@ -1,7 +1,8 @@
 "use client";
 
-import { Search, ShoppingCart, Truck, MessageCircle, Shield, CreditCard } from "lucide-react";
+import { Search, Truck, MessageCircle, Shield, CreditCard } from "lucide-react";
 import Link from "next/link";
+import { TrackedWhatsAppLink } from "@/components/analytics/tracked-whatsapp-link";
 
 const steps = [
   {
@@ -91,14 +92,15 @@ export function HowItWorks() {
 
                 {/* Link */}
                 {step.external ? (
-                  <a
+                  <TrackedWhatsAppLink
                     href={step.link}
                     target="_blank"
                     rel="noopener noreferrer"
+                    location="how_it_works"
                     className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 md:px-6 md:py-3 rounded-xl font-bold text-xs md:text-sm transition-all hover:scale-105 ${step.bgColor} ${step.textColor}`}
                   >
                     {step.linkText}
-                  </a>
+                  </TrackedWhatsAppLink>
                 ) : (
                   <Link
                     href={step.link}

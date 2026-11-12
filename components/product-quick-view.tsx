@@ -21,6 +21,7 @@ import { WhatsAppDropdown } from "./whatsapp-dropdown";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/lib/store";
 import { toast } from "sonner";
+import { trackAddToCart } from "@/lib/analytics/events";
 import { cn, isMinioImage } from "@/lib/utils";
 import {
   Carousel,
@@ -168,6 +169,7 @@ export function ProductQuickView({ product, children }: ProductQuickViewProps) {
                 className="flex-1 h-14 rounded-2xl font-bold border-2 border-primary/20 hover:bg-primary/5 text-base"
                 onClick={() => {
                   addItem(product);
+                  trackAddToCart(product);
                   toast.success(`${product.name} añadido al carrito`);
                 }}
               >
@@ -176,6 +178,8 @@ export function ProductQuickView({ product, children }: ProductQuickViewProps) {
               </Button>
               <WhatsAppDropdown
                 message={whatsappMessage}
+                location="product_quick_view"
+                product={product}
                 className="flex-[1.5] h-14 text-lg rounded-2xl font-black shadow-2xl shadow-green-600/20"
               >
                 Comprar por WhatsApp

@@ -19,9 +19,15 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { branches } from "@/lib/data";
 import { CreditCard, Send, CheckCircle, User, Briefcase, MessageCircle, Copy, FileText } from "lucide-react";
+import { trackContact, trackLead } from "@/lib/analytics/events";
+import { sendLeadToCapi } from "@/lib/analytics/capi-client";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8282";
 const API_FINANCING_URL = `${API_BASE_URL}/api/company/moreltechnology/financing/requests`;
+
+function createFinancingLeadId(): string {
+  return `FIN-${Date.now()}`;
+}
 
 const formSchema = z.object({
   fullName: z.string().min(3, { message: "El nombre debe tener al menos 3 caracteres." }),
@@ -109,7 +115,33 @@ export function FinancingForm({ initialBranch }: { initialBranch?: string }) {
       if (!res.ok) throw new Error("Error al enviar la solicitud");
 
       const data = await res.json().catch(() => null);
+      const leadId = data?.requestNumber || createFinancingLeadId();
+      const customer = {
+        name: values.fullName,
+        email: values.email,
+        phone: values.phone,
+      };
+
       setRequestNumber(data?.requestNumber || "");
+
+      const leadEventId = trackLead({
+        orderId: leadId,
+        leadType: "financing",
+        value: parseFloat(values.loanAmount) || 0,
+        customer,
+      });
+
+      if (leadEventId) {
+        void sendLeadToCapi({
+          eventId: leadEventId,
+          eventName: "Lead",
+          orderId: leadId,
+          leadType: "financing",
+          value: parseFloat(values.loanAmount) || 0,
+          customer,
+        });
+      }
+
       setIsSuccess(true);
     } catch (error) {
       console.error("Error:", error);
@@ -178,6 +210,7 @@ export function FinancingForm({ initialBranch }: { initialBranch?: string }) {
               href={`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackContact({ location: "financing_success" })}
               className="inline-flex items-center gap-2 h-10 px-5 text-sm font-medium rounded-lg bg-green-700 text-white hover:bg-green-800 transition-colors"
             >
               <MessageCircle className="w-4 h-4" />

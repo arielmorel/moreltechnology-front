@@ -8,6 +8,7 @@ import { useCart } from "@/lib/store";
 import { useFavorites } from "@/lib/favorites-store";
 import { toast } from "sonner";
 import { cn, isMinioImage, productUrl, rememberOrigin } from "@/lib/utils";
+import { trackAddToCart } from "@/lib/analytics/events";
 
 interface ProductCardCarouselProps {
   product: Product;
@@ -125,6 +126,7 @@ export function ProductCardCarousel({ product, branch }: ProductCardCarouselProp
                 e.preventDefault();
                 e.stopPropagation();
                 addItem(product);
+                trackAddToCart(product);
                 toast.success("Agregado al carrito", {
                   description: product.name,
                 });

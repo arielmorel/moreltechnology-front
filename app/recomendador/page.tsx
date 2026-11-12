@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { trackContact } from "@/lib/analytics/events";
 
 type Step = "usage" | "budget" | "brand" | "results";
 type ConditionFilter = "todas" | "nuevo" | "usado";
@@ -304,6 +305,7 @@ function RecomendadorPageInner() {
       lines +
       `\n\n¿Me pueden dar más información?`;
     const chat = branches[0].whatsappNumber;
+    trackContact({ location: "recommender_results" });
     window.open(`https://wa.me/${chat}?text=${encodeURIComponent(message)}`, "_blank");
   };
 

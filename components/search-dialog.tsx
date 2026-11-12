@@ -9,6 +9,7 @@ import { Search, CornerDownLeft } from "lucide-react";
 import { searchProducts } from "@/lib/api";
 import { Product } from "@/lib/data";
 import { isMinioImage, productUrl, rememberOrigin } from "@/lib/utils";
+import { trackSearch } from "@/lib/analytics/events";
 
 export function SearchDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const router = useRouter();
@@ -46,7 +47,9 @@ export function SearchDialog({ open, onOpenChange }: { open: boolean; onOpenChan
         seen.add(p.id);
         return true;
       });
-      setResults(unique.slice(0, 8));
+      const limitedResults = unique.slice(0, 8);
+      setResults(limitedResults);
+      trackSearch(q, limitedResults.length);
     } catch {
       setResults([]);
     } finally {

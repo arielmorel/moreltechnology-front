@@ -113,7 +113,7 @@ export default async function LaptopsPage() {
           image: product.images[0],
           description: product.description,
           brand: { "@type": "Brand", name: product.brand },
-          sku: product.id,
+          sku: product.sku || product.id,
           offers: {
             "@type": "AggregateOffer",
             priceCurrency: product.prices[0]?.currency || "DOP",

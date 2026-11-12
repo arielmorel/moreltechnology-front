@@ -5,6 +5,7 @@ import { MapPin, Phone, Mail, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Facebook, Instagram } from "@/components/icons";
 import { NewsletterForm } from "@/components/newsletter-form";
+import { ConsentSettingsButton } from "@/components/analytics/consent-settings-button";
 
 export function Footer() {
   return (
@@ -154,6 +155,7 @@ export function Footer() {
             <Link href="/politicas/envios" className="hover:text-foreground transition-colors">Envíos</Link>
             <Link href="/privacidad" className="hover:text-foreground transition-colors">Privacidad</Link>
             <Link href="/terminos" className="hover:text-foreground transition-colors">Términos</Link>
+            <ConsentSettingsButton className="hover:text-foreground transition-colors" />
           </div>
         </div>
       </div>

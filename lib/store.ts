@@ -1,18 +1,22 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { useSyncExternalStore } from 'react';
-import { Product } from './data';
+import { Product, ProductVariant } from './data';
+import { getCartItemId, resolveProductPrice } from './product-pricing';
 
-interface CartItem extends Product {
+export interface CartItem extends Product {
   quantity: number;
+  cartItemId?: string;
+  variantId?: string;
+  variantName?: string;
 }
 
 interface CartStore {
   items: CartItem[];
   compareItems: Product[];
-  addItem: (product: Product) => void;
-  removeItem: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
+  addItem: (product: Product, variant?: ProductVariant) => void;
+  removeItem: (cartItemId: string) => void;
+  updateQuantity: (cartItemId: string, quantity: number) => void;
   clearCart: () => void;
   totalItems: () => number;
   totalPrice: () => number;
@@ -21,40 +25,67 @@ interface CartStore {
   clearCompare: () => void;
 }
 
+function itemKey(item: CartItem): string {
+  return item.cartItemId ?? item.id;
+}
+
 export const useCart = create<CartStore>()(
   persist(
     (set, get) => ({
       items: [],
       compareItems: [],
-      addItem: (product) => {
+      addItem: (product, variant) => {
         const currentItems = get().items;
-        const existingItem = currentItems.find((item) => item.id === product.id);
+        const cartItemId = getCartItemId(product.id, variant?.id);
+        const existingItem = currentItems.find((item) => itemKey(item) === cartItemId);
 
         if (existingItem) {
           set({
             items: currentItems.map((item) =>
-              item.id === product.id
-                ? { ...item, quantity: item.quantity + 1 }
+              itemKey(item) === cartItemId
+                ? { ...item, cartItemId, quantity: item.quantity + 1 }
                 : item
             ),
           });
         } else {
-          set({ items: [...currentItems, { ...product, quantity: 1 }] });
+          const pricing = resolveProductPrice(product, variant);
+          const cartProduct: Product = variant
+            ? {
+                ...product,
+                sku: variant.sku || product.sku,
+                price: pricing.price,
+                originalPrice: pricing.originalPrice,
+                prices: variant.prices.length > 0 ? variant.prices : product.prices,
+              }
+            : product;
+
+          set({
+            items: [
+              ...currentItems,
+              {
+                ...cartProduct,
+                quantity: 1,
+                cartItemId,
+                variantId: variant?.id,
+                variantName: variant?.name,
+              },
+            ],
+          });
         }
       },
-      removeItem: (productId) => {
+      removeItem: (cartItemId) => {
         set({
-          items: get().items.filter((item) => item.id !== productId),
+          items: get().items.filter((item) => itemKey(item) !== cartItemId),
         });
       },
-      updateQuantity: (productId, quantity) => {
+      updateQuantity: (cartItemId, quantity) => {
         if (quantity <= 0) {
-          get().removeItem(productId);
+          get().removeItem(cartItemId);
           return;
         }
         set({
           items: get().items.map((item) =>
-            item.id === productId ? { ...item, quantity } : item
+            itemKey(item) === cartItemId ? { ...item, quantity } : item
           ),
         });
       },

@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { Shield } from "lucide-react";
+import { ConsentSettingsButton } from "@/components/analytics/consent-settings-button";
 
 export const metadata: Metadata = {
   title: "Política de Privacidad | Morel Technology",
@@ -24,7 +25,7 @@ export default function PrivacidadPage() {
             Política de Privacidad
           </h1>
           <p className="text-lg text-muted-foreground leading-relaxed">
-            Última actualización: 17 de agosto de 2026
+            Última actualización: 10 de noviembre de 2026
           </p>
         </div>
 
@@ -68,12 +69,25 @@ export default function PrivacidadPage() {
           <ul>
             <li>Entidades financieras para procesar solicitudes de financiamiento</li>
             <li>Empresas de envío para entregar sus pedidos</li>
+            <li>Proveedores de analítica y publicidad, como Google y Meta, cuando usted otorga su consentimiento</li>
             <li>Cuando lo requiera la ley o una orden judicial</li>
           </ul>
 
-          <h2>5. Cookies</h2>
+          <h2>5. Cookies y Tecnologías de Medición</h2>
           <p>
-            Nuestro sitio web utiliza cookies para mejorar su experiencia de navegación, recordar sus preferencias y analizar el tráfico del sitio. Puede configurar su navegador para rechazar cookies, aunque esto podría afectar la funcionalidad del sitio.
+            Nuestro sitio web utiliza cookies y tecnologías similares para mejorar su experiencia de navegación, recordar sus preferencias, analizar el tráfico y medir el rendimiento de nuestras campañas. Estas tecnologías pueden incluir Google Tag Manager, Google Analytics 4 y Meta Pixel.
+          </p>
+          <p>
+            Cuando usted acepta el uso de cookies analíticas y publicitarias, podemos compartir identificadores seudonimizados, datos de navegación e información del evento de compra con Meta Platforms a través de Meta Conversions API, con el fin de medir y optimizar nuestras campañas. La información personal utilizada para estas mediciones se envía cifrada mediante hash SHA-256 cuando corresponde.
+          </p>
+          <p>
+            Puede aceptar o rechazar estas tecnologías desde el banner de cookies o cambiar su elección en cualquier momento mediante el siguiente control:
+          </p>
+          <p>
+            <ConsentSettingsButton className="text-primary font-semibold underline underline-offset-4" />
+          </p>
+          <p>
+            También puede configurar su navegador para bloquear o eliminar cookies, aunque esto podría afectar la funcionalidad del sitio.
           </p>
 
           <h2>6. Sus Derechos</h2>

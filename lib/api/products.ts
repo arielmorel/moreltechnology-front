@@ -88,6 +88,7 @@ export const mapApiProductToProduct = (apiProduct: ApiProduct): Product => {
 
   return {
     id: apiProduct.id.toString(),
+    sku: apiProduct.sku || apiProduct.id.toString(),
     slug: apiProduct.slug,
     name: apiProduct.name,
     brand: brand,

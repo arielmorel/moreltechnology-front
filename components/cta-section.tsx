@@ -1,6 +1,7 @@
 "use client";
 
 import { MessageCircle } from "lucide-react";
+import { TrackedWhatsAppLink } from "@/components/analytics/tracked-whatsapp-link";
 
 export function CTASection() {
   return (
@@ -23,24 +24,26 @@ export function CTASection() {
           </p>
 
           <div className="animate-slide-up-delay-3 flex flex-col gap-4 justify-center">
-            <a
+            <TrackedWhatsAppLink
               href="https://wa.me/18096175517"
               target="_blank"
               rel="noopener noreferrer"
+              location="cta_santo_domingo"
               className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-green-700 text-white font-bold text-lg hover:bg-green-800 transition-all hover:scale-105 shadow-xl shadow-green-700/25"
             >
               <MessageCircle className="w-6 h-6" />
               WhatsApp Santo Domingo
-            </a>
-            <a
+            </TrackedWhatsAppLink>
+            <TrackedWhatsAppLink
               href="https://wa.me/18094215517"
               target="_blank"
               rel="noopener noreferrer"
+              location="cta_santiago"
               className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-card/10 text-white font-bold text-lg hover:bg-card/20 transition-all hover:scale-105 backdrop-blur-sm border border-white/20"
             >
               <MessageCircle className="w-6 h-6" />
               WhatsApp Santiago
-            </a>
+            </TrackedWhatsAppLink>
           </div>
 
           <div className="animate-slide-up-delay-4 mt-12 flex flex-wrap justify-center gap-8 text-white/60 text-sm">
