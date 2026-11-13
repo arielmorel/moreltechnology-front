@@ -2,6 +2,25 @@ import { getAllOfferProducts } from "@/lib/api";
 import { ProductCard } from "@/components/product-card";
 import { BlackFridayPromoBanner } from "@/components/black-friday/black-friday-promo-banner";
 import { BadgePercent, Sparkles } from "lucide-react";
+import type { Metadata } from "next";
+
+const OFERTAS_TITLE = "Ofertas en Laptops en RD | Morel Technology";
+const OFERTAS_DESCRIPTION =
+  "Laptops en oferta en República Dominicana: Lenovo, Dell, HP, Apple y más con descuento, garantía, financiamiento y envío a todo el país.";
+
+export const metadata: Metadata = {
+  title: OFERTAS_TITLE,
+  description: OFERTAS_DESCRIPTION,
+  alternates: { canonical: "/ofertas" },
+  openGraph: {
+    type: "website",
+    locale: "es_DO",
+    siteName: "Morel Technology",
+    url: "/ofertas",
+    title: OFERTAS_TITLE,
+    description: OFERTAS_DESCRIPTION,
+  },
+};
 
 export default async function OfertasPage() {
   const products = await getAllOfferProducts();

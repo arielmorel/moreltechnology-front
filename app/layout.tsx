@@ -38,17 +38,12 @@ export const metadata: Metadata = {
     ],
     apple: "/apple-touch-icon.png",
   },
-  alternates: {
-    canonical: "/",
-    languages: {
-      "es": "/",
-      "es-DO": "/",
-    },
-  },
+  // No canonical/og:url here on purpose: every route inherits root metadata, so a
+  // canonical of "/" would tell Google that every page without its own metadata is
+  // a duplicate of the home page. Each page declares its own `alternates.canonical`.
   openGraph: {
     type: "website",
     locale: "es_DO",
-    url: SITE_URL,
     title: "Morel Technology - Laptops en República Dominicana",
     description: "Laptops nuevas y usadas con garantía en RD. Estudio, trabajo y gaming con atención por WhatsApp.",
     siteName: "Morel Technology",

@@ -9,23 +9,28 @@ import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Blog - Morel Technology República Dominicana",
-  description: "Guías de compra, comparativas, gaming y tecnología en República Dominicana. Expertos ayudándote a elegir la laptop ideal.",
-  alternates: {
-    canonical: "/blog",
-  },
-  openGraph: {
-    title: "Blog - Morel Technology República Dominicana",
-    description: "Guías de compra, comparativas, gaming y tecnología en RD.",
-    type: "website",
-    locale: "es_DO",
-    siteName: "Morel Technology",
-  },
-};
-
 interface BlogPageProps {
   searchParams: Promise<{ category?: string }>;
+}
+
+export async function generateMetadata({ searchParams }: BlogPageProps): Promise<Metadata> {
+  const { category } = await searchParams;
+  // /blog?category=x renders the same list as /blog/category/x, so point Google at that URL.
+  const canonical = category && getBlogCategoryBySlug(category) ? `/blog/category/${category}` : "/blog";
+
+  return {
+    title: "Blog - Morel Technology República Dominicana",
+    description: "Guías de compra, comparativas, gaming y tecnología en República Dominicana. Expertos ayudándote a elegir la laptop ideal.",
+    alternates: { canonical },
+    openGraph: {
+      url: canonical,
+      title: "Blog - Morel Technology República Dominicana",
+      description: "Guías de compra, comparativas, gaming y tecnología en RD.",
+      type: "website",
+      locale: "es_DO",
+      siteName: "Morel Technology",
+    },
+  };
 }
 
 export default async function BlogPage({ searchParams }: BlogPageProps) {

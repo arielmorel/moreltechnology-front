@@ -4,6 +4,20 @@ import { GamingCarousel } from "@/components/gaming-carousel";
 import { BlackFridayPromoBanner } from "@/components/black-friday/black-friday-promo-banner";
 import { getHomeProducts } from "@/lib/api";
 import dynamic from "next/dynamic";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    locale: "es_DO",
+    url: "https://moreltechnologyrd.com",
+    siteName: "Morel Technology",
+    title: "Morel Technology - Laptops en República Dominicana",
+    description: "Laptops nuevas y usadas con garantía en RD. Estudio, trabajo y gaming con atención por WhatsApp.",
+    images: [{ url: "https://moreltechnologyrd.com/og-image.png", width: 1200, height: 630, alt: "Morel Technology - Laptops en República Dominicana" }],
+  },
+};
 
 const HowItWorks = dynamic(() => import("@/components/how-it-works").then(m => m.HowItWorks));
 const TrustSection = dynamic(() => import("@/components/trust-section").then(m => m.TrustSection));

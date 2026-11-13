@@ -6,12 +6,14 @@ import Image from "next/image";
 import { Product } from "@/lib/data";
 import { ChevronLeft, ChevronRight, Share2 } from "lucide-react";
 import { cn, isMinioImage } from "@/lib/utils";
+import { productImagePath } from "@/lib/product-images";
 
 interface ProductImageGalleryProps {
   product: Product;
   activeImage: number;
   onActiveImageChange: (index: number) => void;
   onShare?: () => void;
+  branch?: string;
 }
 
 export function ProductImageGallery({
@@ -19,7 +21,10 @@ export function ProductImageGallery({
   activeImage,
   onActiveImageChange,
   onShare,
+  branch,
 }: ProductImageGalleryProps) {
+  // Stable same-origin URLs (crawlable by Google Images) instead of expiring presigned ones.
+  const imageSrc = (src: string) => productImagePath(product.slug, src, branch);
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
   const [imageTransitionKey, setImageTransitionKey] = React.useState(0);
@@ -62,7 +67,7 @@ export function ProductImageGallery({
         >
           <Image
             key={`main-${imageTransitionKey}`}
-            src={product.images[activeImage]}
+            src={imageSrc(product.images[activeImage])}
             alt={product.name}
             fill
             sizes="(max-width: 768px) 100vw, 50vw"
@@ -206,7 +211,7 @@ export function ProductImageGallery({
           >
             <Image
               key={`viewer-${imageTransitionKey}`}
-              src={product.images[activeImage]}
+              src={imageSrc(product.images[activeImage])}
               alt={product.name}
               fill
               unoptimized={isMinioImage(product.images[activeImage])}
@@ -264,7 +269,7 @@ export function ProductImageGallery({
               )}
             >
               <Image
-                src={img}
+                src={imageSrc(img)}
                 alt={`${product.name} ${idx + 1}`}
                 fill
                 unoptimized={isMinioImage(img)}

@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { getProducts } from "@/lib/api";
 import { productUrl } from "@/lib/utils";
+import { productImageUrl } from "@/lib/product-images";
 import { brands } from "@/lib/data";
 import { CATEGORY_LAPTOPS, isLaptopCategory, LAPTOP_USES, type LaptopUse } from "@/lib/laptops";
 import { getPostBySlug, type BlogPost } from "@/lib/blog";
@@ -110,7 +111,7 @@ export default async function LaptopsPage() {
         item: {
           "@type": "Product",
           name: product.name,
-          image: product.images[0],
+          image: productImageUrl(product.slug, product.images[0]),
           description: product.description,
           brand: { "@type": "Brand", name: product.brand },
           sku: product.sku || product.id,

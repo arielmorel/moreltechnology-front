@@ -178,6 +178,7 @@ export default function ProductDetailClient({
               activeImage={activeImage}
               onActiveImageChange={setActiveImage}
               onShare={handleShare}
+              branch={branch}
             />
           </div>
 
