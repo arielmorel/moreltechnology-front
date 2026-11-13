@@ -44,6 +44,13 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // Single host for SEO: www.moreltechnologyrd.com → moreltechnologyrd.com (301).
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.moreltechnologyrd.com" }],
+        destination: "https://moreltechnologyrd.com/:path*",
+        permanent: true,
+      },
       {
         source: "/garantia",
         destination: "/politicas/garantia",

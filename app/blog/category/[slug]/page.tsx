@@ -26,9 +26,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: `${category.name} - Blog | Morel Technology República Dominicana`,
     description: category.description,
     alternates: {
-      canonical: `/blog?category=${slug}`,
+      canonical: `/blog/category/${slug}`,
     },
     openGraph: {
+      url: `/blog/category/${slug}`,
       title: `${category.name} - Blog | Morel Technology`,
       description: category.description,
       type: "website",

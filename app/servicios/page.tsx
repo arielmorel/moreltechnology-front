@@ -5,6 +5,7 @@ import { TrackedWhatsAppLink } from "@/components/analytics/tracked-whatsapp-lin
 export const metadata: Metadata = {
   title: "Servicios Técnicos | MorelTechnology RD",
   description: "Servicios técnicos especializados para laptops y computadoras. Diagnóstico, mantenimiento, formateo, instalación de componentes y más.",
+  alternates: { canonical: "/servicios" },
 };
 
 const services = [

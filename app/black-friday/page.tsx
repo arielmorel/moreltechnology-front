@@ -23,6 +23,7 @@ import {
 } from "@/lib/black-friday";
 import { LAPTOP_USES } from "@/lib/laptops";
 import { isMinioImage, productUrl } from "@/lib/utils";
+import { productImageUrl } from "@/lib/product-images";
 import { BlackFridayDeals } from "@/components/black-friday/black-friday-deals";
 import { BlackFridayCountdown } from "@/components/black-friday/black-friday-countdown";
 import { WhatsAppDropdown } from "@/components/whatsapp-dropdown";
@@ -122,7 +123,7 @@ export default async function BlackFridayPage() {
           item: {
             "@type": "Product",
             name: product.name,
-            image: product.images[0],
+            image: productImageUrl(product.slug, product.images[0]),
             description: product.description,
             brand: { "@type": "Brand", name: product.brand },
             sku: product.sku || product.id,

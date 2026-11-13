@@ -1,7 +1,10 @@
 import { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { cache, Suspense } from "react";
 import { getProductBySlug, resolveBranchId } from "@/lib/api";
 import { productUrl } from "@/lib/utils";
+import { productImageUrl } from "@/lib/product-images";
+import { getApprovedReviewsCached } from "@/lib/reviews";
 import { ProductReviewsSection } from "@/components/product-detail/product-reviews-section";
 import { SameModelSection } from "@/components/product-detail/same-model-section";
 import { AccessoriesSection } from "@/components/product-detail/accessories-section";
@@ -27,9 +30,8 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   const product = await getProductBySlugCached(slug, branch);
 
   if (!product) {
-    return {
-      title: "Producto no encontrado | Morel Technology",
-    };
+    // Renders app/not-found.tsx with noindex instead of an indexable "not found" page.
+    notFound();
   }
 
   const specs = [product.processor, product.ram, product.ssd].filter(s => s && s !== "N/A").join(", ");
@@ -68,28 +70,70 @@ export default async function ProductDetailPage({ params, searchParams }: PagePr
   const branch = await resolveBranch(searchParams);
   const product = await getProductBySlugCached(slug, branch);
 
-  let productId = NaN;
-  if (product) {
-    productId = parseInt(product.id, 10);
+  if (!product) {
+    notFound();
   }
 
-  const modelQuery = product?.name
-    ?.replace(new RegExp(`^${product.brand}\\s+`, "i"), "")
-    .trim() ?? "";
-  const category = product?.category ?? "";
+  const productId = parseInt(product.id, 10);
 
-  const productSchema = product ? {
+  const modelQuery = product.name
+    .replace(new RegExp(`^${product.brand}\\s+`, "i"), "")
+    .trim();
+  const category = product.category ?? "";
+
+  const pageUrl = `https://moreltechnologyrd.com${productUrl(product.slug, branch)}`;
+
+  const { reviews, averageRating, totalReviews } = !isNaN(productId)
+    ? await getApprovedReviewsCached(productId)
+    : { reviews: [], averageRating: 0, totalReviews: 0 };
+
+  const reviewSchema = totalReviews > 0 && reviews.length > 0
+    ? {
+        aggregateRating: {
+          "@type": "AggregateRating",
+          ratingValue: averageRating,
+          reviewCount: totalReviews,
+          bestRating: 5,
+          worstRating: 1,
+        },
+        review: reviews.map((r) => ({
+          "@type": "Review",
+          author: { "@type": "Person", name: r.customerName },
+          reviewRating: {
+            "@type": "Rating",
+            ratingValue: r.rating,
+            bestRating: 5,
+            worstRating: 1,
+          },
+          name: r.title || undefined,
+          reviewBody: r.comment,
+          datePublished: new Date(r.createdAt).toISOString().split("T")[0],
+        })),
+      }
+    : {};
+
+  const productSchema = {
     "@context": "https://schema.org",
     "@type": "Product",
+    "@id": `${pageUrl}#product`,
+    url: pageUrl,
     name: product.name,
     description: product.description,
+    sku: product.sku || product.id,
     brand: {
       "@type": "Brand",
       name: product.brand,
     },
-    image: product.images[0],
+    image: product.images.map((src) => productImageUrl(product.slug, src, branch)),
+    ...reviewSchema,
     offers: {
       "@type": "Offer",
+      url: pageUrl,
+      seller: {
+        "@type": "Organization",
+        name: "Morel Technology",
+        url: "https://moreltechnologyrd.com",
+      },
       price: product.price,
       priceCurrency: "DOP",
       availability: product.quantity > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
@@ -188,7 +232,7 @@ export default async function ProductDetailPage({ params, searchParams }: PagePr
       ],
     },
     category: product.category,
-  } : null;
+  };
 
   const breadcrumbSchema = {
     "@context": "https://schema.org",
@@ -206,24 +250,22 @@ export default async function ProductDetailPage({ params, searchParams }: PagePr
         name: "Catálogo",
         item: `https://moreltechnologyrd.com/catalogo/${branch ?? "moreltechnology"}`,
       },
-      ...(product ? [{
+      {
         "@type": "ListItem",
         position: 3,
         name: product.name,
-        item: `https://moreltechnologyrd.com${productUrl(product.slug, branch)}`,
-      }] : []),
+        item: pageUrl,
+      },
     ],
   };
 
   return (
     <>
-      {productSchema && (
-        <script
-          id="product-schema"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
-        />
-      )}
+      <script
+        id="product-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
       <script
         id="product-breadcrumb-schema"
         type="application/ld+json"
@@ -243,27 +285,23 @@ export default async function ProductDetailPage({ params, searchParams }: PagePr
                 </div>
               }
             >
-              <ProductReviewsSection
-                productId={productId}
-                productName={product!.name}
-                slug={slug}
-              />
+              <ProductReviewsSection productId={productId} />
             </Suspense>
           ) : null
         }
         sameModelSlot={
           <Suspense fallback={<CarouselSectionSkeleton title="Mismo modelo" />}>
-            <SameModelSection query={modelQuery} excludeSlug={product?.slug} branch={branch} />
+            <SameModelSection query={modelQuery} excludeSlug={product.slug} branch={branch} />
           </Suspense>
         }
         accessoriesSlot={
           <Suspense fallback={<CarouselSectionSkeleton title="Accesorios" />}>
-            <AccessoriesSection currentProductId={product?.slug} branch={branch} />
+            <AccessoriesSection currentProductId={product.slug} branch={branch} />
           </Suspense>
         }
         relatedSlot={
           <Suspense fallback={<CarouselSectionSkeleton title="Relacionados" />}>
-            <RelatedSection category={category} excludeSlug={product?.slug} branch={branch} />
+            <RelatedSection category={category} excludeSlug={product.slug} branch={branch} />
           </Suspense>
         }
       />
