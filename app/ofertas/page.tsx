@@ -1,3 +1,4 @@
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 import { getAllOfferProducts } from "@/lib/api";
 import { ProductCard } from "@/components/product-card";
 import { BlackFridayPromoBanner } from "@/components/black-friday/black-friday-promo-banner";
@@ -19,6 +20,7 @@ export const metadata: Metadata = {
     url: "/ofertas",
     title: OFERTAS_TITLE,
     description: OFERTAS_DESCRIPTION,
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 

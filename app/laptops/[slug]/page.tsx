@@ -1,3 +1,4 @@
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -208,7 +209,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: brandData.title,
       description: brandData.description,
       alternates: { canonical: `/laptops/${slug}` },
-      openGraph: { title: brandData.title, description: brandData.description },
+      openGraph: { type: "website", locale: "es_DO", siteName: "Morel Technology", url: `/laptops/${slug}`, title: brandData.title, description: brandData.description, images: [DEFAULT_OG_IMAGE] },
     };
   }
 
@@ -217,7 +218,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: categoryData.title,
       description: categoryData.description,
       alternates: { canonical: `/laptops/${slug}` },
-      openGraph: { title: categoryData.title, description: categoryData.description },
+      openGraph: { type: "website", locale: "es_DO", siteName: "Morel Technology", url: `/laptops/${slug}`, title: categoryData.title, description: categoryData.description, images: [DEFAULT_OG_IMAGE] },
     };
   }
 

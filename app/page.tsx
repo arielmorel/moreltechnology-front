@@ -15,7 +15,6 @@ export const metadata: Metadata = {
     siteName: "Morel Technology",
     title: "Morel Technology - Laptops en República Dominicana",
     description: "Laptops nuevas y usadas con garantía en RD. Estudio, trabajo y gaming con atención por WhatsApp.",
-    images: [{ url: "https://moreltechnologyrd.com/og-image.png", width: 1200, height: 630, alt: "Morel Technology - Laptops en República Dominicana" }],
   },
 };
 
