@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Garantía de Laptops - Morel Technology RD",
-  description: "Conoce nuestras políticas de garantía: equipos nuevos con 12 meses, usados con 6 meses. Diagnóstico gratis, factura fiscal incluida.",
+  description: "Conoce nuestras políticas de garantía: cada equipo indica su tiempo; por lo general 12 meses en nuevos y 6 meses en usados. Diagnóstico gratis, factura fiscal incluida.",
   alternates: {
     canonical: "/politicas/garantia",
   },
@@ -34,7 +34,7 @@ export default function GarantiaPage() {
             {
               icon: Clock,
               title: "Tiempos de Garantía",
-              desc: "Nuevos: 12 meses. Usados Grado A: 6 meses. Usados Grado B: 3 meses. Todas las baterías tienen 1 mes de garantía.",
+              desc: "El tiempo de garantía de cada equipo se indica en su ficha y en la factura. Por lo general: nuevos 12 meses y usados certificados 6 meses. Todas las baterías tienen 1 mes de garantía.",
               iconClass: "bg-blue-500/10 text-blue-600"
             },
             {
@@ -129,7 +129,7 @@ export default function GarantiaPage() {
                 </div>
                 <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-500/10 text-orange-600 text-sm font-bold">
                   <Clock className="w-4 h-4" />
-                  6 Meses de Garantía
+                  Por lo general 6 meses
                 </div>
               </div>
               <div className="p-6 space-y-4">
@@ -176,7 +176,7 @@ export default function GarantiaPage() {
                 </div>
                 <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 text-blue-600 text-sm font-bold">
                   <Clock className="w-4 h-4" />
-                  12 Meses de Garantía
+                  Por lo general 12 meses
                 </div>
               </div>
               <div className="p-6 space-y-4">

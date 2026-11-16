@@ -9,7 +9,7 @@ import {
   type BlackFridayState,
 } from "@/lib/black-friday";
 
-const EMPTY = { days: 0, hours: 0, minutes: 0, seconds: 0 };
+type TimeLeft = { days: number; hours: number; minutes: number; seconds: number };
 
 function getTimeLeftUntil(targetIso: string) {
   const diff = Math.max(0, new Date(targetIso).getTime() - Date.now());
@@ -31,7 +31,7 @@ function pad(n: number) {
   return n.toString().padStart(2, "0");
 }
 
-function formatTimeLeft(timeLeft: typeof EMPTY) {
+function formatTimeLeft(timeLeft: TimeLeft) {
   const dayPrefix = timeLeft.days > 0 ? `${timeLeft.days}d ` : "";
   return `${dayPrefix}${pad(timeLeft.hours)}:${pad(timeLeft.minutes)}:${pad(timeLeft.seconds)}`;
 }
@@ -44,10 +44,17 @@ function useMounted() {
   );
 }
 
-export function FlashAnnouncement() {
+interface FlashAnnouncementProps {
+  /** Campaign state computed on the server, so the first HTML already shows the right banner. */
+  initialState?: BlackFridayState;
+}
+
+export function FlashAnnouncement({ initialState }: FlashAnnouncementProps) {
   const mounted = useMounted();
-  const [state, setState] = useState<BlackFridayState | null>(null);
-  const [timeLeft, setTimeLeft] = useState(EMPTY);
+  const [state, setState] = useState<BlackFridayState | null>(initialState ?? null);
+  // Countdown digits depend on the visitor's clock: render a placeholder until the first
+  // client tick instead of a misleading "00:00:00".
+  const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null);
 
   useEffect(() => {
     if (!mounted) return;
@@ -103,7 +110,7 @@ export function FlashAnnouncement() {
             </span>
             <span className="inline-flex items-center gap-1.5 text-xs md:text-sm font-semibold">
               <span className="tabular-nums bg-black/20 rounded-md px-1.5 py-0.5">
-                {formatTimeLeft(timeLeft)}
+                {timeLeft ? formatTimeLeft(timeLeft) : "--:--:--"}
               </span>
               {countdownLabel}
             </span>

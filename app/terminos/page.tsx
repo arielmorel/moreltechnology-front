@@ -51,8 +51,9 @@ export default function TerminosPage() {
             Todos nuestros productos incluyen garantía según las siguientes condiciones:
           </p>
           <ul>
-            <li><strong>Laptops nuevas:</strong> 1 año de garantía</li>
-            <li><strong>Laptops usadas certificadas:</strong> 6 meses de garantía</li>
+            <li>El tiempo de garantía de cada equipo se indica en su ficha de producto y en la factura</li>
+            <li><strong>Laptops nuevas:</strong> por lo general, 12 meses de garantía</li>
+            <li><strong>Laptops usadas certificadas:</strong> por lo general, 6 meses de garantía</li>
             <li>La garantía cubre defectos de hardware</li>
             <li>La garantía no cubre daños físicos, líquidos o mal uso</li>
           </ul>

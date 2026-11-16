@@ -24,7 +24,7 @@ const brands: Record<string, {
     longDescription: "Lenovo es una de las marcas líderes en tecnología a nivel mundial, reconocida por la durabilidad y rendimiento de sus equipos. En Morel Technology ofrecemos una amplia gama de laptops Lenovo para cada necesidad: desde la serie ThinkPad para profesionales, hasta la serie Legion para gaming.",
     faqs: [
       { q: "¿Qué series de Lenovo tienen?", a: "Trabajamos con ThinkPad (profesional), IdeaPad (uso general), Legion (gaming) y Yoga (convertibles). Cada serie está diseñada para un perfil de usuario específico." },
-      { q: "¿Las laptops Lenovo tienen garantía?", a: "Sí, todos nuestros equipos Lenovo incluyen garantía. Los nuevos tienen hasta 1 año y los usados 6 meses." },
+      { q: "¿Las laptops Lenovo tienen garantía?", a: "Sí, todos nuestros equipos Lenovo incluyen garantía por escrito. El tiempo se indica en cada ficha: por lo general, 12 meses en nuevos y 6 meses en usados." },
       { q: "¿Puedo financiar una laptop Lenovo?", a: "¡Por supuesto! Ofrecemos financiamiento con varias entidades financieras. Aparta tu laptop Lenovo con cuotas cómodas." },
     ],
   },
@@ -114,7 +114,7 @@ const categories: Record<string, {
     faqs: [
       { q: "¿Qué specs necesita una laptop gaming?", a: "Mínimo 16GB RAM, procesador Intel i7 o AMD Ryzen 7, y tarjeta gráfica dedicada (NVIDIA RTX 3060 o superior). Para gaming competitivo recomendamos 32GB RAM y RTX 4070." },
       { q: "¿Las laptops gaming son buenas para trabajo?", a: "Sí! La potencia de una laptop gaming la hace ideal para edición de video, diseño 3D, programación pesada y cualquier tarea que requiera alto rendimiento." },
-      { q: "¿Ofrecen garantía en laptops gaming?", a: "Sí, todas nuestras laptops gaming incluyen garantía de 6 meses a 1 año según el estado del equipo." },
+      { q: "¿Ofrecen garantía en laptops gaming?", a: "Sí, todas nuestras laptops gaming incluyen garantía por escrito. El tiempo se indica en cada ficha: por lo general, 12 meses en nuevas y 6 meses en usadas." },
     ],
   },
   programacion: {

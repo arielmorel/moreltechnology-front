@@ -9,6 +9,15 @@ export function isLaptopCategory(category: string): boolean {
   return c === "laptop" || c === "laptops" || c === "portatiles" || c === "port\u00e1tiles";
 }
 
+/**
+ * A laptop category AND real specs. Some accessories are miscategorized as "Laptop" in
+ * the catalog (a mousepad, some mice); they have a one-part description, so no RAM.
+ */
+export function isRealLaptop(product: { category: string; ram?: string }): boolean {
+  const ram = (product.ram || "").trim();
+  return isLaptopCategory(product.category) && ram !== "" && ram !== "N/A";
+}
+
 export interface LaptopUse {
   id: string;
   name: string;

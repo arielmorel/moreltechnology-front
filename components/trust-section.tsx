@@ -15,7 +15,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
 const trustSignals = [
   { icon: CheckCircle2, label: "Equipos probados", description: "Cada laptop pasa por test de calidad riguroso" },
-  { icon: Shield, label: "Garantía escrita", description: "6-12 meses de garantía certificada por escrito" },
+  { icon: Shield, label: "Garantía escrita", description: "Garantía certificada por escrito en cada equipo" },
   { icon: CreditCard, label: "Factura fiscal", description: "Entregamos factura fiscal válida (NCF)" },
   { icon: Laptop, label: "Soporte técnico", description: "Asesoría antes, durante y después de tu compra" },
   { icon: Building2, label: "Financiamiento", description: "Opciones flexibles con entidades financieras" },

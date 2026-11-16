@@ -128,7 +128,7 @@ export function HeroSection() {
                 </div>
                 <div>
                   <div className="text-sm font-bold">Garantía</div>
-                  <div className="text-xs text-muted-foreground">6 meses mínimo</div>
+                  <div className="text-xs text-muted-foreground">Hasta 12 meses</div>
                 </div>
               </div>
             </div>

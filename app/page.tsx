@@ -3,18 +3,30 @@ import { OffersCarousel } from "@/components/offers-carousel";
 import { GamingCarousel } from "@/components/gaming-carousel";
 import { BlackFridayPromoBanner } from "@/components/black-friday/black-friday-promo-banner";
 import { getHomeProducts } from "@/lib/api";
+import { getBlackFridayState } from "@/lib/black-friday";
+import { HomeSeoIntro } from "@/components/home-seo-intro";
 import dynamic from "next/dynamic";
 import type { Metadata } from "next";
 
+// Re-render at most every 30 minutes so offers, prices and the campaign banner stay
+// current (without this the home was prerendered once per deploy and cached for a year).
+export const revalidate = 1800;
+
+const HOME_TITLE = "Laptops en República Dominicana con Garantía | Morel Technology";
+const HOME_DESCRIPTION =
+  "Laptops nuevas y usadas certificadas en RD: Lenovo, Dell y HP. Garantía escrita, financiamiento y envío a todo el país. Tiendas en Santo Domingo y Santiago.";
+
 export const metadata: Metadata = {
+  title: HOME_TITLE,
+  description: HOME_DESCRIPTION,
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "es_DO",
     url: "https://moreltechnologyrd.com",
     siteName: "Morel Technology",
-    title: "Morel Technology - Laptops en República Dominicana",
-    description: "Laptops nuevas y usadas con garantía en RD. Estudio, trabajo y gaming con atención por WhatsApp.",
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
   },
 };
 
@@ -30,49 +42,76 @@ const ShopByNeed = dynamic(() => import("@/components/shop-by-need").then(m => m
 const ShopByBrand = dynamic(() => import("@/components/shop-by-brand").then(m => m.ShopByBrand));
 const FlashAnnouncement = dynamic(() => import("@/components/flash-announcement").then(m => m.FlashAnnouncement));
 
+const SITE = "https://moreltechnologyrd.com";
+
+// Shared opening hours (same as the store pages in app/tienda/[branch]).
+const openingHours = {
+  "@type": "OpeningHoursSpecification",
+  dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+  opens: "09:00",
+  closes: "19:00",
+};
+
+// Organization + one ElectronicsStore per branch (local SEO). The store @ids match the
+// LocalBusiness schema on /tienda/<branch> so Google treats them as the same entity.
 const organizationSchema = {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "MorelTechnology",
-  url: "https://moreltechnologyrd.com",
-  logo: "https://moreltechnologyrd.com/logo/moreltechnology.png",
-  description: "Tienda de laptops nuevas y usadas en República Dominicana con garantía certificada",
-  address: [
+  "@graph": [
     {
-      "@type": "PostalAddress",
-      streetAddress: "El Edén de Villa Mella, Calle Ceuta frente a la Calle 7",
-      addressLocality: "Santo Domingo",
-      postalCode: "11207",
-      addressCountry: "DO",
+      "@type": "Organization",
+      "@id": `${SITE}/#organization`,
+      name: "Morel Technology",
+      url: SITE,
+      logo: `${SITE}/logo/moreltechnology.png`,
+      description: "Tienda de laptops nuevas y usadas certificadas en República Dominicana, con garantía por escrito.",
+      contactPoint: [
+        { "@type": "ContactPoint", telephone: "+1-809-617-5517", contactType: "customer service", areaServed: "DO", availableLanguage: "Spanish" },
+        { "@type": "ContactPoint", telephone: "+1-809-421-5517", contactType: "customer service", areaServed: "DO", availableLanguage: "Spanish" },
+      ],
+      sameAs: [
+        "https://instagram.com/moreltechnology",
+        "https://facebook.com/moreltechnology",
+        "https://tiktok.com/@moreltechnology8",
+      ],
     },
     {
-      "@type": "PostalAddress",
-      streetAddress: "Plaza Pamela 3, Carr. Buena Vista",
-      addressLocality: "Santiago",
-      postalCode: "91000",
-      addressCountry: "DO",
-    },
-  ],
-  contactPoint: [
-    {
-      "@type": "ContactPoint",
+      "@type": "ElectronicsStore",
+      "@id": `${SITE}/tienda/moreltechnology#store`,
+      name: "Morel Technology - Santo Domingo",
+      url: `${SITE}/tienda/moreltechnology`,
+      image: `${SITE}/logo/moreltechnology.png`,
       telephone: "+1-809-617-5517",
-      contactType: "customer service",
-      areaServed: "DO",
-      availableLanguage: "Spanish",
+      priceRange: "$$",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "El Edén de Villa Mella, Calle Ceuta frente a la Calle 7",
+        addressLocality: "Santo Domingo",
+        postalCode: "11207",
+        addressCountry: "DO",
+      },
+      geo: { "@type": "GeoCoordinates", latitude: 18.5354915, longitude: -69.8955395 },
+      openingHoursSpecification: openingHours,
+      parentOrganization: { "@id": `${SITE}/#organization` },
     },
     {
-      "@type": "ContactPoint",
+      "@type": "ElectronicsStore",
+      "@id": `${SITE}/tienda/mts#store`,
+      name: "Morel Technology - Santiago",
+      url: `${SITE}/tienda/mts`,
+      image: `${SITE}/logo/moreltechnology.png`,
       telephone: "+1-809-421-5517",
-      contactType: "customer service",
-      areaServed: "DO",
-      availableLanguage: "Spanish",
+      priceRange: "$$",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Plaza Pamela 3, Carr. Buena Vista",
+        addressLocality: "Santiago",
+        postalCode: "91000",
+        addressCountry: "DO",
+      },
+      geo: { "@type": "GeoCoordinates", latitude: 19.4804643, longitude: -70.6834893 },
+      openingHoursSpecification: openingHours,
+      parentOrganization: { "@id": `${SITE}/#organization` },
     },
-  ],
-  sameAs: [
-    "https://instagram.com/moreltechnology",
-    "https://facebook.com/moreltechnology",
-    "https://tiktok.com/@moreltechnology8",
   ],
 };
 
@@ -97,7 +136,7 @@ const faqSchema = {
       name: "¿Qué garantía tienen las laptops?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Ofrecemos 6 meses de garantía en laptops usadas certificadas y 1 año en laptops nuevas. Toda garantía es por escrito y cubre defectos de hardware.",
+        text: "La garantía de cada equipo se indica en su ficha. Por lo general, las laptops nuevas tienen 12 meses y las usadas certificadas 6 meses. Toda garantía es por escrito y cubre defectos de hardware.",
       },
     },
     {
@@ -161,7 +200,7 @@ export default async function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
 
-      <FlashAnnouncement />
+      <FlashAnnouncement initialState={getBlackFridayState()} />
       <HeroSection />
       <OffersCarousel products={offers} />
       <div className="container mx-auto px-4 pb-2 md:px-6">
@@ -179,6 +218,7 @@ export default async function Home() {
       <TrustSection />
       <HappyClients />
       <HomeFAQ />
+      <HomeSeoIntro />
       <BranchesSection />
       <ReviewsSection />
     </>

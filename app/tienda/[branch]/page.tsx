@@ -36,13 +36,13 @@ const branchData: Record<string, {
       { type: "video", src: "/images/store/santo-domingo/inside-santo-domingo-video.mp4", alt: "Recorrido Morel Technology Santo Domingo" },
     ],
     benefits: [
-      { title: "Garantía Certificada", desc: "Todos nuestros equipos incluyen garantía real. Los usados tienen 6 meses; los nuevos hasta 1 año." },
+      { title: "Garantía Certificada", desc: "Todos nuestros equipos incluyen garantía por escrito, indicada en cada ficha: por lo general, 12 meses en nuevos y 6 meses en usados." },
       { title: "Envío Express", desc: "Envío el mismo día en Santo Domingo. También realizamos envíos a todo el país." },
       { title: "Financiamiento", desc: "Aparta tu laptop con cuotas cómodas. Aprobación rápida con solo tu cédula." },
     ],
     faqs: [
       { q: "¿Dónde están ubicados?", a: "Estamos en El Edén de Villa Mella, Calle Ceuta frente a la Calle 7. Fácil acceso desde Santo Domingo Norte." },
-      { q: "¿Tienen laptops usadas?", a: "Sí, tenemos una excelente selección de laptops usadas certificadas de marcas como Lenovo, Dell y HP. Todas con garantía de 6 meses." },
+      { q: "¿Tienen laptops usadas?", a: "Sí, tenemos una excelente selección de laptops usadas certificadas de marcas como Lenovo, Dell y HP. Todas con garantía por escrito, por lo general de 6 meses." },
       { q: "¿Puedo comprar por WhatsApp?", a: "¡Claro! Escríbenos al 809-617-5517 y te atendemos de inmediato." },
       { q: "¿Hacen envíos a otras provincias?", a: "Sí, realizamos envíos a todo el país a través de servicios de transporte confiables." },
     ],
@@ -68,13 +68,13 @@ const branchData: Record<string, {
       { type: "video", src: "/images/store/santiago/printing-santiago-video.mp4", alt: "Impresoras Morel Technology Santiago" },
     ],
     benefits: [
-      { title: "Garantía Certificada", desc: "Todos nuestros equipos incluyen garantía real. Los usados tienen 6 meses; los nuevos hasta 1 año." },
+      { title: "Garantía Certificada", desc: "Todos nuestros equipos incluyen garantía por escrito, indicada en cada ficha: por lo general, 12 meses en nuevos y 6 meses en usados." },
       { title: "Envío a todo el Cibao", desc: "Realizamos envíos a todas las provincias del Cibao en 24-48 horas a través de servicios de transporte confiables." },
       { title: "Financiamiento", desc: "Aparta tu laptop con cuotas cómodas. Aprobación rápida con solo tu cédula." },
     ],
     faqs: [
       { q: "¿Dónde están ubicados en Santiago?", a: "Estamos en Plaza Pamela 3, Carrera Buena Vista, Santiago. Fácil acceso desde cualquier punto de la ciudad." },
-      { q: "¿Tienen laptops usadas en Santiago?", a: "Sí, tenemos una excelente selección de laptops usadas certificadas de marcas como Lenovo, Dell y HP. Todas con garantía de 6 meses." },
+      { q: "¿Tienen laptops usadas en Santiago?", a: "Sí, tenemos una excelente selección de laptops usadas certificadas de marcas como Lenovo, Dell y HP. Todas con garantía por escrito, por lo general de 6 meses." },
       { q: "¿Puedo comprar por WhatsApp desde Santiago?", a: "¡Claro! Escríbenos al 809-421-5517 y te atendemos de inmediato." },
       { q: "¿Hacen envíos a otras provincias del Cibao?", a: "Sí, realizamos envíos a todas las provincias del Cibao a través de MetroPac, Caribe Pack y BM Cargo." },
     ],
@@ -132,8 +132,11 @@ export default async function TiendaBranchPage({ params }: PageProps) {
 
   const localBusinessSchema = {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
+    "@type": "ElectronicsStore",
+    "@id": `https://moreltechnologyrd.com${data.canonical}#store`,
     name: `Morel Technology - ${branchInfo?.name.replace("Sucursal ", "") || branch}`,
+    image: "https://moreltechnologyrd.com/logo/moreltechnology.png",
+    parentOrganization: { "@id": "https://moreltechnologyrd.com/#organization" },
     description: data.description,
     url: `https://moreltechnologyrd.com${data.canonical}`,
     telephone: data.schema.telephone,

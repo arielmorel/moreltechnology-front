@@ -13,7 +13,7 @@ import { TrackedWhatsAppLink } from "@/components/analytics/tracked-whatsapp-lin
 const faqs = [
   {
     question: "¿Qué garantía tienen las laptops?",
-    answer: "Ofrecemos 6 meses de garantía en laptops usadas certificadas y 1 año en laptops nuevas. Toda garantía es por escrito y cubre defectos de hardware. Puedes revisar nuestros <a href='/politicas/garantia' class='text-primary font-semibold hover:underline'>términos completos aquí</a>.",
+    answer: "La garantía de cada equipo se indica en su ficha. Por lo general, las laptops nuevas tienen 12 meses y las usadas certificadas 6 meses. Toda garantía es por escrito y cubre defectos de hardware. Puedes revisar nuestros <a href='/politicas/garantia' class='text-primary font-semibold hover:underline'>términos completos aquí</a>.",
   },
   {
     question: "¿Puedo pagar con tarjeta de crédito o débito?",
