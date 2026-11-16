@@ -1,3 +1,4 @@
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 import type { Metadata } from "next";
 
 const TITLE = "¿Qué Laptop Comprar? Recomendador Gratis | Morel Technology RD";
@@ -15,6 +16,7 @@ export const metadata: Metadata = {
     url: "/recomendador",
     title: TITLE,
     description: DESCRIPTION,
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 

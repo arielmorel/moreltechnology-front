@@ -47,13 +47,12 @@ export const metadata: Metadata = {
     title: "Morel Technology - Laptops en República Dominicana",
     description: "Laptops nuevas y usadas con garantía en RD. Estudio, trabajo y gaming con atención por WhatsApp.",
     siteName: "Morel Technology",
-    images: [{ url: `${SITE_URL}/og-image.png`, width: 1200, height: 630, alt: "Morel Technology - Laptops en República Dominicana" }],
+    // og:image comes from app/opengraph-image.tsx (or a closer opengraph-image per route).
   },
+  // Only the card type: X falls back to each page's og:title/og:description/og:image,
+  // so pages don't inherit the home page's title and image.
   twitter: {
     card: "summary_large_image",
-    title: "Morel Technology - Laptops en República Dominicana",
-    description: "Laptops nuevas y usadas con garantía en RD. Estudio, trabajo y gaming con atención por WhatsApp.",
-    images: [`${SITE_URL}/og-image.png`],
   },
 };
 

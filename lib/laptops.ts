@@ -1,6 +1,8 @@
 import { needsCategories } from "@/lib/data";
 
-export const CATEGORY_LAPTOPS = "Laptops";
+// Must match the catalog API's categoryName exactly: the filter is case-sensitive and
+// silently ignores unknown values ("Laptops" returned every product, TVs included).
+export const CATEGORY_LAPTOPS = "Laptop";
 
 export function isLaptopCategory(category: string): boolean {
   const c = category.toLowerCase();

@@ -1,3 +1,4 @@
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 import { Metadata } from "next";
 import Link from "next/link";
 import { getProducts } from "@/lib/api";
@@ -77,6 +78,7 @@ export const metadata: Metadata = {
     description:
       "Compra laptops en República Dominicana: nuevas y usadas certificadas en Santo Domingo. Garantía, financiamiento y envío a todo el país.",
     siteName: "Morel Technology",
+    images: [DEFAULT_OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",

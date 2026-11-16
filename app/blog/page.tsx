@@ -1,3 +1,4 @@
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { getAllPosts, getPostsByCategory } from "@/lib/blog";
@@ -29,6 +30,7 @@ export async function generateMetadata({ searchParams }: BlogPageProps): Promise
       type: "website",
       locale: "es_DO",
       siteName: "Morel Technology",
+      images: [DEFAULT_OG_IMAGE],
     },
   };
 }

@@ -1,3 +1,4 @@
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 import { Metadata } from "next";
 import Link from "next/link";
 import { MapPin, Phone, Clock, ShieldCheck, Truck, CreditCard, MessageCircle } from "lucide-react";
@@ -107,7 +108,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: data.title,
     description: data.description,
     alternates: { canonical: data.canonical },
-    openGraph: { title: data.title, description: data.description },
+    openGraph: { type: "website", locale: "es_DO", siteName: "Morel Technology", url: `/tienda/${branch}`, title: data.title, description: data.description, images: [DEFAULT_OG_IMAGE] },
   };
 }
 
