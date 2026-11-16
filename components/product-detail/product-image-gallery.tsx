@@ -61,7 +61,7 @@ export function ProductImageGallery({
       {/* Main Image Container */}
       <div className="group relative">
         <div
-          className="relative aspect-square md:aspect-[4/3] cursor-zoom-in rounded-2xl overflow-hidden touch-pan-y"
+          className="relative aspect-[4/3] cursor-zoom-in rounded-2xl overflow-hidden touch-pan-y"
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
@@ -254,9 +254,33 @@ export function ProductImageGallery({
       </Dialog>
       */}
 
-      {/* Thumbnails */}
+      {/* Mobile: dots instead of thumbnails (swipe changes the photo) to save vertical space */}
       {product.images.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+        <div className="flex md:hidden justify-center gap-1" role="tablist" aria-label="Fotos del producto">
+          {product.images.map((_, idx) => (
+            <button
+              key={idx}
+              type="button"
+              role="tab"
+              aria-selected={activeImage === idx}
+              aria-label={`Foto ${idx + 1} de ${product.images.length}`}
+              onClick={() => handleImageChange(idx)}
+              className="p-1.5"
+            >
+              <span
+                className={cn(
+                  "block h-1.5 rounded-full transition-all duration-200",
+                  activeImage === idx ? "w-5 bg-foreground" : "w-1.5 bg-muted-foreground/40"
+                )}
+              />
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Thumbnails (desktop) */}
+      {product.images.length > 1 && (
+        <div className="hidden md:flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
           {product.images.map((img, idx) => (
             <button
               key={idx}

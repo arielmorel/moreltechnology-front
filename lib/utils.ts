@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { DEFAULT_BRANCH } from "@/lib/api/config"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -17,7 +18,9 @@ export function slugify(text: string): string {
 }
 
 export function productUrl(slug: string, branch?: string): string {
-  if (branch) {
+  // The default branch is the plain URL; adding ?branch=<default> would create a
+  // duplicate URL of the same page (both self-canonical).
+  if (branch && branch !== DEFAULT_BRANCH) {
     return `/productos/${slug}?branch=${branch}`
   }
   return `/productos/${slug}`

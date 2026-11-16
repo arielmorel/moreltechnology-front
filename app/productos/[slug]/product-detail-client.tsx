@@ -5,7 +5,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Product, ProductVariant } from "@/lib/data";
 import { getProductBySlug, resolveBranchId } from "@/lib/api";
-import { MessageCircle, ShoppingCart, ChevronDown, Share2 } from "lucide-react";
+import { MessageCircle, ShoppingCart, ChevronDown } from "lucide-react";
+import { productWhatsAppUrl } from "@/lib/branch-contact";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/lib/store";
 import { toast } from "sonner";
@@ -187,6 +188,7 @@ export default function ProductDetailClient({
               product={product}
               warrantyLabel={warrantyLabel}
               onAddToCart={handleAddToCart}
+              branch={branch}
               selectedVariant={selectedVariant}
               onVariantChange={setSelectedVariant}
             />
@@ -196,6 +198,11 @@ export default function ProductDetailClient({
         {/* Same Model Carousel */}
         <div className="animate-slide-up-delay-3">
           {sameModelSlot}
+        </div>
+
+        {/* Related Products: before accessories, the shopper is still comparing laptops */}
+        <div className="mt-4 md:mt-8 animate-slide-up-delay-3">
+          {relatedSlot}
         </div>
 
         {/* Accessories Carousel */}
@@ -220,64 +227,51 @@ export default function ProductDetailClient({
             </div>
           </details>
         </div>
-
-        {/* Related Products */}
-        <div className="mt-6 md:mt-10 animate-slide-up-delay-6">
-          {relatedSlot}
-        </div>
       </div>
 
-      {/* Mobile Sticky CTA Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-md border-t border-border py-3 px-4 shadow-lg flex items-center gap-3 md:hidden">
+      {/* Mobile Sticky CTA Bar: price + one clear primary action (WhatsApp, the main sales
+          channel) + cart. Padding respects the iPhone home indicator. */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-md border-t border-border px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-lg md:hidden">
         {product.quantity === 0 ? (
-          <div className="w-full">
-            <NotifyWhenAvailable productId={product.id} productName={product.name} />
-          </div>
+          <NotifyWhenAvailable productId={product.id} productName={product.name} />
         ) : (
-          <>
-            <div className="flex flex-col items-start shrink-0">
-              <span className="text-lg font-extrabold text-foreground leading-tight">
+          <div className="flex items-center gap-2">
+            <div className="flex flex-col min-w-0 shrink-0">
+              <span className="text-lg font-extrabold text-foreground leading-tight whitespace-nowrap">
                 RD$ {currentDisplayPrice.toLocaleString("es-DO")}
               </span>
-              <span className="text-[9px] font-medium text-emerald-600 leading-none mt-0.5">
-                Envío gratis
+              <span className="text-[11px] font-medium text-emerald-600 leading-tight">
+                Garantía {warrantyLabel.toLowerCase()}
               </span>
             </div>
-            <div className="flex-1 flex items-center justify-end gap-2">
-              <button
-                type="button"
-                onClick={handleShare}
-                className="h-12 w-12 shrink-0 border border-border rounded-xl flex items-center justify-center text-muted-foreground hover:bg-muted transition-all duration-200 active:scale-95"
-                aria-label="Compartir producto"
-              >
-                <Share2 className="w-5 h-5" />
-              </button>
-              <button
-                type="button"
-                onClick={handleAddToCart}
-                className="h-12 w-12 shrink-0 bg-slate-900 hover:bg-slate-800 text-white rounded-xl transition-all duration-200 shadow-md active:scale-[0.97] flex items-center justify-center"
-                aria-label="Agregar al carrito"
-              >
-                <ShoppingCart className="w-5 h-5" />
-              </button>
-              <a
-                href={`https://wa.me/18096175517?text=${encodeURIComponent(`Hola, estoy interesado en ${product.name}.`)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() =>
-                  trackContact({
-                    location: "product_detail_mobile",
-                    product,
-                    variant: selectedVariant,
-                  })
-                }
-                className="h-12 w-12 shrink-0 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl transition-all duration-200 active:scale-90 flex items-center justify-center"
-                aria-label="WhatsApp"
-              >
-                <MessageCircle className="w-5 h-5" />
-              </a>
-            </div>
-          </>
+            <a
+              href={productWhatsAppUrl(product, branch, {
+                variantName: selectedVariant?.name,
+                price: currentDisplayPrice,
+              })}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() =>
+                trackContact({
+                  location: "product_detail_mobile",
+                  product,
+                  variant: selectedVariant,
+                })
+              }
+              className="flex-1 h-12 min-w-0 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-sm transition-all duration-200 active:scale-[0.97] flex items-center justify-center gap-2 shadow-md"
+            >
+              <MessageCircle className="w-5 h-5 shrink-0" />
+              <span className="truncate">Comprar por WhatsApp</span>
+            </a>
+            <button
+              type="button"
+              onClick={handleAddToCart}
+              className="h-12 w-12 shrink-0 border border-border bg-card text-foreground rounded-xl transition-all duration-200 active:scale-[0.97] flex items-center justify-center"
+              aria-label="Agregar al carrito"
+            >
+              <ShoppingCart className="w-5 h-5" />
+            </button>
+          </div>
         )}
       </div>
     </div>

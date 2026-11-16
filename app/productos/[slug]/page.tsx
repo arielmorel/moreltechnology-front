@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache, Suspense } from "react";
-import { getProductBySlug, resolveBranchId } from "@/lib/api";
+import { DEFAULT_BRANCH, getProductBySlug, resolveBranchId } from "@/lib/api";
 import { productUrl } from "@/lib/utils";
 import { productImageUrl } from "@/lib/product-images";
 import { getApprovedReviewsCached } from "@/lib/reviews";
@@ -21,7 +21,10 @@ interface PageProps {
 
 async function resolveBranch(searchParams: PageProps["searchParams"]): Promise<string | undefined> {
   const { branch } = await searchParams;
-  return resolveBranchId(typeof branch === "string" ? branch : undefined);
+  const resolved = resolveBranchId(typeof branch === "string" ? branch : undefined);
+  // ?branch=<default> is the same page as the plain URL: treat it as no branch so the
+  // canonical, JSON-LD and links all point at /productos/<slug>.
+  return resolved === DEFAULT_BRANCH ? undefined : resolved;
 }
 
 export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {

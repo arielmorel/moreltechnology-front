@@ -15,13 +15,18 @@ import {
   ChevronDown,
   FileText,
   ArrowRightLeft,
+  MapPin,
+  CreditCard,
 } from "lucide-react";
+import Link from "next/link";
 import { cn, parseSpecsFromString } from "@/lib/utils";
 import { ConditionGuide } from "@/components/condition-guide";
 import { NotifyWhenAvailable } from "@/components/notify-when-available";
 import { useCart } from "@/lib/store";
 import { toast } from "sonner";
 import { trackContact } from "@/lib/analytics/events";
+import { branchCity, getBranch, productWhatsAppUrl } from "@/lib/branch-contact";
+import { SHIPPING_RATES } from "@/lib/shipping";
 
 interface ProductInfoCardProps {
   product: Product;
@@ -29,6 +34,8 @@ interface ProductInfoCardProps {
   onAddToCart: () => void;
   selectedVariant?: ProductVariant;
   onVariantChange?: (variant: ProductVariant | undefined) => void;
+  /** Branch that holds the product; drives the WhatsApp number and "Disponible en". */
+  branch?: string;
 }
 
 export function ProductInfoCard({
@@ -37,7 +44,9 @@ export function ProductInfoCard({
   onAddToCart,
   selectedVariant,
   onVariantChange,
+  branch,
 }: ProductInfoCardProps) {
+  const city = branchCity(getBranch(branch));
   // Parse specs from name/description if individual fields are empty
   const parsedSpecs = React.useMemo(() => {
     const hasAllSpecs = product.processor && product.ram && product.ssd;
@@ -53,6 +62,15 @@ export function ProductInfoCard({
   const displaySsd = product.ssd || parsedSpecs?.ssd;
   const displayGpu = product.gpu || parsedSpecs?.gpu;
   const displayScreenSize = product.screenSize || parsedSpecs?.screenSize;
+
+  const specSummary = [
+    displayProcessor?.split("/")[0].trim(),
+    displayRam,
+    displaySsd,
+    displayScreenSize,
+  ]
+    .filter((s): s is string => Boolean(s && s !== "N/A" && s !== "Consultar"))
+    .join(" · ");
 
   const activeVariants = React.useMemo(() => {
     return product.variants?.filter(v => v.active) ?? [];
@@ -139,6 +157,9 @@ export function ProductInfoCard({
           <h1 className="font-sans text-xl md:text-2xl font-bold text-foreground tracking-tight leading-tight">
             {product.name}
           </h1>
+          {specSummary && (
+            <p className="text-sm text-muted-foreground leading-snug">{specSummary}</p>
+          )}
         </div>
 
         {/* Variant Selector */}
@@ -218,6 +239,36 @@ export function ProductInfoCard({
           })}
         </div>
 
+        {/* Trust signals next to the price (warranty from the product, branch stock,
+            real shipping rate, financing) */}
+        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-xs font-medium">
+          <li className="flex items-center gap-2 text-emerald-700 dark:text-emerald-500">
+            <ShieldCheck className="w-4 h-4 shrink-0" />
+            {warrantyLabel === "Certificada"
+              ? "Garantía certificada por escrito"
+              : `Garantía de ${warrantyLabel} por escrito`}
+          </li>
+          {product.quantity > 0 && (
+            <li className="flex items-center gap-2 text-foreground">
+              <MapPin className="w-4 h-4 shrink-0 text-muted-foreground" />
+              Disponible en {city}
+              {product.quantity <= 3 && (
+                <span className="text-amber-600">· {product.quantity === 1 ? "última unidad" : `últimas ${product.quantity}`}</span>
+              )}
+            </li>
+          )}
+          <li className="flex items-center gap-2 text-foreground">
+            <Truck className="w-4 h-4 shrink-0 text-muted-foreground" />
+            Envío a todo el país desde RD$ {SHIPPING_RATES.GRAN_SANTO_DOMINGO}
+          </li>
+          <li className="flex items-center gap-2 text-foreground">
+            <CreditCard className="w-4 h-4 shrink-0 text-muted-foreground" />
+            <Link href="/financiamiento" className="underline underline-offset-2 hover:text-primary">
+              Financiamiento disponible
+            </Link>
+          </li>
+        </ul>
+
         {/* Divider */}
         <div className="border-t border-border" />
 
@@ -283,40 +334,19 @@ export function ProductInfoCard({
           </div>
         </div>
 
-        {/* Trust Signals */}
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2.5 text-emerald-700">
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span className="text-xs font-medium">Garantía de {warrantyLabel}</span>
-          </div>
-          <div className="flex items-center gap-2.5 text-emerald-700">
-            <Truck className="w-4 h-4 text-emerald-600" />
-            <span className="text-xs font-medium">Envío express disponible</span>
-          </div>
-        </div>
-
-        {/* Description Accordion */}
-        <div className="border-t border-border pt-4">
-          <button
-            type="button"
-            onClick={() => {
-              const el = document.getElementById("product-description");
-              el?.classList.toggle("hidden");
-            }}
-            className="flex items-center justify-between w-full group active:scale-[0.99] transition-transform duration-150"
-          >
-            <div className="flex items-center gap-2">
+        {/* Description (native disclosure: keyboard + screen-reader friendly) */}
+        <details open className="group border-t border-border pt-4">
+          <summary className="flex items-center justify-between w-full cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+            <span className="flex items-center gap-2">
               <FileText className="w-4 h-4 text-muted-foreground" />
               <span className="text-xs font-semibold text-foreground uppercase tracking-wider">Descripción</span>
-            </div>
-            <ChevronDown className="w-4 h-4 text-muted-foreground group-hover:text-muted-foreground transition-transform" />
-          </button>
-          <div id="product-description" className="mt-3">
-            <p className="font-sans text-xs text-muted-foreground leading-relaxed whitespace-pre-line">
-              {product.description}
-            </p>
-          </div>
-        </div>
+            </span>
+            <ChevronDown className="w-4 h-4 text-muted-foreground transition-transform group-open:rotate-180" />
+          </summary>
+          <p className="mt-3 font-sans text-xs text-muted-foreground leading-relaxed whitespace-pre-line">
+            {product.description}
+          </p>
+        </details>
 
         {/* Desktop Buttons */}
         <div className="hidden md:flex flex-col gap-3">
@@ -333,7 +363,7 @@ export function ProductInfoCard({
                 Añadir al carrito
               </button>
               <a
-                href={`https://wa.me/18096175517?text=${encodeURIComponent(`Hola, estoy interesado en ${product.name}.`)}`}
+                href={productWhatsAppUrl(product, branch, { variantName: selectedVariant?.name })}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() =>
