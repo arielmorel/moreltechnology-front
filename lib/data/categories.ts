@@ -177,5 +177,4 @@ export const brands = [
   { name: "ASUS", slug: "asus", color: "#00539B" },
   { name: "Acer", slug: "acer", color: "#83B81A" },
   { name: "Razer", slug: "razer", color: "#44D62C" },
-  { name: "MSI", slug: "msi", color: "#FF0000" },
 ];

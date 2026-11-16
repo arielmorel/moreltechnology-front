@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 import { getProducts, resolveBranchId } from "@/lib/api";
 import { branches } from "@/lib/data";
 import type { Product } from "@/lib/data";
-import { CATEGORY_LAPTOPS } from "@/lib/laptops";
+import { CATEGORY_LAPTOPS, isRealLaptop } from "@/lib/laptops";
 import {
   OG_COLORS as C,
   OG_CONTENT_TYPE,
@@ -38,11 +38,10 @@ export default async function Image({ params }: { params: Promise<{ branch: stri
     getProducts(0, 16, CATEGORY_LAPTOPS, branchId),
   ]);
 
-  // Only real laptops (some accessories are miscategorized as "Laptop" in the catalog,
-  // but they have no processor), in-stock first; keep tiles whose photo actually loads.
-  const hasProcessor = (p: Product) => Boolean(p.processor && p.processor !== "N/A" && p.processor !== "Consultar");
+  // Only real laptops (some accessories are miscategorized as "Laptop" in the catalog),
+  // in-stock first; keep tiles whose photo actually loads.
   const candidates = products
-    .filter(hasProcessor)
+    .filter(isRealLaptop)
     .sort((a, b) => Number(b.quantity > 0) - Number(a.quantity > 0));
   const tiles: Tile[] = [];
   for (const product of candidates) {

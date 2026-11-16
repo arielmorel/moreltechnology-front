@@ -2,6 +2,7 @@ import axios from "axios";
 import { Product, ProductCondition, ProductPrice, ProductVariant } from "../data";
 import { ApiProduct, ApiResponse } from "./types";
 import { getCatalogUrl } from "./config";
+import { isRealLaptop } from "../laptops";
 
 export const PAGE_SIZE_DEFAULT = 20;
 export const PAGE_SIZE_SEARCH = 10;
@@ -317,11 +318,17 @@ export const getHomeProducts = async (branchId?: string): Promise<HomeProducts> 
       )
       .slice(0, 12);
 
-    const featured = products
+    // Almost the whole catalog is pinned (accessories and TVs included), so the home
+    // "Destacados" / "Recien Llegados" tabs only show real laptops, in-stock first.
+    const laptops = products
+      .filter(isRealLaptop)
+      .sort((a, b) => Number(b.quantity > 0) - Number(a.quantity > 0));
+
+    const featured = laptops
       .filter(p => p.pinned === true)
       .slice(0, 8);
 
-    const newArrivals = [...products]
+    const newArrivals = [...laptops]
       .sort((a, b) => {
         if (a.createdAt && b.createdAt) {
           return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
