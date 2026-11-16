@@ -2,10 +2,10 @@
 
 import { useState, useMemo, useEffect, useCallback, useRef, useSyncExternalStore } from "react";
 import { categories, Product } from "@/lib/data";
-import { getProducts, searchProducts, getCachedProducts, getCachedSearch, AvailabilityFilter, SortFilter, getSettingWithDefault } from "@/lib/api";
+import { AvailabilityFilter, SortFilter, getAllProducts, getSettingWithDefault } from "@/lib/api";
+import { isLaptopCategory } from "@/lib/laptops";
 import { useDebounce } from "@/hooks/use-debounce";
 import { ProductCard, type ProductCardView } from "@/components/product-card";
-import { ProductCardSkeleton } from "@/components/product-card-skeleton";
 import { Search, SlidersHorizontal, MapPin, Share2, X, BadgePercent, ChevronDown, ChevronRight, LayoutGrid, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -33,9 +33,22 @@ import { motion, type Variants } from "framer-motion";
 import { useTheme } from "next-themes";
 import { trackSearch } from "@/lib/analytics/events";
 
-const PAGE_SIZE = 8;
-
 const TAG_OPTIONS = ["gamer", "touch"];
+
+/** Lowercase, accent-free text for search matching ("diseño" matches "diseno"). */
+function normalize(text: string): string {
+  return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+}
+
+/** Category filter ids are "Laptops", "Accesorios"...; product.category is the API's
+ * lowercased categoryName ("laptop", "accesorios"...). */
+function matchesCategoryFilter(product: Product, categoryId: string): boolean {
+  if (categoryId === "todas") return true;
+  if (categoryId === "Laptops") return isLaptopCategory(product.category);
+  const target = categoryId.toLowerCase();
+  const category = product.category.toLowerCase();
+  return category === target || `${category}s` === target || category === target.replace(/s$/, "");
+}
 
 function getBranchLabel(branchId: string): string {
   const branch = branches.find(b => b.id === branchId);
@@ -96,10 +109,17 @@ function setViewMode(next: ProductCardView): void {
   window.dispatchEvent(new Event("storage"));
 }
 
-export default function CatalogoBranchClient({ branch: initialBranch }: { branch: string }) {
+interface CatalogoBranchClientProps {
+  branch: string;
+  /** Every in-stock product of the branch, loaded on the server. */
+  initialProducts: Product[];
+  /** Out-of-stock total (all categories); those products are fetched only on demand. */
+  initialOutOfStockCount: number;
+}
+
+export default function CatalogoBranchClient({ branch: initialBranch, initialProducts, initialOutOfStockCount }: CatalogoBranchClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const sentinelRef = useRef<HTMLDivElement>(null);
 
   const [branch] = useState<string>(initialBranch);
   const [currentTheme, setCurrentTheme] = useState<CatalogTheme>("theme-novus");
@@ -215,128 +235,57 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
     }
   }, [debouncedSearch, selectedCategory, selectedBrand, selectedProcessor, selectedRam, selectedStorage, showOnlyOffers, selectedCondition, selectedTag, priceRange, stockFilter, sortBy, branch, router]);
 
-  const [products, setProducts] = useState<Product[]>([]);
-  const [total, setTotal] = useState(0);
-  const pageRef = useRef(0);
   const trackedSearchRef = useRef("");
-  const [isLoading, setIsLoading] = useState(true);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [stockCounts, setStockCounts] = useState({ available: 0, outOfStock: 0, total: 0 });
+
+  // Out-of-stock products are only loaded when the visitor asks for them.
+  const [outOfStockProducts, setOutOfStockProducts] = useState<Product[] | null>(null);
+  const needsOutOfStock = stockFilter !== "IN_STOCK";
+  // getAllProducts never rejects (API errors resolve to an empty list), so this ends.
+  const isLoadingOutOfStock = needsOutOfStock && outOfStockProducts === null;
+
+  useEffect(() => {
+    if (!needsOutOfStock || outOfStockProducts !== null) return;
+    let cancelled = false;
+    getAllProducts(undefined, branch, undefined, "OUT_OF_STOCK")
+      .then(result => { if (!cancelled) setOutOfStockProducts(result); });
+    return () => { cancelled = true; };
+  }, [needsOutOfStock, outOfStockProducts, branch]);
+
+  // Everything below works on the complete catalog (not a first page), so filters,
+  // price sorting, filter options and counts are always complete. The catalog used to
+  // load 8 products at a time and filter/sort only what had been loaded.
+  const allProducts = useMemo(
+    () => (outOfStockProducts ? [...initialProducts, ...outOfStockProducts] : initialProducts),
+    [initialProducts, outOfStockProducts]
+  );
+
+  const categoryProducts = useMemo(
+    () => allProducts.filter(p => matchesCategoryFilter(p, selectedCategory)),
+    [allProducts, selectedCategory]
+  );
+
+  const stockCounts = useMemo(() => {
+    const available = categoryProducts.filter(p => p.quantity > 0).length;
+    // Exact once out-of-stock products are loaded; before that we only know the overall total.
+    const outOfStock: number | null = outOfStockProducts
+      ? categoryProducts.length - available
+      : selectedCategory === "todas" ? initialOutOfStockCount : null;
+    return { available, outOfStock, total: outOfStock === null ? null : available + outOfStock };
+  }, [categoryProducts, outOfStockProducts, selectedCategory, initialOutOfStockCount]);
+
+  const products = useMemo(() => {
+    if (stockFilter === "IN_STOCK") return categoryProducts.filter(p => p.quantity > 0);
+    if (stockFilter === "OUT_OF_STOCK") return categoryProducts.filter(p => p.quantity <= 0);
+    return categoryProducts;
+  }, [categoryProducts, stockFilter]);
+
   const filtersKey = `${debouncedSearch}-${selectedCategory}-${branch}-${stockFilter}`;
 
-  const hasMore = products.length < total;
-
-  useEffect(() => {
-    pageRef.current = 0;
-    let cancelled = false;
-    const loadInitial = async () => {
-      if (debouncedSearch.trim() === "") {
-        const cached = getCachedProducts(0, PAGE_SIZE, selectedCategory, branch, undefined, stockFilter);
-        if (!cancelled && cached) {
-          setProducts(cached.products);
-          setTotal(cached.total);
-          setIsLoading(false);
-          return;
-        }
-      } else {
-        const cached = getCachedSearch(debouncedSearch, 0, PAGE_SIZE, selectedCategory, branch, undefined, stockFilter);
-        if (!cancelled && cached) {
-          setProducts(cached.products);
-          setTotal(cached.total);
-          setIsLoading(false);
-          if (trackedSearchRef.current !== debouncedSearch) {
-            trackedSearchRef.current = debouncedSearch;
-            trackSearch(debouncedSearch, cached.total);
-          }
-          return;
-        }
-      }
-      if (!cancelled) setIsLoading(true);
-      try {
-        let result;
-        if (debouncedSearch.trim() === "") {
-          result = await getProducts(0, PAGE_SIZE, selectedCategory, branch, undefined, stockFilter);
-        } else {
-          result = await searchProducts(debouncedSearch, 0, PAGE_SIZE, selectedCategory, branch, undefined, stockFilter);
-        }
-        if (!cancelled) {
-          setProducts(result.products);
-          setTotal(result.total);
-          if (debouncedSearch.trim() && trackedSearchRef.current !== debouncedSearch) {
-            trackedSearchRef.current = debouncedSearch;
-            trackSearch(debouncedSearch, result.total);
-          }
-        }
-      } finally {
-        if (!cancelled) setIsLoading(false);
-      }
-    };
-    loadInitial();
-    return () => { cancelled = true; };
-  }, [filtersKey, debouncedSearch, selectedCategory, branch, stockFilter]);
-
-  useEffect(() => {
-    if (!sentinelRef.current || !hasMore || isLoadingMore) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && hasMore && !isLoadingMore) {
-          const nextPage = pageRef.current + 1;
-          pageRef.current = nextPage;
-          setIsLoadingMore(true);
-          const loadMore = async () => {
-            try {
-              let result;
-              if (debouncedSearch.trim() === "") {
-                result = await getProducts(nextPage, PAGE_SIZE, selectedCategory, branch, undefined, stockFilter);
-              } else {
-                result = await searchProducts(debouncedSearch, nextPage, PAGE_SIZE, selectedCategory, branch, undefined, stockFilter);
-              }
-              setProducts(prev => [...prev, ...result.products]);
-              setTotal(result.total);
-            } finally {
-              setIsLoadingMore(false);
-            }
-          };
-          loadMore();
-        }
-      },
-      { rootMargin: "300px" }
-    );
-
-    observer.observe(sentinelRef.current);
-    return () => observer.disconnect();
-  }, [hasMore, isLoadingMore, debouncedSearch, selectedCategory, branch, products.length, stockFilter]);
-
-  // Fetch stock counts for all categories (IN_STOCK, OUT_OF_STOCK, ALL)
-  useEffect(() => {
-    let cancelled = false;
-    const loadCounts = async () => {
-      const categoryParam = selectedCategory !== "todas" ? selectedCategory : undefined;
-      try {
-        const [available, outOfStock, all] = await Promise.all([
-          getProducts(0, 1, categoryParam, branch, undefined, "IN_STOCK"),
-          getProducts(0, 1, categoryParam, branch, undefined, "OUT_OF_STOCK"),
-          getProducts(0, 1, categoryParam, branch, undefined, "ALL"),
-        ]);
-        if (!cancelled) {
-          setStockCounts({
-            available: available.total,
-            outOfStock: outOfStock.total,
-            total: all.total,
-          });
-        }
-      } catch {
-        // Silently fail - counts will stay at 0
-      }
-    };
-    loadCounts();
-    return () => { cancelled = true; };
-  }, [selectedCategory, branch]);
-
+  // Most common brands first (the quick chips show the top 3).
   const brands = useMemo(() => {
-    const uniqueBrands = new Set(products.map(p => p.brand));
-    return Array.from(uniqueBrands);
+    const counts = new Map<string, number>();
+    for (const p of products) counts.set(p.brand, (counts.get(p.brand) ?? 0) + 1);
+    return Array.from(counts.keys()).sort((a, b) => (counts.get(b) ?? 0) - (counts.get(a) ?? 0));
   }, [products]);
 
   const processors = useMemo(() => Array.from(new Set(products.map(p => p.processor).filter(Boolean))).sort(), [products]);
@@ -351,10 +300,11 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
   }, [products]);
 
   const filteredProducts = useMemo(() => {
+    const query = normalize(debouncedSearch.trim());
     return products.filter((product) => {
-      const matchesSearch = product.name.toLowerCase().includes(search.toLowerCase()) ||
-        product.processor.toLowerCase().includes(search.toLowerCase()) ||
-        product.brand.toLowerCase().includes(search.toLowerCase());
+      const matchesSearch = !query || normalize(
+        [product.name, product.brand, product.processor, product.ram, product.ssd, product.description].join(" ")
+      ).includes(query);
       const matchesBrand = selectedBrand === "todas" || product.brand === selectedBrand;
       const matchesProcessor = selectedProcessor === "todas" || product.processor === selectedProcessor;
       const matchesRam = selectedRam === "todas" || product.ram === selectedRam;
@@ -368,7 +318,15 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
 
       return matchesSearch && matchesBrand && matchesProcessor && matchesRam && matchesStorage && matchesOffers && matchesCondition && matchesPrice && matchesTag;
     });
-  }, [products, search, selectedBrand, selectedProcessor, selectedRam, selectedStorage, showOnlyOffers, selectedCondition, selectedTag, priceRange]);
+  }, [products, debouncedSearch, selectedBrand, selectedProcessor, selectedRam, selectedStorage, showOnlyOffers, selectedCondition, selectedTag, priceRange]);
+
+  useEffect(() => {
+    const query = debouncedSearch.trim();
+    if (query && trackedSearchRef.current !== query) {
+      trackedSearchRef.current = query;
+      trackSearch(query, filteredProducts.length);
+    }
+  }, [debouncedSearch, filteredProducts.length]);
 
   const sortedProducts = useMemo(() => {
     const sorted = [...filteredProducts];
@@ -457,7 +415,7 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
       <motion.div
         className="w-full px-4 md:px-6 lg:px-8 xl:px-10"
         variants={containerVariants}
-        initial="hidden"
+        initial={false}
         animate="show"
       >
         {/* Breadcrumb */}
@@ -470,18 +428,25 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
             Inicio
           </Link>
           <ChevronRight className="w-3 h-3 shrink-0" />
-          <Link href="/catalogo" className="hover:text-foreground transition-colors font-medium">
-            Catálogo
-          </Link>
-          <ChevronRight className="w-3 h-3 shrink-0" />
-          <span className="text-foreground font-semibold">{getBranchLabel(branch)}</span>
+          <span className="text-foreground font-semibold">Catálogo {getBranchLabel(branch)}</span>
         </motion.nav>
 
         {/* Header */}
         <motion.div variants={itemVariants} className="flex justify-between items-center w-full mb-4">
-          <h1 className="font-sans text-xl font-bold tracking-tight" style={{ color: themeColors.text }}>
-            Laptops disponibles en {getBranchLabel(branch)}
-          </h1>
+          <div className="min-w-0">
+            <h1 className="font-sans text-xl font-bold tracking-tight" style={{ color: themeColors.text }}>
+              Catálogo de {getBranchLabel(branch)}
+            </h1>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              <span aria-live="polite">
+                {sortedProducts.length} {sortedProducts.length === 1 ? "equipo" : "equipos"}
+              </span>
+              {" · "}
+              <Link href="/laptops" className="underline underline-offset-2 hover:text-foreground">
+                Guía de laptops en RD
+              </Link>
+            </p>
+          </div>
           <motion.button
             type="button"
             onClick={handleShare}
@@ -657,14 +622,14 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
             active={stockFilter === "OUT_OF_STOCK"}
             onClick={() => setStockFilter("OUT_OF_STOCK")}
           >
-            Agotados ({stockCounts.outOfStock})
+            Agotados{stockCounts.outOfStock !== null && ` (${stockCounts.outOfStock})`}
           </FilterChip>
 
           <FilterChip
             active={stockFilter === "ALL"}
             onClick={() => setStockFilter("ALL")}
           >
-            Todos ({stockCounts.total})
+            Todos{stockCounts.total !== null && ` (${stockCounts.total})`}
           </FilterChip>
 
           <FilterChip
@@ -782,29 +747,18 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
           {/* Main Content */}
           <div className="flex-1">
 
-            {isLoading && products.length === 0 ? (
-              <div
-                key={`skeleton-${filtersKey}-${viewMode}`}
-                className={cn(
-                  "grid gap-3 sm:gap-6",
-                  viewMode === "list"
-                    ? "grid-cols-1"
-                    : "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
-                )}
-              >
-                {[...Array(viewMode === "list" ? 3 : 8)].map((_, i) => (
-                  <ProductCardSkeleton key={i} />
-                ))}
-              </div>
+            {isLoadingOutOfStock ? (
+              <p className="text-center text-sm text-muted-foreground py-16" aria-live="polite">
+                Cargando equipos agotados…
+              </p>
             ) : sortedProducts.length > 0 ? (
               <>
                 {viewMode === "list" ? (
                   <motion.div
                     key={`list-${filtersKey}`}
                     variants={productListVariants}
-                    initial="hidden"
+                    initial={false}
                     animate="show"
-                    aria-busy={isLoading}
                     className="flex flex-col gap-5"
                   >
                     {sortedProducts.map(product => (
@@ -817,9 +771,8 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
                   <motion.div
                     key={`grid-${filtersKey}`}
                     variants={productListVariants}
-                    initial="hidden"
+                    initial={false}
                     animate="show"
-                    aria-busy={isLoading}
                     className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6"
                   >
                     {sortedProducts.map(product => (
@@ -830,29 +783,9 @@ export default function CatalogoBranchClient({ branch: initialBranch }: { branch
                   </motion.div>
                 )}
 
-                {/* Infinite scroll sentinel */}
-                <div ref={sentinelRef} className="flex justify-center pt-6">
-                  {isLoadingMore && (
-                    <div
-                      key={`loading-more-${filtersKey}`}
-                      className={cn(
-                        "grid gap-3 sm:gap-6 w-full",
-                        viewMode === "list"
-                          ? "grid-cols-1"
-                          : "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
-                      )}
-                    >
-                      {[...Array(viewMode === "list" ? 1 : 4)].map((_, i) => (
-                        <ProductCardSkeleton key={i} />
-                      ))}
-                    </div>
-                  )}
-                  {!hasMore && sortedProducts.length > 0 && (
-                    <p className="text-xs text-muted-foreground py-2">
-                      Has visto todos los equipos disponibles.
-                    </p>
-                  )}
-                </div>
+                <p className="text-center text-xs text-muted-foreground pt-6 pb-2">
+                  Has visto todos los equipos.
+                </p>
               </>
             ) : (
               <div className="text-center py-16 bg-card rounded-2xl border border-border">

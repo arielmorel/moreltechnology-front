@@ -151,6 +151,8 @@ export function getCachedSearch(query: string, page = 0, size = PAGE_SIZE_DEFAUL
   return getCachedPage(pageCacheKey("s", page, size, category, branchId, tags, availability, sort, query));
 }
 
+// The catalog API answers "no results" with 204 No Content (empty body), so every
+// `response.data` read below must tolerate an empty response.
 export const getProducts = async (page = 0, size = PAGE_SIZE_DEFAULT, category?: string, branchId?: string, tags?: string, availability?: AvailabilityFilter, sort?: SortFilter, onlyOffers?: boolean): Promise<{ products: Product[], total: number }> => {
   const key = pageCacheKey("p", page, size, category, branchId, tags, availability, sort, undefined, onlyOffers);
   const cached = getCachedPage(key);
@@ -177,8 +179,8 @@ export const getProducts = async (page = 0, size = PAGE_SIZE_DEFAULT, category?:
     const response = await axios.get<ApiResponse>(getCatalogUrl(branchId), { params });
 
     const result = {
-      products: response.data.content.map(mapApiProductToProduct),
-      total: response.data.totalElements
+      products: (response.data?.content ?? []).map(mapApiProductToProduct),
+      total: response.data?.totalElements ?? 0
     };
     setCachedPage(key, result);
     return result;
@@ -253,7 +255,7 @@ export const getProductsByBrand = async (brand: string, branchId?: string): Prom
       params: { page: 0, size: PAGE_SIZE_DEFAULT, query: brand }
     });
 
-    return response.data.content
+    return (response.data?.content ?? [])
       .map(mapApiProductToProduct)
       .filter(p => p.brand.toLowerCase() === brand.toLowerCase());
   } catch (error) {
@@ -285,8 +287,8 @@ export const searchProducts = async (query: string, page = 0, size = PAGE_SIZE_D
     const response = await axios.get<ApiResponse>(`${getCatalogUrl(branchId)}/search`, { params });
 
     const result = {
-      products: response.data.content.map(mapApiProductToProduct),
-      total: response.data.totalElements
+      products: (response.data?.content ?? []).map(mapApiProductToProduct),
+      total: response.data?.totalElements ?? 0
     };
     setCachedPage(key, result);
     return result;
