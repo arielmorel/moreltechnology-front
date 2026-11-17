@@ -1,6 +1,7 @@
 import { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { branches } from "@/lib/data";
-import { getProducts } from "@/lib/api";
+import { getAllProducts, getProducts } from "@/lib/api";
 import { productUrl } from "@/lib/utils";
 import CatalogoBranchClient from "./catalogo-client";
 
@@ -10,20 +11,24 @@ interface PageProps {
 
 const SITE_URL = "https://moreltechnologyrd.com";
 
-function absoluteUrl(path: string): string {
-  if (!path) return `${SITE_URL}/`;
-  if (/^https?:\/\//.test(path)) return path;
-  return `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
+function getBranchName(branch: string): string | null {
+  const branchData = branches.find(b => b.id === branch);
+  return branchData ? branchData.name.replace("Sucursal ", "") : null;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { branch } = await params;
-  const branchData = branches.find(b => b.id === branch);
-  const branchName = branchData ? branchData.name.replace("Sucursal ", "") : branch;
+  const branchName = getBranchName(branch);
+  if (!branchName) notFound();
+
+  // The catalog lists everything the branch sells (laptops, accessories, TVs...), so the
+  // title doesn't compete with /laptops, which is the page that targets "laptops en RD".
+  const title = `Catálogo y Precios en ${branchName} | Morel Technology`;
+  const description = `Precios actualizados de laptops nuevas y usadas y accesorios en nuestra tienda de ${branchName}. Filtra por marca, RAM y precio. Garantía y envío a todo RD.`;
 
   return {
-    title: `Catálogo de Laptops ${branchName} | Morel Technology`,
-    description: `Explora el catálogo completo de laptops disponibles en la sucursal ${branchName} de Morel Technology. Equipos nuevos y usados con garantía.`,
+    title,
+    description,
     alternates: {
       canonical: `/catalogo/${branch}`,
     },
@@ -33,52 +38,37 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       locale: "es_DO",
       siteName: "Morel Technology",
       url: `/catalogo/${branch}`,
-      title: `Catálogo de Laptops ${branchName} | Morel Technology`,
-      description: `Explora el catálogo completo de laptops disponibles en la sucursal ${branchName} de Morel Technology.`,
+      title,
+      description,
     },
   };
 }
 
 export default async function CatalogoBranchPage({ params }: PageProps) {
   const { branch } = await params;
-  const branchData = branches.find(b => b.id === branch);
-  const branchName = branchData ? branchData.name.replace("Sucursal ", "") : branch;
+  const branchName = getBranchName(branch);
+  if (!branchName) notFound();
 
-  const { products, total } = await getProducts(0, 12, undefined, branch);
+  // Load every in-stock product on the server (~50 per branch) so the HTML ships them all
+  // (crawlable links, no loading skeleton) and filters/sorting in the client work on the
+  // complete catalog instead of the first page. Out-of-stock products (~170, rarely
+  // viewed) are only counted here and fetched by the client on demand, to keep the page light.
+  const [inStock, outOfStockCount] = await Promise.all([
+    getAllProducts(undefined, branch, undefined, "IN_STOCK"),
+    getProducts(0, 1, undefined, branch, undefined, "OUT_OF_STOCK").then(r => r.total),
+  ]);
 
   const itemListSchema = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: `Catálogo de Laptops ${branchName}`,
-    numberOfItems: total,
-    itemListElement: products.map((product, index) => {
-      const lowestOfferPrice = product.prices.length > 0
-        ? Math.min(...product.prices.map(p => (p.offerPrice && p.offerPrice > 0 ? p.offerPrice : p.priceOut)))
-        : product.price;
-
-      return {
-        "@type": "ListItem",
-        position: index + 1,
-        item: {
-          "@type": "Product",
-          name: product.name,
-          image: absoluteUrl(product.images[0]),
-          description: product.description,
-          brand: { "@type": "Brand", name: product.brand },
-          sku: product.sku || product.id,
-          offers: {
-            "@type": "AggregateOffer",
-            priceCurrency: product.prices[0]?.currency || "DOP",
-            lowPrice: lowestOfferPrice,
-            highPrice: product.price,
-            availability: product.quantity > 0
-              ? "https://schema.org/InStock"
-              : "https://schema.org/OutOfStock",
-            url: absoluteUrl(productUrl(product.slug, branch)),
-          },
-        },
-      };
-    }),
+    name: `Catálogo Morel Technology ${branchName}`,
+    numberOfItems: inStock.length,
+    itemListElement: inStock.map((product, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: product.name,
+      url: `${SITE_URL}${productUrl(product.slug, branch)}`,
+    })),
   };
 
   const breadcrumbSchema = {
@@ -86,8 +76,7 @@ export default async function CatalogoBranchPage({ params }: PageProps) {
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Inicio", item: `${SITE_URL}/` },
-      { "@type": "ListItem", position: 2, name: "Catálogo", item: `${SITE_URL}/catalogo` },
-      { "@type": "ListItem", position: 3, name: branchName, item: `${SITE_URL}/catalogo/${branch}` },
+      { "@type": "ListItem", position: 2, name: `Catálogo ${branchName}`, item: `${SITE_URL}/catalogo/${branch}` },
     ],
   };
 
@@ -101,7 +90,12 @@ export default async function CatalogoBranchPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <CatalogoBranchClient key={branch} branch={branch} />
+      <CatalogoBranchClient
+        key={branch}
+        branch={branch}
+        initialProducts={inStock}
+        initialOutOfStockCount={outOfStockCount}
+      />
     </>
   );
 }
