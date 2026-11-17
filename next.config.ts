@@ -16,6 +16,11 @@ const nextConfig: NextConfig = {
       {
         pathname: "/laptop.jpeg",
       },
+      {
+        // Generated blog covers (app/blog/[slug]/opengraph-image.tsx) shown on blog cards.
+        pathname: "/blog/*/opengraph-image",
+        search: "",
+      },
     ],
     remotePatterns: [
       {

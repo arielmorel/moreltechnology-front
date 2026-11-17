@@ -1,6 +1,3 @@
-import { existsSync } from "node:fs";
-import { join } from "node:path";
-import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -31,11 +28,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return { title: "Artículo no encontrado | Morel Technology" };
   }
 
-  // Many posts reference images that were never added to public/; only use the post image if it exists.
-  const hasPostImage = post.image.startsWith("/") && existsSync(join(process.cwd(), "public", post.image));
-
-  const categorySlug = post.category.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
-
+  // og:image / twitter:image come from ./opengraph-image.tsx (file-based metadata wins over
+  // anything set here), which uses the post's own photo when it exists in public/.
   return {
     title: `${post.title} | Morel Technology Blog`,
     description: post.description.substring(0, 160),
@@ -52,7 +46,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       tags: post.tags,
       siteName: "Morel Technology",
       locale: "es_DO",
-      images: hasPostImage ? [{ url: post.image, alt: post.title }] : [DEFAULT_OG_IMAGE],
     },
     twitter: {
       card: "summary_large_image",

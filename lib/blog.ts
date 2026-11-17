@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import { getPostCoverUrl } from "@/lib/blog-cover";
 
 const blogDir = path.join(process.cwd(), "content/blog");
 
@@ -13,6 +14,8 @@ export interface BlogPost {
   author: string;
   category: string;
   image: string;
+  /** Real photo if present in public/, otherwise the generated cover image route. */
+  cover: string;
   tags: string[];
   relatedProducts?: string[];
   content: string;
@@ -27,6 +30,8 @@ export interface BlogPostSummary {
   author: string;
   category: string;
   image: string;
+  /** Real photo if present in public/, otherwise the generated cover image route. */
+  cover: string;
   tags: string[];
   relatedProducts?: string[];
 }
@@ -35,8 +40,9 @@ function parsePost(filePath: string, file: string): BlogPostSummary {
   const fileContent = fs.readFileSync(filePath, "utf-8");
   const { data } = matter(fileContent);
 
+  const slug = file.replace(".mdx", "");
   return {
-    slug: file.replace(".mdx", ""),
+    slug,
     title: data.title || "",
     description: data.description || "",
     date: data.date || "",
@@ -44,6 +50,7 @@ function parsePost(filePath: string, file: string): BlogPostSummary {
     author: data.author || "Morel Technology",
     category: data.category || "",
     image: data.image || "",
+    cover: getPostCoverUrl({ slug, image: data.image }),
     tags: data.tags || [],
     relatedProducts: data.relatedProducts || [],
   };
@@ -153,6 +160,7 @@ export function getPostBySlug(slug: string): BlogPost | null {
     author: data.author || "Morel Technology",
     category: data.category || "",
     image: data.image || "",
+    cover: getPostCoverUrl({ slug, image: data.image }),
     tags: data.tags || [],
     relatedProducts: data.relatedProducts || [],
     content,

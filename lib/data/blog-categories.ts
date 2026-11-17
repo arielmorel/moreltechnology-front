@@ -5,6 +5,8 @@ export interface BlogCategory {
   color: string;
   textColor: string;
   icon: string;
+  /** Hex accent used by the generated cover images (next/og can't read Tailwind classes). */
+  accent: string;
 }
 
 export const blogCategories: BlogCategory[] = [
@@ -15,6 +17,7 @@ export const blogCategories: BlogCategory[] = [
     color: "bg-category-gaming text-category-gaming-fg",
     textColor: "text-purple-600 dark:text-purple-400",
     icon: "Gamepad2",
+    accent: "#7c3aed",
   },
   {
     slug: "laptops",
@@ -23,6 +26,7 @@ export const blogCategories: BlogCategory[] = [
     color: "bg-category-laptops text-category-laptops-fg",
     textColor: "text-blue-600 dark:text-blue-400",
     icon: "Laptop",
+    accent: "#2563eb",
   },
   {
     slug: "hardware",
@@ -31,6 +35,7 @@ export const blogCategories: BlogCategory[] = [
     color: "bg-category-hardware text-category-hardware-fg",
     textColor: "text-rose-600 dark:text-rose-400",
     icon: "Cpu",
+    accent: "#e11d48",
   },
   {
     slug: "software",
@@ -39,6 +44,7 @@ export const blogCategories: BlogCategory[] = [
     color: "bg-category-software text-category-software-fg",
     textColor: "text-violet-600 dark:text-violet-400",
     icon: "Settings",
+    accent: "#0891b2",
   },
   {
     slug: "arquitectura",
@@ -47,6 +53,7 @@ export const blogCategories: BlogCategory[] = [
     color: "bg-category-arquitectura text-category-arquitectura-fg",
     textColor: "text-amber-600 dark:text-amber-400",
     icon: "Building2",
+    accent: "#d97706",
   },
   {
     slug: "tecnologia",
@@ -55,6 +62,7 @@ export const blogCategories: BlogCategory[] = [
     color: "bg-category-tecnologia text-category-tecnologia-fg",
     textColor: "text-emerald-600 dark:text-emerald-400",
     icon: "Brain",
+    accent: "#059669",
   },
   {
     slug: "guias",
@@ -63,6 +71,7 @@ export const blogCategories: BlogCategory[] = [
     color: "bg-category-guia text-category-guia-fg",
     textColor: "text-amber-600 dark:text-amber-400",
     icon: "BookOpen",
+    accent: "#0d9488",
   },
   {
     slug: "gta-6",
@@ -71,11 +80,18 @@ export const blogCategories: BlogCategory[] = [
     color: "bg-category-gta6 text-category-gta6-fg",
     textColor: "text-orange-600 dark:text-orange-400",
     icon: "Crosshair",
+    accent: "#ea580c",
   },
 ];
 
 export function getBlogCategoryBySlug(slug: string): BlogCategory | undefined {
   return blogCategories.find((c) => c.slug === slug);
+}
+
+/** Finds a category by its display name ("GTA 6", "Guías") or slug. */
+export function getBlogCategoryByName(category: string): BlogCategory | undefined {
+  const key = category.toLowerCase();
+  return blogCategories.find((c) => c.name.toLowerCase() === key || c.slug === key);
 }
 
 export function getCategoryColorClass(category: string): string {

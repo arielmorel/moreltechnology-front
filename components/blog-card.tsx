@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Calendar, ArrowRight, Clock } from "lucide-react";
@@ -14,11 +15,21 @@ export function BlogCard({ post, featured = false }: BlogCardProps) {
     <Link href={`/blog/${post.slug}`} className="group block">
       <article
         className={cn(
-          "h-full bg-card border border-border/50 rounded-2xl overflow-hidden transition-all hover:border-border hover:shadow-sm",
+          "h-full flex flex-col bg-card border border-border/50 rounded-2xl overflow-hidden transition-all hover:border-border hover:shadow-sm",
           featured && "md:col-span-2 lg:col-span-2"
         )}
       >
-        <div className={cn("flex flex-col h-full", featured ? "p-8 sm:p-10" : "p-6")}>
+        <div className="relative aspect-[1200/630] overflow-hidden border-b border-border/50 bg-muted">
+          <Image
+            src={post.cover}
+            alt={post.title}
+            fill
+            sizes={featured ? "(min-width: 1024px) 66vw, (min-width: 768px) 100vw, 100vw" : "(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"}
+            priority={featured}
+            className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          />
+        </div>
+        <div className={cn("flex flex-col flex-1", featured ? "p-8 sm:p-10" : "p-6")}>
           <div className="flex items-center gap-3 mb-4">
             {post.category && (
               <span
