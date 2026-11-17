@@ -75,6 +75,41 @@ export function getPostsByCategory(categorySlug: string): BlogPostSummary[] {
   });
 }
 
+function normalizeForSearch(text: string): string {
+  return text
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase();
+}
+
+/**
+ * Filters posts by a free-text query. Every word in the query must appear somewhere
+ * in the post (title, description, tags, category or body), ignoring accents and case.
+ * Results are ranked so that matches in the title and tags come before body-only matches.
+ */
+export function searchPosts(query: string, posts: BlogPostSummary[] = getAllPosts()): BlogPostSummary[] {
+  const terms = normalizeForSearch(query).split(/\s+/).filter(Boolean);
+  if (terms.length === 0) return posts;
+
+  const scored = posts.flatMap((post) => {
+    const title = normalizeForSearch(post.title);
+    const meta = normalizeForSearch([post.description, post.category, ...post.tags].join(" "));
+    const body = normalizeForSearch(getPostBySlug(post.slug)?.content ?? "");
+
+    let score = 0;
+    for (const term of terms) {
+      if (title.includes(term)) score += 5;
+      else if (meta.includes(term)) score += 3;
+      else if (body.includes(term)) score += 1;
+      else return [];
+    }
+    return [{ post, score }];
+  });
+
+  // Array.prototype.sort is stable, so equal scores keep the incoming (newest-first) order.
+  return scored.sort((a, b) => b.score - a.score).map((s) => s.post);
+}
+
 export function getPostsByTag(tag: string): BlogPostSummary[] {
   const allPosts = getAllPosts();
   return allPosts.filter((post) =>
