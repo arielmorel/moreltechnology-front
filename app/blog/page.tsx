@@ -1,21 +1,22 @@
 import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { getAllPosts, getPostsByCategory } from "@/lib/blog";
+import { getAllPosts, getPostsByCategory, searchPosts } from "@/lib/blog";
 import { blogCategories, getBlogCategoryBySlug } from "@/lib/data/blog-categories";
 import { BlogCard } from "@/components/blog-card";
 import { BlogFilters } from "@/components/blog-filters";
+import { BlogSearch } from "@/components/blog-search";
 import { BookOpen, Gamepad2, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
 interface BlogPageProps {
-  searchParams: Promise<{ category?: string }>;
+  searchParams: Promise<{ category?: string; q?: string }>;
 }
 
 export async function generateMetadata({ searchParams }: BlogPageProps): Promise<Metadata> {
-  const { category } = await searchParams;
+  const { category, q } = await searchParams;
   // /blog?category=x renders the same list as /blog/category/x, so point Google at that URL.
   const canonical = category && getBlogCategoryBySlug(category) ? `/blog/category/${category}` : "/blog";
 
@@ -23,6 +24,8 @@ export async function generateMetadata({ searchParams }: BlogPageProps): Promise
     title: "Blog - Morel Technology República Dominicana",
     description: "Guías de compra, comparativas, gaming y tecnología en República Dominicana. Expertos ayudándote a elegir la laptop ideal.",
     alternates: { canonical },
+    // Search result pages are thin/duplicate content; keep them out of the index but let crawlers follow links.
+    ...(q?.trim() ? { robots: { index: false, follow: true } } : {}),
     openGraph: {
       url: canonical,
       title: "Blog - Morel Technology República Dominicana",
@@ -36,8 +39,10 @@ export async function generateMetadata({ searchParams }: BlogPageProps): Promise
 }
 
 export default async function BlogPage({ searchParams }: BlogPageProps) {
-  const { category } = await searchParams;
-  const posts = category ? getPostsByCategory(category) : getAllPosts();
+  const { category, q } = await searchParams;
+  const query = q?.trim() || undefined;
+  const basePosts = category ? getPostsByCategory(category) : getAllPosts();
+  const posts = query ? searchPosts(query, basePosts) : basePosts;
   const activeCategory = category ? getBlogCategoryBySlug(category) : null;
 
   const gta6Posts = getAllPosts().filter((p) => p.category === "GTA 6");
@@ -64,8 +69,13 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
           </p>
         </div>
 
+        {/* Search */}
+        <div className="mb-8">
+          <BlogSearch query={query} category={category} />
+        </div>
+
         {/* GTA 6 Banner */}
-        {!category && gta6Posts.length > 0 && (
+        {!category && !query && gta6Posts.length > 0 && (
           <Link href="/blog?category=gta-6" className="group block mb-10">
             <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-orange-500/10 via-red-500/10 to-purple-500/10 border border-orange-500/20 p-6 sm:p-8 transition-all hover:border-orange-500/40">
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
@@ -93,12 +103,34 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
           </Suspense>
         </div>
 
+        {/* Search results summary */}
+        {query && (
+          <p className="mb-6 text-sm text-muted-foreground" aria-live="polite">
+            {posts.length === 1 ? "1 artículo" : `${posts.length} artículos`} para{" "}
+            <span className="font-semibold text-foreground">“{query}”</span>
+            {activeCategory && <> en {activeCategory.name}</>}
+          </p>
+        )}
+
         {/* Posts Grid */}
         {posts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {posts.map((post, index) => (
-              <BlogCard key={post.slug} post={post} featured={index === 0 && !category} />
+              <BlogCard key={post.slug} post={post} featured={index === 0 && !category && !query} />
             ))}
+          </div>
+        ) : query ? (
+          <div className="py-24 text-center space-y-4">
+            <div className="inline-flex items-center justify-center w-12 h-12 bg-muted rounded-full mb-2">
+              <BookOpen className="w-5 h-5 text-muted-foreground" />
+            </div>
+            <p className="text-lg font-semibold">No encontramos artículos para “{query}”</p>
+            <p className="text-sm text-muted-foreground max-w-sm mx-auto">
+              Prueba con otras palabras, como el nombre de un juego, una laptop o una tarjeta gráfica.
+            </p>
+            <Link href="/blog" className="inline-block text-sm font-medium text-primary hover:underline">
+              Ver todos los artículos
+            </Link>
           </div>
         ) : (
           <div className="py-24 text-center space-y-4">
@@ -113,7 +145,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
         )}
 
         {/* Categories Overview (only on main blog page) */}
-        {!category && (
+        {!category && !query && (
           <div className="mt-16 pt-12 border-t border-border/50">
             <h2 className="text-xl font-bold mb-6">Explorar por Categoría</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
