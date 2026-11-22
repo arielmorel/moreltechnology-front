@@ -235,11 +235,12 @@ export function ProductCarousel({
               };
 
   return (
-    <section className="relative overflow-hidden py-6 md:py-16">
-      {/* Background glow */}
-      <div className="absolute inset-0 -z-10 overflow-hidden">
+    <section className="relative isolate overflow-hidden py-6 md:py-16">
+      {/* Background glow. `isolate` keeps the -z-10 layer inside this section's stacking
+          context so iOS Safari clips it; on mobile it is also sized to fit the screen. */}
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <div
-          className={`absolute left-1/2 top-1/2 h-[450px] w-[450px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[80px] md:h-[800px] md:w-[800px] md:blur-[120px] ${accentStyles.glow}`}
+          className={`absolute left-1/2 top-1/2 aspect-square w-[85%] max-w-[450px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[60px] md:h-[800px] md:w-[800px] md:max-w-none md:blur-[120px] ${accentStyles.glow}`}
         />
       </div>
 
