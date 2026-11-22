@@ -334,9 +334,16 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* Guard against decorative overflow (blur glows wider than the screen). iOS Safari
+       sometimes fails to clip blurred layers, widens the layout viewport, and the page
+       renders zoomed with right-edge UI (share, cart) pushed off-screen. `clip` does not
+       create a scroll container, so position: sticky keeps working. */
+    overflow-x: clip;
   }
   html {
     @apply font-sans;
+    /* Propagates to the viewport, so it never breaks sticky either. */
+    overflow-x: hidden;
   }
 }
 
