@@ -47,7 +47,7 @@ const SORTERS: Record<SortId, (a: Product, b: Product) => number> = {
   price_desc: (a, b) => b.price - a.price,
 };
 
-export function BlackFridayDeals({ deals }: { deals: Product[] }) {
+export function BlackFridayDeals({ deals, branch }: { deals: Product[]; branch?: string }) {
   const [filter, setFilter] = useState<FilterId>("all");
   const [sort, setSort] = useState<SortId>("savings");
 
@@ -119,7 +119,7 @@ export function BlackFridayDeals({ deals }: { deals: Product[] }) {
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {visible.map((product) => (
-          <ProductCard key={product.id} product={product} showSavings />
+          <ProductCard key={product.id} product={product} branch={branch} showSavings />
         ))}
       </div>
     </div>

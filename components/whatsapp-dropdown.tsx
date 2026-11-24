@@ -28,6 +28,8 @@ interface WhatsAppDropdownProps {
   location?: string;
   product?: Product;
   productVariant?: ProductVariant;
+  /** Branch listed first in the menu (e.g. on a branch-specific page). */
+  preferredBranchId?: string;
 }
 
 export function WhatsAppDropdown({
@@ -42,7 +44,11 @@ export function WhatsAppDropdown({
   location = "whatsapp_dropdown",
   product,
   productVariant,
+  preferredBranchId,
 }: WhatsAppDropdownProps) {
+  const orderedBranches = preferredBranchId
+    ? [...branches].sort((a, b) => Number(b.id === preferredBranchId) - Number(a.id === preferredBranchId))
+    : branches;
 
   const handleWhatsApp = (number: string) => {
     trackContact({
@@ -72,7 +78,7 @@ export function WhatsAppDropdown({
         <DropdownMenuGroup>
           <DropdownMenuLabel>Selecciona una sucursal</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          {branches.map((branch) => (
+          {orderedBranches.map((branch) => (
             <DropdownMenuItem
               key={branch.id}
               className="cursor-pointer flex flex-col items-start gap-1 p-3"
