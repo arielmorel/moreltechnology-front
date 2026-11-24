@@ -1,3 +1,4 @@
+import axios from "axios";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { Product } from "@/lib/data";
@@ -79,26 +80,48 @@ export function loadOgLogo(): Promise<string | null> {
   return logoPromise;
 }
 
-const SUPPORTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
-const MAX_IMAGE_BYTES = 4 * 1024 * 1024;
+// Formats the OG renderer (Satori) can embed as-is; others (webp, avif) are converted.
+const NATIVE_IMAGE_TYPES = ["image/jpeg", "image/png"];
+const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
+const MAX_IMAGE_SIDE = 1200;
 
 /**
  * Downloads a remote image and inlines it as a data URI so the OG renderer never
  * depends on the client reaching the image host (MinIO is only exposed on :9000).
- * Returns null on failure or unsupported formats so the image still renders.
+ * Images are downscaled and converted to JPEG (webp/avif aren't supported by Satori).
+ * Returns null on failure so the card still renders without the photo.
+ *
+ * Uses axios rather than fetch on purpose: Next.js instruments fetch, and an uncached
+ * fetch would force the OG route to render on every request instead of revalidating.
  */
 export async function fetchImageAsDataUri(url: string | undefined): Promise<string | null> {
   if (!url || !/^https?:\/\//.test(url)) return null;
   try {
-    const res = await fetch(url, { signal: AbortSignal.timeout(6000), cache: "no-store" });
-    if (!res.ok) return null;
-    const type = (res.headers.get("content-type") || "").split(";")[0].trim().toLowerCase();
-    if (!SUPPORTED_IMAGE_TYPES.includes(type)) return null;
-    const buf = Buffer.from(await res.arrayBuffer());
-    if (buf.byteLength > MAX_IMAGE_BYTES) return null;
-    return `data:${type === "image/jpg" ? "image/jpeg" : type};base64,${buf.toString("base64")}`;
+    const res = await axios.get<ArrayBuffer>(url, {
+      responseType: "arraybuffer",
+      timeout: 6000,
+      maxContentLength: MAX_IMAGE_BYTES,
+    });
+    const type = String(res.headers["content-type"] || "").split(";")[0].trim().toLowerCase();
+    const buf = Buffer.from(res.data);
+
+    try {
+      const { default: sharp } = await import("sharp");
+      const jpeg = await sharp(buf)
+        .rotate()
+        .resize(MAX_IMAGE_SIDE, MAX_IMAGE_SIDE, { fit: "inside", withoutEnlargement: true })
+        .flatten({ background: "#ffffff" })
+        .jpeg({ quality: 85 })
+        .toBuffer();
+      return `data:image/jpeg;base64,${jpeg.toString("base64")}`;
+    } catch (error) {
+      // sharp unavailable: embed natively supported formats unchanged.
+      const nativeType = type === "image/jpg" ? "image/jpeg" : type;
+      if (!NATIVE_IMAGE_TYPES.includes(nativeType)) throw error;
+      return `data:${nativeType};base64,${buf.toString("base64")}`;
+    }
   } catch (error) {
-    console.error(`[og] Could not fetch image ${url}:`, error);
+    console.error(`[og] Could not load image ${url.split("?")[0]}:`, error instanceof Error ? error.message : error);
     return null;
   }
 }

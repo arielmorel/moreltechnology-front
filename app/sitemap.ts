@@ -6,7 +6,7 @@ import { getAllPosts } from "@/lib/blog";
 import { blogCategories } from "@/lib/data/blog-categories";
 import { homeCategories, needsCategories } from "@/lib/data";
 import { branches } from "@/lib/data/branches";
-import { BLACK_FRIDAY_CAMPAIGN } from "@/lib/black-friday";
+import { BLACK_FRIDAY_BRANCH_LIST, BLACK_FRIDAY_CAMPAIGN } from "@/lib/black-friday";
 
 const baseUrl = "https://moreltechnologyrd.com";
 
@@ -68,12 +68,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority,
   }));
 
-  const blackFridayPage: MetadataRoute.Sitemap[number] = {
-    url: `${baseUrl}${BLACK_FRIDAY_CAMPAIGN.slug}`,
+  // One Black Friday landing per branch (/black-friday, /black-friday/santiago).
+  const blackFridayPages: MetadataRoute.Sitemap = BLACK_FRIDAY_BRANCH_LIST.map((branch) => ({
+    url: `${baseUrl}${branch.path}`,
     lastModified: new Date(BLACK_FRIDAY_CAMPAIGN.startIso),
     changeFrequency: "daily",
     priority: 0.9,
-  };
+  }));
 
   const landingPages: MetadataRoute.Sitemap = [
     ...useLandingPaths,
@@ -122,7 +123,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     ...staticPages,
-    blackFridayPage,
+    ...blackFridayPages,
     ...landingPages,
     ...blogPages,
     ...blogCategoryPages,
